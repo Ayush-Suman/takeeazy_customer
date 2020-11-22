@@ -5,20 +5,24 @@ import 'tokenhandler.dart';
 
 String _URL = "https://takeeazy-backend.herokuapp.com";
 
-Future<http.Response> GET(String Route, {bool auth=true}) {
+Future<http.Response> GET(String Route, {bool auth=true, http.Client client}) {
   String Token = '';
   if(!auth){
     Token = token;
   }
-  return http.get(_URL+ Route, headers: {"Authorization": Token});
+  return client==null?
+    http.get(_URL+ Route, headers: {"Authorization": Token}):
+    client.get(_URL+ Route, headers: {"Authorization": Token});
 }
 
-Future<http.Response> POST(String Route, {dynamic body, bool auth=true}) {
+Future<http.Response> POST(String Route, {dynamic body, bool auth=true, http.Client client}) {
   String Token = '';
   if(!auth){
     Token = token;
   }
-  return http.post(_URL+ Route, headers: {"Authorization": Token}, body: body);
+  return client==null?
+    http.post(_URL+ Route, headers: {"Authorization": Token}, body: body):
+  client.post(_URL+ Route, headers: {"Authorization": Token}, body: body);
 }
 
 void authenticate(String Token){
