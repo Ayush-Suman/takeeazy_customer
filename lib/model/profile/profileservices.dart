@@ -6,7 +6,7 @@ import '../base/URLRoutes.dart' as Routes;
 class ProfileServices {
 
   Future<Profile> getProfile() async{
-    network.GET(Routes.getProfile);
+    network.request(Routes.getProfile, call: network.CALLTYPE.GET);
   }
 
 }

@@ -1,13 +1,13 @@
 import 'package:takeeazy_customer/model/base/URLRoutes.dart' as Routes;
 
-import '..//base/networkcall.dart' as network;
+import '..//base/networkcall.dart';
 
 class OTPServices {
   void sendOTP(String phoneNumber) {
-    network.POST(Routes.sendOTP, body: {'phone': phoneNumber}, auth: false);
+    request(Routes.sendOTP, call: CALLTYPE.POST, body: {'phone': phoneNumber}, auth: false);
   }
 
   void verfiyOTP({String phoneNumber, String OTP, String session_id}){
-    network.POST(Routes.verifyOTP, body: {'phone':phoneNumber, 'otp': OTP, 'session_id': session_id}, auth:false);
+    request(Routes.verifyOTP, call: CALLTYPE.POST, body: {'phone':phoneNumber, 'otp': OTP, 'session_id': session_id}, auth:false);
   }
 }
