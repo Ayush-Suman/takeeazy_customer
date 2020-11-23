@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:takeeazy_customer/model/base/networkcall.dart';
+import 'package:takeeazy_customer/model/stores/storesDAO.dart';
 import 'package:takeeazy_customer/screens/home.dart';
+import 'model/base/URLRoutes.dart' as Routes;
 
 void main() async{
-
+  GET<ShopModel>(Routes.getShops);
   runApp(MyApp());
 }
 

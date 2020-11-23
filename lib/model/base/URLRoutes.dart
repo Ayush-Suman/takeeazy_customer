@@ -6,6 +6,7 @@ const String verifyOTP = '/api/user/verifyotp';
 const String getProfile = '/api/user/profile';
 
 // Orders
+const String getShops = '/api/shop/stores';
 
 // Stores
 
