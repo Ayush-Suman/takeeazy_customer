@@ -14,7 +14,9 @@ enum CALLTYPE{
 
 }
 
-dynamic jsonToDAO(Map<String, dynamic> jsonAndFunc){
+
+
+dynamic jsonToModel(Map<String, dynamic> jsonAndFunc){
   dynamic decoded = jsonDecode(jsonAndFunc['json'] as String);
   dynamic data;
   Function function = jsonAndFunc['func'] as Function;
@@ -69,7 +71,7 @@ Future<T> request<T>(String route, {
     'func': fromJSON
   };
   // Converts JSON to DAO
-  return compute(jsonToDAO, jsonAndFunc) as T;
+  return compute(jsonToModel, jsonAndFunc) as T;
 
 }
 
