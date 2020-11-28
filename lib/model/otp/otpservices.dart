@@ -1,6 +1,7 @@
 import 'package:takeeazy_customer/model/base/URLRoutes.dart' as Routes;
+import 'package:takeeazy_customer/model/base/networkcall.dart';
 
-import '..//base/networkcall.dart';
+
 
 class OTPServices {
   void sendOTP(String phoneNumber) {

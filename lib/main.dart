@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:takeeazy_customer/model/base/URLRoutes.dart' as Routes;
 import 'package:takeeazy_customer/model/base/networkcall.dart';
-import 'package:takeeazy_customer/model/stores/storesDAO.dart';
+import 'package:takeeazy_customer/model/stores/storesModel.dart';
 import 'package:takeeazy_customer/screens/home.dart';
-import 'model/base/URLRoutes.dart' as Routes;
+
 
 void main() async{
+  List<ShopModel> shop = await request<List<ShopModel>>(Routes.getShops, call: CALLTYPE.GET, auth: false, fromJSON: shopModel);
   runApp(MyApp());
 }
 

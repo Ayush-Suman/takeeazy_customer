@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:takeeazy_customer/model/base/modelconstructor.dart';
 import 'tokenhandler.dart';
 
 // Uses Token Handler functions
@@ -14,32 +16,38 @@ enum CALLTYPE{
 
 }
 
+Isolate isolate;
 
+void networkCallInit() async{
+  isolate = await Isolate.spawn((message) { }, "");
+}
+
+void networkCallDestroy() async{
+  isolate.kill();
+}
 
 dynamic jsonToModel(Map<String, dynamic> jsonAndFunc){
   dynamic decoded = jsonDecode(jsonAndFunc['json'] as String);
   dynamic data;
-  Function function = jsonAndFunc['func'] as Function;
   if(decoded is List){
     data = List();
     for(dynamic m in decoded){
-      data.add(function(m));
+      data.add(createClass(jsonAndFunc['route'] as String, m));
     }
   } else {
-    data = function(decoded);
+    data = createClass(jsonAndFunc['route'] as String, decoded);
   }
   return data;
 }
 
 
 Future<T> request<T>(String route, {
-  CALLTYPE call,
+  @required CALLTYPE call,
   Map<String, dynamic> param,
   Map<String, dynamic> header,
   Map<String, dynamic> body,
   bool auth=true,
   http.Client client,
-  Function fromJSON
 }) async {
 
   Map<String, dynamic> headerData = Map();
@@ -68,7 +76,7 @@ Future<T> request<T>(String route, {
 
   Map<String, dynamic> jsonAndFunc = {
     'json': response.body,
-    'func': fromJSON
+    'route':  route,
   };
   // Converts JSON to DAO
   return compute(jsonToModel, jsonAndFunc) as T;

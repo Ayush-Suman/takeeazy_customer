@@ -1,3 +1,8 @@
+ShopModel shopModel(Map<String, dynamic> map){
+  return ShopModel.fromJSON(map);
+}
+
+
 class ShopModel{
   String id;
   String shopName;
@@ -14,7 +19,7 @@ class ShopModel{
     primaryPhone : shopData['primaryPhone'],
     createdAt : shopData['createdAt'],
     categories : shopData['categories'],
-    location : shopData['location']
+    location : Location.fromJSON(shopData['location'])
     );
   }
 
@@ -25,4 +30,8 @@ class Location {
   final List<double> coordinates;
 
   Location({this.type, this.coordinates});
+
+  factory Location.fromJSON(Map<String, dynamic> location){
+    return Location(type: location['type'], coordinates: location['coordinates']);
+  }
 }
