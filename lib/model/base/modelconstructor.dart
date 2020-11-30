@@ -1,11 +1,15 @@
 import 'package:takeeazy_customer/model/base/URLRoutes.dart' as Routes;
+import 'package:takeeazy_customer/model/meta/metamodel.dart';
 import 'package:takeeazy_customer/model/stores/storesModel.dart';
 
 dynamic createClass(String type, Map<String, dynamic> map){
   switch(type){
     case Routes.getShops:
-      ShopModel.fromJSON(map);
+      return ShopModel.fromJSON(map);
       break;
-    default: return null;
+    case Routes.getMeta:
+      return MetaModel.fromJSON(map);
+      break;
+    default: return map;
   }
 }

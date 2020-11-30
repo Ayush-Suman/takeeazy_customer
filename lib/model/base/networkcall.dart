@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:flutter/foundation.dart';
@@ -43,33 +44,34 @@ dynamic jsonToModel(Map<String, dynamic> jsonAndFunc){
 
 Future<T> request<T>(String route, {
   @required CALLTYPE call,
-  Map<String, dynamic> param,
+  Map<String, String> param,
   Map<String, dynamic> header,
   Map<String, dynamic> body,
   bool auth=true,
   http.Client client,
 }) async {
 
-  Map<String, dynamic> headerData = Map();
+  Map<String, dynamic> headerData = {HttpHeaders.contentTypeHeader: 'application/json'};
 
   if(auth){
-    headerData.addAll({"Authorization": await token});
+    headerData.addAll({HttpHeaders.authorizationHeader: await token});
   }
 
   http.Response response;
+  final Uri uri = Uri.http(_URL,route, param);
 
   // Network CALL based on CALL TYPE
   switch(call) {
     case CALLTYPE.GET:
       response = await (client == null ?
-      http.get(_URL + route, headers: headerData..addAll(header)) :
-      client.get(_URL + route, headers: headerData..addAll(header)));
+      http.get(uri, headers: headerData..addAll(header)) :
+      client.get(uri, headers: headerData..addAll(header)));
       break;
 
     case CALLTYPE.POST:
       response = await (client == null ?
-      http.post(_URL + route, headers: headerData..addAll(header), body: body) :
-      client.post(_URL + route, headers: headerData..addAll(header), body: body));
+      http.post(uri, headers: headerData..addAll(header), body: body) :
+      client.post(uri, headers: headerData..addAll(header), body: body));
       break;
   }
 

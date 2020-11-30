@@ -1,3 +1,6 @@
+// Meta
+const String getMeta = '/api/user/meta';
+
 // OTP
 const String sendOTP = '/api/user/sendotp';
 const String verifyOTP = '/api/user/verifyotp';
