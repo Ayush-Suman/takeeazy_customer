@@ -6,7 +6,8 @@ import 'package:takeeazy_customer/screens/home.dart';
 
 
 void main() async{
-  List<ShopModel> shop = await request<List<ShopModel>>(Routes.getShops, call: CALLTYPE.GET, auth: false, fromJSON: shopModel);
+  List<ShopModel> shop = await request<List<ShopModel>>(Routes.getShops, call: CALLTYPE.GET, auth: false);
+  print(shop[0].shopName);
   runApp(MyApp());
 }
 
