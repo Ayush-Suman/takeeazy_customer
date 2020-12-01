@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:takeeazy_customer/model/base/URLRoutes.dart' as Routes;
+import 'package:takeeazy_customer/model/base/URLRoutes.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart';
+import 'package:takeeazy_customer/model/meta/metamodel.dart';
 import 'package:takeeazy_customer/model/stores/storesModel.dart';
 import 'package:takeeazy_customer/screens/home.dart';
 
 
 void main() async{
-  List<ShopModel> shop = await request<List<ShopModel>>(Routes.getShops, call: CALLTYPE.GET, auth: false);
-  print(shop[0].shopName);
+  networkInit();
+  MetaModel meta = await request<MetaModel>(getMeta, call: CALLTYPE.GET, auth: false, param: {'geo':'29.0000,77.700000'});
+  print(meta.city.cityName);
   runApp(MyApp());
 }
 

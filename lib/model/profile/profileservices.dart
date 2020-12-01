@@ -8,7 +8,7 @@ import 'package:takeeazy_customer/model/profile/profileModel.dart';
 class ProfileServices {
 
   Future<Profile> getProfile() async{
-    request(Routes.getProfile, call: CALLTYPE.GET);
+    request(Routes.getProfile, call: Routes.CALLTYPE.GET);
   }
 
 }

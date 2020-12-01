@@ -1,46 +1,17 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:isolate';
+import 'dart:math';
 
+import 'package:takeeazy_customer/model/base/URLRoutes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:takeeazy_customer/model/base/modelconstructor.dart';
+import 'package:takeeazy_customer/model/base/httpworker.dart';
 import 'tokenhandler.dart';
 
-// Uses Token Handler functions
 
-String _URL = "https://takeeazy-backend.herokuapp.com";
-
-enum CALLTYPE{
-  GET,
-  POST
-
+List<int> _ids = List();
+Random _random = Random();
+void networkInit(){
+  init();
 }
-
-Isolate isolate;
-
-void networkCallInit() async{
-  isolate = await Isolate.spawn((message) { }, "");
-}
-
-void networkCallDestroy() async{
-  isolate.kill();
-}
-
-dynamic jsonToModel(Map<String, dynamic> jsonAndFunc){
-  dynamic decoded = jsonDecode(jsonAndFunc['json'] as String);
-  dynamic data;
-  if(decoded is List){
-    data = List();
-    for(dynamic m in decoded){
-      data.add(createClass(jsonAndFunc['route'] as String, m));
-    }
-  } else {
-    data = createClass(jsonAndFunc['route'] as String, decoded);
-  }
-  return data;
-}
-
 
 Future<T> request<T>(String route, {
   @required CALLTYPE call,
@@ -51,38 +22,31 @@ Future<T> request<T>(String route, {
   http.Client client,
 }) async {
 
-  Map<String, dynamic> headerData = {HttpHeaders.contentTypeHeader: 'application/json'};
-
-  if(auth){
-    headerData.addAll({HttpHeaders.authorizationHeader: await token});
+  print('request function called');
+  int rand = _random.nextInt(256);
+  while(_ids.contains(rand)){
+    rand = _random.nextInt(256);
   }
+  _ids.add(rand);
 
-  http.Response response;
-  final Uri uri = Uri.http(_URL,route, param);
+  print('request id: '+rand.toString());
 
-  // Network CALL based on CALL TYPE
-  switch(call) {
-    case CALLTYPE.GET:
-      response = await (client == null ?
-      http.get(uri, headers: headerData..addAll(header)) :
-      client.get(uri, headers: headerData..addAll(header)));
-      break;
-
-    case CALLTYPE.POST:
-      response = await (client == null ?
-      http.post(uri, headers: headerData..addAll(header), body: body) :
-      client.post(uri, headers: headerData..addAll(header), body: body));
-      break;
-  }
-
-
-  Map<String, dynamic> jsonAndFunc = {
-    'json': response.body,
-    'route':  route,
+  Map<String, dynamic> data = {
+    'route':route,
+    'call':call,
+    'param':param,
+    'header':header,
+    'body':body,
+    'auth':auth,
+    'client':client,
+    'id': rand
   };
-  // Converts JSON to DAO
-  return compute(jsonToModel, jsonAndFunc) as T;
-
+  print('data map built');
+  await isReady;
+  print('isolate ready');
+  dynamic response = await sendRequest(data);
+  _ids.remove(rand);
+  return response as T;
 }
 
 

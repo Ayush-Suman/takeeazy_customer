@@ -14,3 +14,15 @@ const String getShops = '/api/shop/stores';
 // Stores
 
 // Items
+
+
+
+
+// URL
+
+// CallType Enum
+enum CALLTYPE{
+  GET,
+  POST
+
+}
