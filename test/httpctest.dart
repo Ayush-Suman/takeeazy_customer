@@ -3,13 +3,12 @@ import 'package:takeeazy_customer/model/base/URLRoutes.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart';
 import 'package:takeeazy_customer/model/meta/metamodel.dart';
 
-void main(){
-
-test('custom http test', () async{
+void main()async {
   TestWidgetsFlutterBinding.ensureInitialized();
-  print('test started');
-  networkInit();
-  MetaModel metaModel = await request(getMeta, call: CALLTYPE.GET, param: {'geo':'29.0000,77.700000'});
-  print('response fetched');
-});
+  test('custom http test', () async{
+    print('test started');
+    networkInit();
+    await request(getMeta, call: CALLTYPE.GET, param: {'geo':'29.0000,77.700000'}).then((value) {print((value as MetaModel).city.cityName);});
+    print('response fetched');
+  });
 }

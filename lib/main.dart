@@ -8,8 +8,9 @@ import 'package:takeeazy_customer/screens/home.dart';
 
 void main() async{
   networkInit();
-  MetaModel meta = await request<MetaModel>(getMeta, call: CALLTYPE.GET, auth: false, param: {'geo':'29.0000,77.700000'});
-  print(meta.city.cityName);
+  request<MetaModel>(getMeta, call: CALLTYPE.GET, auth: false, param: {'geo':'29.0000,77.700000'}).then((value) {print((value as MetaModel).city.cityName);});
+  request<MetaModel>(getMeta, call: CALLTYPE.GET, auth: false, param: {'geo':'29.0000,77.700000'}).then((value) {print((value as MetaModel).city.cityName);});
+  //print(meta.city.cityName);
   runApp(MyApp());
 }
 

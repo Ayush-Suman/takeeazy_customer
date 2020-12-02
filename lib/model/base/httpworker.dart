@@ -7,6 +7,7 @@ import 'package:http/http.dart';
 import 'package:takeeazy_customer/model/base/URLRoutes.dart';
 import 'package:takeeazy_customer/model/base/modelconstructor.dart';
 import 'package:takeeazy_customer/model/base/tokenhandler.dart';
+import 'package:takeeazy_customer/model/meta/metamodel.dart';
 
 
 String _URL = "takeeazy-backend.herokuapp.com";
@@ -22,33 +23,22 @@ List<Map<String, dynamic>> responseQueue = List<Map<String, dynamic>>();
 
 void init() async {
   _isolate = await Isolate.spawn(_entryFunction, _receivePort.sendPort);
-  _receivePort.listen((message) {
-    if(message is SendPort){
-      _sendPort = message;
-      _isolateReady.complete();
-    }else{
-      print('adding'+message['id']);
-      responseQueue.add(message);
-    }
-  });
-
+  _sendPort = await _receivePort.first;
+  _isolateReady.complete();
 }
 
 void destroy() {
+  _receivePort.close();
   _isolate.kill();
+  _isolate = null;
 }
 
 
 Future<T> sendRequest<T>(var data) async {
+  ReceivePort _responsePort = ReceivePort();
   print('sending id: ' + data['id'].toString());
-  _sendPort.send(data);
-  for(;;){
-    var response = responseQueue.where((element) => element['id']==data['id']).toList();
-    if(response.length > 0){
-      responseQueue.remove(response);
-      return response[0]['model'] as T;
-    }
-  }
+  _sendPort.send([data, _responsePort.sendPort]);
+  return (await _responsePort.first)['model'];
 }
 
 
@@ -56,8 +46,11 @@ Future<T> sendRequest<T>(var data) async {
 void _entryFunction(SendPort sendPort) async{
   ReceivePort receivePort = ReceivePort();
   sendPort.send(receivePort.sendPort);
+  SendPort childSendPort;
   print('sendPort sent from network isolate');
-  receivePort.listen((data) async{
+  await for(var message in receivePort){
+    childSendPort = message[1];
+    var data = message[0];
     print('received request for id: '+ data['id'].toString());
     CALLTYPE call;
     Client client;
@@ -116,9 +109,9 @@ void _entryFunction(SendPort sendPort) async{
     }
     Map<String, dynamic> returnMap = {'model': modelClass, 'id': data['id']};
     print('returning');
-    sendPort.send(returnMap);
+    childSendPort.send(returnMap);
     print('return sent');
-  });
+  }
 
 }
 
