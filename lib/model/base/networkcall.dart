@@ -10,6 +10,16 @@ void networkInit(ClassSelector modelClassSelector){
   init(modelClassSelector);
 }
 
+Function _modifyToken = (token)=> token;
+
+void setTokenModifier({Function tokenModifier}){
+  _modifyToken = tokenModifier;
+}
+
+get _token => _modifyToken(TokenHandler.token);
+
+
+
 Future<T> request<T>(String route, {
   @required CALLTYPE call,
   Map<String, String> param,
@@ -19,7 +29,6 @@ Future<T> request<T>(String route, {
   http.Client client,
 }) async {
 
-  String token = await TokenHandler.token;
   Map<String, dynamic> data = {
     'route':route,
     'call':call,
@@ -28,7 +37,7 @@ Future<T> request<T>(String route, {
     'body':body,
     'auth':auth,
     'client':client,
-    'token': token
+    'token': _token
   };
   await isReady;
   dynamic response = await sendRequest(data);
