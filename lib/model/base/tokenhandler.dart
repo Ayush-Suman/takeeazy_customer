@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const String _TOKEN = 'Token';
-final FlutterSecureStorage _flutterSecureStorage = FlutterSecureStorage();
+FlutterSecureStorage _flutterSecureStorage = FlutterSecureStorage();
 
 String _token = "";
 

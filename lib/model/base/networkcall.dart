@@ -1,16 +1,13 @@
-import 'dart:math';
-
 import 'package:takeeazy_customer/model/base/URLRoutes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:takeeazy_customer/model/base/calltype.dart';
 import 'package:takeeazy_customer/model/base/httpworker.dart';
-import 'tokenhandler.dart';
+import 'package:takeeazy_customer/model/base/modelconstructor.dart';
+import 'package:takeeazy_customer/model/base/tokenhandler.dart' as TokenHandler;
 
-
-List<int> _ids = List();
-Random _random = Random();
-void networkInit(){
-  init();
+void networkInit(ClassSelector modelClassSelector){
+  init(modelClassSelector);
 }
 
 Future<T> request<T>(String route, {
@@ -18,19 +15,11 @@ Future<T> request<T>(String route, {
   Map<String, String> param,
   Map<String, dynamic> header,
   Map<String, dynamic> body,
-  bool auth=true,
+  bool auth=false,
   http.Client client,
 }) async {
 
-  print('request function called');
-  int rand = _random.nextInt(256);
-  while(_ids.contains(rand)){
-    rand = _random.nextInt(256);
-  }
-  _ids.add(rand);
-
-  print('request id: '+rand.toString());
-
+  String token = await TokenHandler.token;
   Map<String, dynamic> data = {
     'route':route,
     'call':call,
@@ -39,22 +28,18 @@ Future<T> request<T>(String route, {
     'body':body,
     'auth':auth,
     'client':client,
-    'id': rand
+    'token': token
   };
-  print('data map built');
   await isReady;
-  print('isolate ready');
   dynamic response = await sendRequest(data);
-  _ids.remove(rand);
   return response as T;
 }
 
-
 void authenticate(String token){
-  saveToken(token);
+  TokenHandler.saveToken(token);
 }
 
 void unauthenticate(){
-  deleteToken();
+  TokenHandler.deleteToken();
 }
 
