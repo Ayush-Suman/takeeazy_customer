@@ -1,5 +1,6 @@
-import 'package:takeeazy_customer/model/base/URLRoutes.dart' as Routes;
+import 'package:takeeazy_customer/model/base/URLRoutes.dart';
 import 'package:takeeazy_customer/model/base/modelclassselector.dart';
+import 'package:takeeazy_customer/model/containers/containersModel.dart';
 import 'package:takeeazy_customer/model/meta/metamodel.dart';
 import 'package:takeeazy_customer/model/stores/storesModel.dart';
 
@@ -7,12 +8,14 @@ import 'package:takeeazy_customer/model/stores/storesModel.dart';
 class ClassSelector extends ModelClassSelector{
   dynamic classSelector(String type, Map<String, dynamic> map){
     switch(type){
-      case Routes.getShops:
+      case URLRoutes.getShops:
         return ShopModel.fromJSON(map);
         break;
-      case Routes.getMeta:
+      case URLRoutes.getMeta:
         return MetaModel.fromJSON(map);
         break;
+      case URLRoutes.getContainers:
+        return ContainerModel.fromJSON(map);
       default: return map;
     }
   }

@@ -10,7 +10,7 @@ void main()async {
   test('custom http test', () async{
     print('test started');
     networkInit(ClassSelector());
-    await request(getMeta, call: CALLTYPE.GET, param: {'geo':'29.0000,77.700000'}).then((value) {print((value as MetaModel).city.cityName);});
+    await request(URLRoutes.getMeta, call: CALLTYPE.GET, param: {'geo':'29.0000,77.700000'}).then((value) {print((value as MetaModel).city.cityName);});
     print('response fetched');
   });
 }

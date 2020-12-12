@@ -1,17 +1,22 @@
+class URLRoutes {
 // Meta
-const String getMeta = '/api/user/meta';
+ static const String getMeta = '/api/user/meta';
 
 // OTP
-const String sendOTP = '/api/user/sendotp';
-const String verifyOTP = '/api/user/verifyotp';
+  static const String sendOTP = '/api/user/sendotp';
+  static const String verifyOTP = '/api/user/verifyotp';
 
 // Profile
-const String getProfile = '/api/user/profile';
+  static const String getProfile = '/api/user/profile';
 
 // Orders
-const String getShops = '/api/shop/stores';
+ static const String getShops = '/api/shop/stores';
+
+ // Containers
+  static const String getContainers = '';
 
 // Stores
 
 // Items
 
+}

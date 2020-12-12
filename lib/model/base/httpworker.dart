@@ -16,6 +16,7 @@ Isolate _isolate;
 Completer<void> _isolateReady = Completer<void>();
 Future<void> get isReady => _isolateReady.future;
 
+
 List<Map<String, dynamic>> responseQueue = List<Map<String, dynamic>>();
 
 void init(ClassSelector modelClassSelector) async {
