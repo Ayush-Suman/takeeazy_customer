@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:takeeazy_customer/model/meta/meta.dart';
 import 'package:takeeazy_customer/model/meta/metamodel.dart';
@@ -13,10 +14,17 @@ class HomeController extends ChangeNotifier{
   Future getLocationData() async{
     try{
       _position = await Geolocator.getCurrentPosition();
+      List<Address> addresses = await Geocoder.local.findAddressesFromCoordinates(Coordinates(_position.latitude, _position.longitude));
+      print(addresses);
+      if(addresses.length>0){
+        Address address = addresses[0];
+        city = address.locality;
+      }
       locationStatus = LocationStatus.Fetched;
     }catch(e){
       locationStatus = LocationStatus.Failed;
     }
+
     notifyListeners();
   }
 

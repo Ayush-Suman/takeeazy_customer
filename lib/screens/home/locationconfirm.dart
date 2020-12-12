@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:takeeazy_customer/controller/home/homecontroller.dart';
 
 class LocationConfirm extends StatelessWidget{
 
@@ -23,7 +25,7 @@ class LocationConfirm extends StatelessWidget{
           Row(
             children: [
               Icon(Icons.add_location_alt_sharp, size: 50,),
-              Text("City Name"),
+              Consumer<HomeController>(builder: (_, homeCont, child)=>Text(homeCont.city??"City Name")),
               FlatButton(onPressed: null, child: Text("Change"))
             ],),
           Text("Lorem Ipsum"),
