@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
       title: 'TakeEazy',
       theme: ThemeData(
           primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          bottomSheetTheme: BottomSheetThemeData(modalBackgroundColor: Colors.transparent)
+      ),
       initialRoute: TERoutes.home,
       onGenerateRoute: TERoutes.generateRoutes,
     );

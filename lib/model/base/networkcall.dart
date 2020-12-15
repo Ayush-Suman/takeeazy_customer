@@ -2,6 +2,7 @@ import 'package:takeeazy_customer/model/base/URLRoutes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:takeeazy_customer/model/base/calltype.dart';
+import 'package:takeeazy_customer/model/base/exception.dart';
 import 'package:takeeazy_customer/model/base/httpworker.dart';
 import 'package:takeeazy_customer/model/base/modelconstructor.dart';
 import 'package:takeeazy_customer/model/base/tokenhandler.dart' as TokenHandler;
@@ -41,6 +42,9 @@ Future<T> request<T>(String route, {
   };
   await isReady;
   dynamic response = await sendRequest(data);
+  if(response is ResponseException){
+    throw response;
+  }
   return response as T;
 }
 

@@ -32,9 +32,18 @@ void destroy() {
 }
 
 
-Future<T> sendRequest<T>(var data) async {
+Future<T> sendRequest<T>(Map<String, dynamic> data) async {
   ReceivePort _responsePort = ReceivePort();
-  _sendPort.send([data, _responsePort.sendPort]);
+  _sendPort.send([Map.of({
+    'route': data['route'],
+    'call':data['call'],
+    'param':data['param'],
+    //'header':data['header'],
+    'body':data['body'],
+    'auth':data['auth'],
+    //'client':data['client'],
+    //'token': data['token']
+   }), _responsePort.sendPort]);
   T returnValue = await _responsePort.first;
   _responsePort.close();
   return returnValue;
@@ -93,16 +102,19 @@ void _entryFunction(var meta) async{
     print(response.body);
     dynamic modelClass;
     dynamic decoded = jsonDecode(response.body);
-    if(decoded is List){
-      modelClass = List();
-      for(dynamic m in decoded){
-        modelClass.add(modelClassSelector.classSelector(route, m));
+    try{
+      if(decoded is List){
+        modelClass = List();
+        for(dynamic m in decoded){
+          modelClass.add(modelClassSelector.classSelector(route, m));
+        }
+      } else {
+        modelClass = modelClassSelector.classSelector(route, decoded);
       }
-    } else {
-      modelClass = modelClassSelector.classSelector(route, decoded);
+      childSendPort.send(modelClass);
+    }catch(e){
+      childSendPort.send(e);
     }
-    childSendPort.send(modelClass);
   }
-
 }
 
