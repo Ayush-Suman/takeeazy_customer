@@ -6,11 +6,11 @@ import 'package:takeeazy_customer/model/meta/meta.dart';
 import 'package:takeeazy_customer/model/meta/metamodel.dart';
 
 
-class HomeController extends ChangeNotifier{
+class HomeController with ChangeNotifier{
   String city;
   String addressLine;
+  final locationController = LocationController();
   bool serviceAvailable;
-  LocationStatus locationStatus = LocationStatus.Fetching;
   Position _position = Position(longitude: 0.0, latitude: 0.0);
 
 
@@ -23,13 +23,12 @@ class HomeController extends ChangeNotifier{
         Address address = addresses[0];
         city = address.locality;
         addressLine = address.addressLine;
+        notifyListeners();
       }
-      locationStatus = LocationStatus.Fetched;
+      locationController._newLocationStatus = LocationStatus.Fetched;
     }catch(e){
-      locationStatus = LocationStatus.Failed;
+      locationController._newLocationStatus = LocationStatus.Failed;
     }
-
-    notifyListeners();
   }
 
 
@@ -39,18 +38,31 @@ class HomeController extends ChangeNotifier{
       MetaModel metaModel = await Meta.getMetaInfo(
           longitude: _position.longitude, latitude: _position.latitude);
       city = metaModel.city.cityName;
+      notifyListeners();
     }catch(e){
       if(e is ResponseException){
         if(e.msg=="We are not available in your city yet."){
           serviceAvailable=false;
+          notifyListeners();
         }
       }
     }
-    locationStatus = LocationStatus.Done;
+    locationController._newLocationStatus = LocationStatus.Done;
     print("Fetched Meta Info");
-    notifyListeners();
   }
 
+}
+
+
+class LocationController with ChangeNotifier{
+  LocationStatus locationStatus = LocationStatus.Fetching;
+
+  set _newLocationStatus(v){
+    if(v!=locationStatus){
+      locationStatus = v;
+      notifyListeners();
+    }
+  }
 
 }
 

@@ -39,13 +39,17 @@ class MyApp extends StatelessWidget {
 class TERoutes {
   static const home = '/';
   static const map = 'map';
+  static final homeController = HomeController();
 
   static Route<dynamic> generateRoutes(RouteSettings settings){
     switch(settings.name){
       case home:
         return MaterialPageRoute(
-          builder: (_) => ChangeNotifierProvider(
-            create: (_)=>HomeController(),
+          builder: (_) => MultiProvider(
+            providers:[
+              ChangeNotifierProvider.value(value:homeController,),
+              ChangeNotifierProvider.value(value: homeController.locationController)
+            ],
             builder: (_, a)=> Home()));
       case map:
         Position _position = settings.arguments as Position;

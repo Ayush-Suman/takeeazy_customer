@@ -3,7 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/home/homecontroller.dart';
 import 'package:takeeazy_customer/main.dart';
-
+import 'package:takeeazy_customer/model/meta/metamodel.dart';
+import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/home/locationconfirm.dart';
 
 
@@ -17,34 +18,29 @@ class Home extends StatelessWidget {
     final homeCont = Provider.of<HomeController>(context, listen: false);
     homeCont.getLocationData();
     print("Home Screen");
-    if (homeCont.locationStatus == LocationStatus.Failed) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        Navigator.pushNamed(context, TERoutes.map);
-      });
-    }
 
-    void _showBottom() {
-      showModalBottomSheet(context: context, isDismissible:false, builder: (_) {
-        return ChangeNotifierProvider.value(value: homeCont, builder: (_, a)=>LocationConfirm(height, width),);
-      });
-    }
 
-    return Scaffold();
+
+    return Scaffold(
+      body: Consumer<LocationController>(builder: (_, locationCont, child){
+        print('rebuilding location');
+        if (locationCont.locationStatus == LocationStatus.Failed) {
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            Navigator.pushNamed(context, TERoutes.map);
+          });
+        }
+        if(locationCont.locationStatus==LocationStatus.Fetched){
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            print('Opening Modal Sheet');
+            showModalBottomSheet(context: context, isDismissible:false, builder: (_) {
+              return ChangeNotifierProvider.value(
+                value: homeCont,
+                builder: (_, a)=>LocationConfirm(height, width),);
+            });
+          });
+        }
+        return Container(child: Center(child: TEText("Random Widget"),));
+      },)
+    );
   }
-
-  var oldWidget = Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-          child: Consumer<HomeController>(
-              builder: (_, homeCont, child) {WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                if(homeCont.locationStatus==LocationStatus.Fetched){
-                  // _showBottom();
-                }
-              });
-              return Text(homeCont.city ?? 'Fetching...');
-              })
-      )
-  );
-
-
 }
