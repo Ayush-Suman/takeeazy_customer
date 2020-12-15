@@ -8,8 +8,10 @@ class TEButton extends StatelessWidget{
   final double width;
   final TEText text;
   final Function onPressed;
+  final bool colored;
+  final bool rounded;
 
-  TEButton({this.height=50, this.width=100, this.text, this.onPressed});
+  TEButton({this.height=50, this.width=100, this.text, this.onPressed, this.colored=true, this.rounded=true});
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +19,15 @@ class TEButton extends StatelessWidget{
         height: height,
         width: width,
         child: FlatButton(
-          shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))),
+          shape: rounded?RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))):null,
             onPressed: onPressed,
             child: text,
         ),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            gradient: LinearGradient(
+          color: colored?null:Color(0xffaaaaaa),
+            borderRadius: rounded?BorderRadius.all(Radius.circular(8)):null,
+            gradient: colored?LinearGradient(
                 begin:  Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
@@ -33,7 +36,7 @@ class TEButton extends StatelessWidget{
                   TakeEazyColors.gradient3Color,
                   TakeEazyColors.gradient4Color
                 ]
-            )
+            ):null
         )
     );
   }

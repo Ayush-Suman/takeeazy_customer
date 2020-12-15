@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/home/homecontroller.dart';
-import 'package:takeeazy_customer/model/base/URLRoutes.dart';
-import 'package:takeeazy_customer/model/base/calltype.dart';
+import 'package:takeeazy_customer/controller/homecontroller.dart';
+import 'package:takeeazy_customer/controller/locationcontroller.dart';
+import 'package:takeeazy_customer/controller/mapcontroller.dart';
 import 'package:takeeazy_customer/model/base/modelconstructor.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart';
-import 'package:takeeazy_customer/model/meta/metamodel.dart';
 import 'package:takeeazy_customer/screens/home/home.dart';
-import 'package:takeeazy_customer/screens/location/locationselect.dart';
+import 'package:takeeazy_customer/screens/map/locationselect.dart';
 
 
 
@@ -39,11 +38,15 @@ class MyApp extends StatelessWidget {
 class TERoutes {
   static const home = '/';
   static const map = 'map';
-  static final homeController = HomeController();
+  static final currentLocation =CurrentLocation();
+  static final homeController = HomeController(currentLocation);
+  static final mapController = MapController();
+
 
   static Route<dynamic> generateRoutes(RouteSettings settings){
     switch(settings.name){
       case home:
+
         return MaterialPageRoute(
           builder: (_) => MultiProvider(
             providers:[
@@ -52,9 +55,13 @@ class TERoutes {
             ],
             builder: (_, a)=> Home()));
       case map:
-        Position _position = settings.arguments as Position;
         return MaterialPageRoute(
-          builder: (_)=>LocationSelect(_position));
+          builder: (_)=>MultiProvider(
+            providers:[
+              ChangeNotifierProvider.value(value: currentLocation),
+              ChangeNotifierProvider.value(value: mapController)
+            ],
+          builder:(_, a)=> LocationSelect()));
       default: return MaterialPageRoute(
           builder: (_) => Scaffold(body: Center(child: Text("No such route as ${settings.name}"),),));
     }

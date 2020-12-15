@@ -14,7 +14,7 @@
         android:label="takeeazy_customer"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAJLHL-lOIoTvKHrPg4OEJJdO2W9QKfF00" />
+            android:value="AIzaSyA13QY6gYzhsWPjq87H1qXlJ82M6mOf7BM" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/home/homecontroller.dart';
+import 'package:takeeazy_customer/controller/homecontroller.dart';
 import 'package:takeeazy_customer/main.dart';
-import 'package:takeeazy_customer/model/meta/metamodel.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/home/locationconfirm.dart';
 

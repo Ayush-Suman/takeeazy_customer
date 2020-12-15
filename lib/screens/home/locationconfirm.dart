@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/home/homecontroller.dart';
+import 'package:takeeazy_customer/controller/homecontroller.dart';
+import 'package:takeeazy_customer/controller/locationcontroller.dart';
+import 'package:takeeazy_customer/main.dart';
 import 'package:takeeazy_customer/screens/components/custombutton.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
@@ -28,7 +30,16 @@ class LocationConfirm extends StatelessWidget{
         children: [
           Row(
             children: [
-              Padding(padding: EdgeInsets.symmetric(vertical: 20, horizontal: 12), child: Icon(Icons.location_on, size: 40, color: TakeEazyColors.gradient2Color,)),
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 12),
+                  child: Icon(
+                    Icons.location_on,
+                    size: 40,
+                    color: TakeEazyColors.gradient2Color,
+                  )
+              ),
               Consumer<HomeController>(
                   builder: (_, homeCont, child)=>
                       ConstrainedBox(
@@ -41,9 +52,25 @@ class LocationConfirm extends StatelessWidget{
                           maxLines: 1,
                         ),)),
               Expanded(child: Container()),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 20), child:FlatButton(onPressed: (){}, child: TEText("Change"), color: Color(0xffeeeeee),))
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child:FlatButton(
+                    onPressed: (){
+                      Navigator.pushNamed(context, TERoutes.map);
+                    },
+                    child: TEText("Change"),
+                    color: Color(0xffeeeeee),
+                  ))
             ],),
-          Consumer<HomeController>(builder: (_, homeCont, child)=> ConstrainedBox(constraints:BoxConstraints(maxWidth: width*0.8), child:TEText(homeCont.addressLine))),
+          Consumer<HomeController>(
+              builder: (_, homeCont, child)=>
+                  ConstrainedBox(
+                      constraints:BoxConstraints(
+                          maxWidth: width*0.8),
+                      child:TEText(
+                          homeCont.addressLine)
+                  )
+          ),
           Expanded(child: Container()),
           Padding(
             padding: EdgeInsets.all(20),
