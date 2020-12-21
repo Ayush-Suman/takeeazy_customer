@@ -19,8 +19,6 @@ void setTokenModifier({Function tokenModifier}){
 
 get _token => _modifyToken(TokenHandler.token);
 
-
-
 Future<T> request<T>(String route, {
   @required CALLTYPE call,
   Map<String, String> param,
@@ -55,4 +53,5 @@ void authenticate(String token){
 void unauthenticate(){
   TokenHandler.deleteToken();
 }
+
 

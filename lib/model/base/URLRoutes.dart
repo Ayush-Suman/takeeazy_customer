@@ -13,7 +13,7 @@ class URLRoutes {
  static const String getShops = '/api/shop/stores';
 
  // Containers
-  static const String getContainers = '';
+  static const String getContainers = '/api/user/container';
 
 // Stores
 

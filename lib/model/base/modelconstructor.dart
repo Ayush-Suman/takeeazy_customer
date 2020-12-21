@@ -7,11 +7,11 @@ import 'package:takeeazy_customer/model/stores/storesModel.dart';
 
 
 class ClassSelector extends ModelClassSelector{
-  dynamic classSelector(String type, Map<String, dynamic> map){
+  dynamic classSelector(String route, Map<String, dynamic> map){
     if(map['message'] != null) {
       throw ResponseException(map['message'] as String);
     }
-    switch(type){
+    switch(route){
       case URLRoutes.getShops:
         return ShopModel.fromJSON(map);
         break;
@@ -20,6 +20,8 @@ class ClassSelector extends ModelClassSelector{
         break;
       case URLRoutes.getContainers:
         return ContainerModel.fromJSON(map);
+      case URLRoutes.getShops:
+        return ShopModel.fromJSON(map);
       default: return map;
     }
   }

@@ -1,5 +1,5 @@
 enum CALLTYPE{
   GET,
-  POST
-
+  POST,
+  DEL
 }

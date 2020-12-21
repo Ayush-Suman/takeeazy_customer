@@ -4,6 +4,7 @@ import 'package:takeeazy_customer/model/base/networkcall.dart';
 
 
 class ContainerServices {
+
   getContainers() async{
     request(URLRoutes.getContainers, call: CALLTYPE.GET);
   }

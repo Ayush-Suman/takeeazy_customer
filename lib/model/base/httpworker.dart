@@ -98,6 +98,13 @@ void _entryFunction(var meta) async{
         post(uri, headers: headerData, body: body) :
         client.post(uri, headers: headerData, body: body));
         break;
+
+      case CALLTYPE.DEL:
+        response = await (client==null?
+        delete(uri, headers: headerData) :
+        client.delete(uri, headers: headerData)
+        );
+        break;
     }
     print(response.body);
     dynamic modelClass;
