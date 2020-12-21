@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:takeeazy_customer/caching/caching.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
@@ -36,10 +36,12 @@ class ListStatusController with ChangeNotifier{
   }
 }
 
+
+// TODO: Change Location to self implemented Place API parsed class
 class AddressListController with ChangeNotifier {
-  List<Address> _addresses = List();
+  List<Location> _addresses = List();
   get addresses => _addresses;
-  set addresses(List<Address> a) {
+  set addresses(List<Location> a) {
     _addresses = a;
     notifyListeners();
   }
@@ -66,19 +68,22 @@ class LocationController with ChangeNotifier{
   final PositionController positionController = PositionController();
   final LocationStatusController locationStatusController = LocationStatusController();
 
+  final FocusNode focusNode = FocusNode();
 
 
   bool serviceAvailable;
 
- void selectAddress(Address address){
-    positionController.position = Position(latitude: address.coordinates.latitude, longitude: address.coordinates.longitude);
-    city.text = address.locality;
-    addressLine.text = address.addressLine;
+  // TODO: Change to use self implemented Place API parsed class
+ void selectAddress(Location address){
+    positionController.position = Position(latitude: address.latitude, longitude: address.longitude);
+    city.text = address.latitude as String;
+    addressLine.text = address.longitude as String;
+    focusNode.unfocus();
  }
 
+ // TODO: Call Place API for autocompletion
   Future getLocationFromAddress(String query) async{
-    listController.addresses = await Geocoder.local.findAddressesFromQuery(query);
-    notifyListeners();
+    listController.addresses = await locationFromAddress(query);
   }
 
   Future getMetaData() async {
@@ -111,15 +116,15 @@ class LocationController with ChangeNotifier{
 
   Future getAddress() async {
     try {
-      listController.addresses =
-      await Geocoder.local.findAddressesFromCoordinates(Coordinates(
+      List<Placemark> placemarks =
+      await placemarkFromCoordinates(
           positionController.position.latitude,
-          positionController.position.longitude));
+          positionController.position.longitude);
       print("Get Address "+listController.addresses.toString());
       if (listController.addresses.length > 0) {
-        Address address = listController.addresses[0];
+        Placemark address = listController.addresses[0];
         city.text = address.locality;
-        addressLine.text = address.addressLine;
+        addressLine.text = address.name;
         notifyListeners();
       }
     } catch (e) {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,18 +14,23 @@ class LocationConfirm extends StatelessWidget{
   final double width;
   LocationConfirm({@required this.height, @required this.width});
 
-  final FocusNode focusNode = FocusNode();
-
   @override
   Widget build(BuildContext context) {
     final top = MediaQuery.of(context).padding.top;
     final LocationController _locationController = Provider.of<LocationController>(context, listen: false);
     _locationController.getLocationData().then((value) => print("Rebuilt Bottom Sheet"));
+    Timer timer = Timer(Duration(seconds: 1), (){print("Timer Ended");});
+
     _locationController.addressLine.addListener((){
-      _locationController.getLocationFromAddress(_locationController.addressLine.text);
+      timer.cancel();
+      timer = Timer(Duration(seconds: 1), (){
+        print("Getting Address suggestions for "+_locationController.addressLine.text);
+        _locationController.getLocationFromAddress(_locationController.addressLine.text);
+      });
+
     });
 
-    focusNode.addListener(() {
+    _locationController.focusNode.addListener(() {
       _locationController.listStatusController.openList(true);
     });
 
@@ -39,6 +46,7 @@ class LocationConfirm extends StatelessWidget{
         Column(children:[
           lscont.listOpen
               ? Container(
+            width: width,
               height: height-size.height-60,
               color: Colors.white,
               child:Padding(
@@ -52,6 +60,7 @@ class LocationConfirm extends StatelessWidget{
                                 lscont.openList(false);
                                 _locationController.selectAddress(lcont.addresses[pos]);
                               },
+                                  // TODO: Change address to self implemented Place API parsed class
                                   child: TEText(text: lcont.addresses[pos].addressLine,)),
                               itemCount: lcont.addresses.length,
                             ),
@@ -117,7 +126,7 @@ class LocationConfirm extends StatelessWidget{
                                     onPressed: (){
                                       _locationController.listStatusController.openList(true);
                                       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                                        focusNode.requestFocus();
+                                        _locationController.focusNode.requestFocus();
                                       });
 
                                     },
@@ -181,7 +190,7 @@ class LocationConfirm extends StatelessWidget{
                                     child:FlatButton(
                                       onPressed: (){
                                         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                                          focusNode.requestFocus();
+                                          _locationController.focusNode.requestFocus();
                                         });
 
                                       },
@@ -212,9 +221,7 @@ class LocationConfirm extends StatelessWidget{
                 })))
 
         ]),
-      child: Consumer<LocationController>(
-          builder: (_, locCont, child)=>
-              ConstrainedBox(
+      child: ConstrainedBox(
                   constraints:BoxConstraints(
                       maxHeight: 70,
                       maxWidth: width*0.8),
@@ -227,14 +234,14 @@ class LocationConfirm extends StatelessWidget{
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child:TextField(
-                        focusNode: focusNode,
+                        focusNode: _locationController.focusNode,
                         decoration: InputDecoration(
                           hintText: "Enter Address",
                           border: InputBorder.none,
                         ),
-                        controller : locCont.addressLine)
+                        controller : _locationController.addressLine)
               ))
-      ),),
+      ),
        ));
   }
 }

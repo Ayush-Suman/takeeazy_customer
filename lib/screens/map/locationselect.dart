@@ -33,15 +33,8 @@ class _LocationSelectState extends State<LocationSelect>{
   final height = MediaQuery.of(context).size.height;
 
   final LocationController _locationController = Provider.of<LocationController>(context, listen: false);
-  final PositionController _positionController = _locationController.positionController;
-  GoogleMapController googleLocationController;
 
-  final FocusNode focusNode = FocusNode();
 
-  focusNode.addListener(() {
-    print("Received Focus "+focusNode.hasFocus.toString());
-    _locationController.listStatusController.openList(focusNode.hasFocus);
-  });
 
   final Size size = (TextPainter(
       text: TextSpan(text: "Hellog"),
