@@ -27,7 +27,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-          bottomSheetTheme: BottomSheetThemeData(modalBackgroundColor: Colors.transparent)
+          bottomSheetTheme: BottomSheetThemeData(modalBackgroundColor: Colors.transparent),
+      appBarTheme: AppBarTheme( iconTheme: IconThemeData(
+        color: Color(0xff3B6E9E),
+      ),color: Colors.white,elevation: 0,),
       ),
       initialRoute: TERoutes.home,
       onGenerateRoute: TERoutes.generateRoutes,

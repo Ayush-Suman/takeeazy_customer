@@ -58,7 +58,7 @@ class Home extends StatelessWidget {
                             text: 'Instant delivery to your doorstep',
                             fontColor: Color(0xff3b6e9e),
                             fontWeight: FontWeight.w500,
-                            fontSize: 19,
+                            fontSize: 18.96,
                           ),
                         ),
                         Padding(
@@ -96,7 +96,7 @@ class Home extends StatelessWidget {
                       text: 'Top picks for you',
                       fontColor: Color(0xff3b6e9e),
                       fontWeight: FontWeight.w500,
-                      fontSize: 19,
+                      fontSize: 18.96,
                     ),
                   ),
                   GridView.builder(
