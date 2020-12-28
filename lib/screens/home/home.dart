@@ -5,6 +5,7 @@ import 'package:takeeazy_customer/controller/homecontroller.dart';
 import 'package:takeeazy_customer/screens/components/categoryWidget.dart';
 import 'package:takeeazy_customer/screens/components/customsearchbar.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
+import 'package:takeeazy_customer/screens/components/hamburgerButton.dart';
 import 'package:takeeazy_customer/screens/components/servicesWidget.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
 
@@ -16,19 +17,26 @@ class Home extends StatelessWidget {
     Provider.of<HomeController>(context, listen: false).updateValues();
 
     return Scaffold(
+      appBar: AppBar(
+        title: Consumer<HomeController>(
+          builder: (_, hcont, child) => Padding(
+            padding: EdgeInsets.all(20),
+            child: TEText(
+              controller: hcont.city,
+              fontSize: 20,
+              fontColor: TakeEazyColors.gradient2Color,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        actions: [
+          HamBurgerButton(),
+        ],
+      ),
       body: Consumer<ServiceableArea>(
         builder: (_, serACont, child) => serACont.serviceableArea
             ? ListView(
                 children: [
-                  Consumer<HomeController>(
-                      builder: (_, hcont, child) => Padding(
-                          padding: EdgeInsets.all(20),
-                          child: TEText(
-                            controller: hcont.city,
-                            fontSize: 20,
-                            fontColor: TakeEazyColors.gradient2Color,
-                            fontWeight: FontWeight.w700,
-                          ))),
                   SearchBar(),
                   Padding(
                     padding:

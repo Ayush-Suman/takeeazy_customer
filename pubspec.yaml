@@ -65,6 +65,7 @@ flutter:
     - assets/meat and Fish.png
     - assets/medicines.png
     - assets/pet Care.png
+    - assets/hamburger.png
   fonts:
     - family: Rubik
       fonts:
