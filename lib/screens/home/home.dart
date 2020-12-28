@@ -110,11 +110,11 @@ class Home extends StatelessWidget {
                     itemBuilder: (context, index) => Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: Colors.grey,
+                        color: Colors.grey[600],
                       ),
                     ),
                     itemCount: 9,
-                  )
+                  ),
                 ],
               )
             : Center(

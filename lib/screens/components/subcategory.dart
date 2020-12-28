@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:takeeazy_customer/screens/category/category.dart';
 
 import 'customtext.dart';
 
-class CategoryWidget extends StatelessWidget {
+class SubCategoryWidget extends StatelessWidget {
   final String widgetName;
-  final bool type;
 
-  const CategoryWidget({
+  const SubCategoryWidget({
     this.widgetName,
-    this.type,
   });
 
   @override
@@ -18,15 +15,7 @@ class CategoryWidget extends StatelessWidget {
     return Expanded(
       flex: 1,
       child: GestureDetector(
-        onTap: () {
-          //will be shifted to named routes
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Category(),
-            ),
-          );
-        },
+        onTap: () {},
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
@@ -46,9 +35,9 @@ class CategoryWidget extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.asset(
-                  'assets/' + widgetName + '.png',
+                  'assets/pet Care.png',
                   fit: BoxFit.contain,
-                  height: type ? height * 0.16 : height * 0.13,
+                  height: height * 0.13,
                   errorBuilder: (context, error, stackTrace) => TEText(
                       text: widgetName[0].toUpperCase() +
                           widgetName.substring(1)),
