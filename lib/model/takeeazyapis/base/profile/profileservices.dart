@@ -1,14 +1,14 @@
-import 'package:takeeazy_customer/model/base/URLRoutes.dart';
+
 import 'package:takeeazy_customer/model/base/calltype.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart';
-import 'package:takeeazy_customer/model/profile/profileModel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/base/URLRoutes.dart';
 
 
 
 
 class ProfileServices {
 
-  Future<Profile> getProfile() async{
+  Future getProfile() async{
     request(URLRoutes.getProfile, call: CALLTYPE.GET);
   }
 

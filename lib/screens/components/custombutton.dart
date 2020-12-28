@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
+import 'package:takeeazy_customer/controller/locationcontroller.dart';
 
 class TEButton extends StatelessWidget{
   final double height;

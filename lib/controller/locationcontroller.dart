@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:takeeazy_customer/caching/caching.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
 import 'package:takeeazy_customer/model/base/exception.dart';
 import 'package:takeeazy_customer/model/dialog/dialogservice.dart';
-import 'package:takeeazy_customer/model/meta/meta.dart';
-import 'package:takeeazy_customer/model/meta/metamodel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/base/stores/storesModel.dart';
 
 
 enum LocationStatus{
@@ -75,25 +73,25 @@ class LocationController with ChangeNotifier{
 
   // TODO: Change to use self implemented Place API parsed class
  void selectAddress(Location address){
-    positionController.position = Position(latitude: address.latitude, longitude: address.longitude);
-    city.text = address.latitude as String;
-    addressLine.text = address.longitude as String;
+    //positionController.position = Position(latitude: , longitude: address.longitude);
+   // city.text = address. as String;
+    //addressLine.text = address.longitude as String;
     focusNode.unfocus();
  }
 
  // TODO: Call Place API for autocompletion
   Future getLocationFromAddress(String query) async{
-    listController.addresses = await locationFromAddress(query);
+    listController.addresses = await getLocationFromAddress(query);
   }
 
   Future getMetaData() async {
     print("Fetching Meta Info");
     locationStatusController._newLocationStatus = LocationStatus.Fetching;
     try {
-      MetaModel metaModel = await Meta.getMetaInfo(
-          longitude: positionController.position.longitude,
-          latitude: positionController.position.latitude);
-      city.text = metaModel.city.cityName;
+      //MetaModel metaModel = await Meta.getMetaInfo(
+       //   longitude: positionController.position.longitude,
+        //  latitude: positionController.position.latitude);
+      //city.text = metaModel.city.cityName;
       serviceAvailable = true;
       locationStatusController._newLocationStatus = LocationStatus.Fetched;
           notifyListeners();
@@ -116,16 +114,16 @@ class LocationController with ChangeNotifier{
 
   Future getAddress() async {
     try {
-      List<Placemark> placemarks =
-      await placemarkFromCoordinates(
-          positionController.position.latitude,
-          positionController.position.longitude);
+      //List<Address> placemarks =
+      //await placemarkFromCoordinates(
+     //     positionController.position.latitude,
+       //   positionController.position.longitude);
       print("Get Address "+listController.addresses.toString());
       if (listController.addresses.length > 0) {
-        Placemark address = listController.addresses[0];
-        city.text = address.locality;
-        addressLine.text = address.name;
-        notifyListeners();
+      //  Placemark address = listController.addresses[0];
+       // city.text = address.locality;
+        // addressLine.text = address.name;
+        // notifyListeners();
       }
     } catch (e) {
       print(e.toString());

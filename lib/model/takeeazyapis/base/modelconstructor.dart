@@ -1,12 +1,17 @@
-import 'package:takeeazy_customer/model/base/URLRoutes.dart';
+
 import 'package:takeeazy_customer/model/base/exception.dart';
 import 'package:takeeazy_customer/model/base/modelclassselector.dart';
-import 'package:takeeazy_customer/model/containers/containersModel.dart';
-import 'package:takeeazy_customer/model/meta/metamodel.dart';
-import 'package:takeeazy_customer/model/stores/storesModel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/base/URLRoutes.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/base/containers/containersModel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/base/meta/metamodel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/base/stores/storesModel.dart';
+
+
 
 
 class ClassSelector extends ModelClassSelector{
+  ClassSelector():super("takeeazy-backend.herokuapp.com");
+
   dynamic classSelector(String route, Map<String, dynamic> map){
     if(map['message'] != null) {
       throw ResponseException(map['message'] as String);

@@ -7,10 +7,11 @@ class TextController with ChangeNotifier{
 
   set text(String t){
     if(t != text){
-      _text = t;
+      text = t;
       notifyListeners();
     }
   }
-
 }
+
+
 

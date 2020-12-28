@@ -108,17 +108,15 @@ class LocationConfirm extends StatelessWidget{
                                   color: TakeEazyColors.gradient2Color,
                                 )
                             ),
-                            Consumer<LocationController>(
-                                builder: (_, locCont, child)=>
                                     ConstrainedBox(
                                       constraints: BoxConstraints(maxWidth: width*0.5) ,
                                       child:TEText(
-                                        controller: locCont.city,
+                                        controller: _locationController.city,
                                         fontColor: TakeEazyColors.gradient2Color,
                                           fontWeight: FontWeight.w700,
                                           fontSize: 24,
                                           maxLines: 1,
-                                        ),)),
+                                        ),),
                               Expanded(child: Container()),
                               Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 20),
@@ -173,17 +171,15 @@ class LocationConfirm extends StatelessWidget{
                                       color: TakeEazyColors.gradient2Color,
                                     )
                                 ),
-                                Consumer<LocationController>(
-                                    builder: (_, locCont, child)=>
                                         ConstrainedBox(
                                           constraints: BoxConstraints(maxWidth: width*0.5) ,
                                           child:TEText(
-                                            controller: locCont.city,
+                                            controller: _locationController.city,
                                             fontColor: TakeEazyColors.gradient2Color,
                                             fontWeight: FontWeight.w700,
                                             fontSize: 24,
                                             maxLines: 1,
-                                          ),)),
+                                          ),),
                                 Expanded(child: Container()),
                                 Padding(
                                     padding: EdgeInsets.symmetric(horizontal: 20),

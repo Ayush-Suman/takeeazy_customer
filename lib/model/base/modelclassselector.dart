@@ -1,4 +1,7 @@
 abstract class ModelClassSelector{
+  ModelClassSelector(this.URL);
+
+  final String URL;
   dynamic classSelector(String route, Map<String, dynamic> map);
   // Define classSelector which takes route as first parameter and response value of type map as the second value.
   // This method returns constructed model class based on the first parameter by using the values in the map.

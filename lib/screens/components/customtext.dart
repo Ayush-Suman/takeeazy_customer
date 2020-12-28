@@ -15,11 +15,10 @@ class TEText extends StatelessWidget{
         this.fontColor,
         this.fontWeight,
         this.fontSize,
-        this.maxLines});
+        this.maxLines}):assert(!(text!=null && controller!=null));
 
   @override
   Widget build(BuildContext context) {
-    assert(!(text!=null && controller!=null));
 
     return ChangeNotifierProvider.value(
       value: controller,

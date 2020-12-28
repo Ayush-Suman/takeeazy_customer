@@ -9,7 +9,6 @@ import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/map/locationconfirm.dart';
 import 'package:takeeazy_customer/screens/map/mapwithmarker.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
-import 'package:google_maps_flutter_platform_interface/src/types/marker_updates.dart';
 
 class LocationSelect extends StatefulWidget{
 
@@ -19,10 +18,6 @@ class LocationSelect extends StatefulWidget{
 }
 
 class _LocationSelectState extends State<LocationSelect>{
-
-
-
-
 
 @override
   Widget build(BuildContext context) {
