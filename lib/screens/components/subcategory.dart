@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:takeeazy_customer/screens/item/item.dart';
 
 import 'customtext.dart';
 
@@ -15,7 +16,15 @@ class SubCategoryWidget extends StatelessWidget {
     return Expanded(
       flex: 1,
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          // will be shifted to named routes
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Item(),
+            ),
+          );
+        },
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
@@ -34,8 +43,8 @@ class SubCategoryWidget extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Image.asset(
-                  'assets/pet Care.png',
+                child: Image.network(
+                  'https://ik.imagekit.io/dunzo/tr:w-488,h-360_home_icon/dunzo/icons/newHome/promoBanner/kitImageUrl/largeIcons/default_grocery_secondary2_1607672711525.png',
                   fit: BoxFit.contain,
                   height: height * 0.13,
                   errorBuilder: (context, error, stackTrace) => TEText(

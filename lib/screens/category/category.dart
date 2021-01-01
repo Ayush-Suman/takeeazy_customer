@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:takeeazy_customer/screens/components/customsearchbar.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/components/shopCard.dart';
-import 'package:takeeazy_customer/screens/item/item.dart';
+import 'package:takeeazy_customer/screens/shop/shop.dart';
 
 class Category extends StatelessWidget {
   @override
@@ -11,10 +11,7 @@ class Category extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: TEText(
-          fontWeight: FontWeight.normal,
           text: 'Daily Groceries',
-          fontSize: 18.96,
-          fontColor: Color(0xff3B6E9E),
         ),
       ),
       body: Column(
@@ -52,7 +49,9 @@ class Category extends StatelessWidget {
                   // will be shifted to named routes later
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Item()),
+                    MaterialPageRoute(
+                      builder: (context) => Shop(),
+                    ),
                   );
                 },
               ),
