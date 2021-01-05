@@ -12,41 +12,45 @@ class _OrderState extends State<Order> {
   Razorpay _razorpay = Razorpay();
   var options = {
     'key': 'rzp_test_c0Q0CAbLzJuzhU',
-    'amount': 5, //in the smallest currency sub-unit.
+    'amount': 500, //in the smallest currency sub-unit.
     'name': 'takeEazy',
     'order_id': 'order_GKmEalDctR6tKg', // Generate order_id using Orders API
-    'description': 'Milk',
+    'description': 'Milk packet',
     'timeout': 600, // in seconds
-    'prefill': {'contact': '8306362098', 'email': 'addepalli.005@gmail.com'}
   };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        color: Colors.deepOrangeAccent,
-        padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            TEText(
-              text: 'CONTINUE',
-              fontSize: 20,
-              fontWeight: FontWeight.w900,
-              fontColor: Colors.white,
-            ),
-          ],
+      floatingActionButton: InkWell(
+        onTap: () {
+          _razorpay.open(options);
+          print('PavanKalyan');
+        },
+        child: Container(
+          color: Colors.deepOrangeAccent,
+          padding: const EdgeInsets.all(10),
+          margin: const EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              TEText(
+                text: 'CONTINUE',
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                fontColor: Colors.white,
+              ),
+            ],
+          ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: Scrollbar(
+        controller: ScrollController(),
+        isAlwaysShown: true,
+        child: ListView(
           children: [
-            const SizedBox(
-              height: 40,
-            ),
             Container(
               margin: const EdgeInsets.all(10),
               child: Row(
