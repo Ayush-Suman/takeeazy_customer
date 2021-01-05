@@ -14,9 +14,13 @@ class _OrderState extends State<Order> {
     'key': 'rzp_test_c0Q0CAbLzJuzhU',
     'amount': 500, //in the smallest currency sub-unit.
     'name': 'takeEazy',
-    'order_id': 'order_GKmEalDctR6tKg', // Generate order_id using Orders API
+    'order_id': 'order_GLYM8hYUKIKBnG', // Generate order_id using Orders API
     'description': 'Milk packet',
     'timeout': 600, // in seconds
+    'prefill': {
+      'contact': '8888888888',
+      'email': 'test@razorpay.com'
+    }
   };
 
   @override
