@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/homecontroller.dart';
 import 'package:takeeazy_customer/controller/locationcontroller.dart';
-import 'package:takeeazy_customer/model/base/httpworker.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart' as NetworkCalls;
 import 'package:takeeazy_customer/model/dialog/dialogmanager.dart';
-import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
+import 'package:takeeazy_customer/screens/home/home.dart';
 import 'package:takeeazy_customer/screens/map/locationselect.dart';
+import 'package:takeeazy_customer/screens/order/order.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,13 +46,14 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      initialRoute: TERoutes.home,
+      initialRoute: TERoutes.order,
       onGenerateRoute: TERoutes.generateRoutes,
     );
   }
 }
 
 class TERoutes {
+  static const order = '/orders';
   static const home = '/';
   static const map = 'map';
   static final locationController = LocationController();
@@ -68,7 +69,7 @@ class TERoutes {
               ChangeNotifierProvider.value(
                   value: homeController.serviceableAreaController)
             ],
-            builder: (_, a) => BottomNav(),
+            builder: (_, a) => Home(),
           ),
         );
 
@@ -77,6 +78,8 @@ class TERoutes {
             builder: (_) => ChangeNotifierProvider.value(
                 value: locationController,
                 builder: (_, a) => LocationSelect()));
+      case order:
+        return MaterialPageRoute(builder: (context) => Order(),);
 
       default:
         return MaterialPageRoute(
