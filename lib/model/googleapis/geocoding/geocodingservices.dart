@@ -14,7 +14,5 @@ class GeocodingServices{
     return response;
   }
 
-
-
 }
 

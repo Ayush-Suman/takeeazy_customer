@@ -48,7 +48,7 @@ class TEResponse<T>{
   }
 
   Completer<T> _response = Completer();
-  get response => _response.future;
+  Future<T> get response => _response.future;
 
 }
 
@@ -84,6 +84,7 @@ Future<TEResponse<T>> request<T>(String route, {
     if(value is ResponseException){
       throw value;
     }
+    print("Value: "+T.toString());
     response._response.complete(value);
   });
   return response;

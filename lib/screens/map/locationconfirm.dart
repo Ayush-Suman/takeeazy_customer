@@ -9,30 +9,49 @@ import 'package:takeeazy_customer/screens/components/custombutton.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
 
-class LocationConfirm extends StatelessWidget{
+
+class LocationConfirm extends StatefulWidget{
+  LocationConfirm({this.height, this.width});
+
   final double height;
   final double width;
-  LocationConfirm({@required this.height, @required this.width});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _LocationConfirmState(height: height, width: width);
+  }
+}
+
+class _LocationConfirmState extends State{
+  final double height;
+  final double width;
+  _LocationConfirmState({@required this.height, @required this.width});
+
+  LocationController _locationController;
+
+  @override
+  void initState() {
+     _locationController = Provider.of<LocationController>(context, listen: false);
+     _locationController.getLocationData();
+     Timer timer = Timer(Duration(seconds: 1), (){print("Timer Ended");});
+     _locationController.addressLine.addListener((){
+       timer.cancel();
+       timer = Timer(Duration(seconds: 1), (){
+         print("Getting Address suggestions for "+_locationController.addressLine.text);
+         _locationController.getLocationFromAddress(_locationController.addressLine.text);
+       });
+
+     });
+
+     _locationController.focusNode.addListener(() {
+       _locationController.listStatusController.listOpen = _locationController.focusNode.hasFocus;
+     });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final top = MediaQuery.of(context).padding.top;
-    final LocationController _locationController = Provider.of<LocationController>(context, listen: false);
-    _locationController.getLocationData().then((value) => print("Rebuilt Bottom Sheet"));
-    Timer timer = Timer(Duration(seconds: 1), (){print("Timer Ended");});
-
-    _locationController.addressLine.addListener((){
-      timer.cancel();
-      timer = Timer(Duration(seconds: 1), (){
-        print("Getting Address suggestions for "+_locationController.addressLine.text);
-        _locationController.getLocationFromAddress(_locationController.addressLine.text);
-      });
-
-    });
-
-    _locationController.focusNode.addListener(() {
-      _locationController.listStatusController.openList(true);
-    });
 
     final Size size = (TextPainter(
         text: TextSpan(text: "Hellog"),
@@ -43,11 +62,11 @@ class LocationConfirm extends StatelessWidget{
         .size;
 
     return Container(child:Consumer<ListStatusController>(builder:(_, lscont, child)=>
-        Column(children:[
+        Stack(children:[
           lscont.listOpen
               ? Container(
             width: width,
-              height: height-size.height-60,
+              height: height,
               color: Colors.white,
               child:Padding(
                 padding: EdgeInsets.only(top: top),
@@ -57,23 +76,23 @@ class LocationConfirm extends StatelessWidget{
                         Consumer<AddressListController>(builder: (_, lcont, child)=>
                             ListView.builder(
                               itemBuilder: (_, pos)=>FlatButton(onPressed: (){
-                                lscont.openList(false);
+                                lscont.listOpen = false;
                                 _locationController.selectAddress(lcont.addresses[pos]);
                               },
-                                  // TODO: Change address to self implemented Place API parsed class
-                                  child: TEText(text: lcont.addresses[pos].addressLine,)),
+                                  child: TEText(text: lcont.addresses[pos].main+" "+lcont.addresses[pos].secondary,)),
                               itemCount: lcont.addresses.length,
                             ),
                         )
                 )
             )
           ) : Container(height: 0,),
-
+lscont.listOpen?Positioned(
+    bottom: MediaQuery.of(context).viewInsets.bottom,
+    left: width*0.1,
+    child: child):
           Container(
       width: width,
-      height: lscont.listOpen
-          ? size.height+60
-          : 240+size.height,
+      height: 240+size.height,
       decoration: BoxDecoration(
           color: Colors.white ,
           borderRadius: BorderRadius.only(
@@ -93,10 +112,7 @@ class LocationConfirm extends StatelessWidget{
 
                       case LocationStatus.Fetched:
                         return Column(
-                      children: [
-                        lscont.listOpen
-                            ? Container()
-                            : Row(
+                      children: [Row(
                           children: [
                             Padding(
                                 padding: EdgeInsets.symmetric(
@@ -122,7 +138,7 @@ class LocationConfirm extends StatelessWidget{
                                   padding: EdgeInsets.symmetric(horizontal: 20),
                                   child:FlatButton(
                                     onPressed: (){
-                                      _locationController.listStatusController.openList(true);
+                                      _locationController.listStatusController.listOpen = true;
                                       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                                         _locationController.focusNode.requestFocus();
                                       });
@@ -134,9 +150,7 @@ class LocationConfirm extends StatelessWidget{
                             ],),
                           child,
                           Expanded(child: Container()),
-                          lscont.listOpen
-                              ? Container()
-                              : Padding(
+                         Padding(
                             padding: EdgeInsets.all(20),
                             child:TEButton(
                                 height: 50,
@@ -157,9 +171,7 @@ class LocationConfirm extends StatelessWidget{
                       case LocationStatus.Denied:
                         return Column(
                           children: [
-                            lscont.listOpen
-                                ? Container()
-                                : Row(
+                             Row(
                               children: [
                                 Padding(
                                     padding: EdgeInsets.symmetric(
@@ -196,9 +208,7 @@ class LocationConfirm extends StatelessWidget{
                               ],),
                             child,
                             Expanded(child: Container()),
-                            lscont.listOpen
-                                ? Container()
-                                : Padding(
+                            Padding(
                                 padding: EdgeInsets.all(20),
                                 child:TEButton(
                                     height: 50,

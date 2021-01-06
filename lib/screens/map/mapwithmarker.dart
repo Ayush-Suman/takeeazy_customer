@@ -42,7 +42,7 @@ class _MapWithMarkerState extends State<MapWithMarker>{
       marker = [];
       marker.add(Marker(markerId: MarkerId("SelectedLocation"), position: LatLng(_positionController.position.latitude, _positionController.position.longitude)));
     });
-      print("HELLO "+_positionController.position.toString());
+     // print("HELLO "+_positionController.position.toString());
       googleLocationController.animateCamera(
           CameraUpdate.newCameraPosition(
               CameraPosition(

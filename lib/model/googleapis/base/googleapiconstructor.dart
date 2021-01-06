@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:takeeazy_customer/model/base/exception.dart';
 import 'package:takeeazy_customer/model/base/modelclassselector.dart';
 import 'package:takeeazy_customer/model/googleapis/base/googleapiurl.dart';
@@ -21,10 +22,12 @@ class GoogleClassSelector extends ModelClassSelector{
         break;
       case GoogleAPIURLRoutes.geocoding:
         print("Geocoding");
-        return AddressResults.fromJSON(map);
+         AddressResults addressResults = AddressResults.fromJSON(map);
+         print(addressResults);
+        return addressResults;
         break;
       case GoogleAPIURLRoutes.placedetails:
-        return map;
+        return Address.fromJSON(map);
         break;
       default: return map;
     }

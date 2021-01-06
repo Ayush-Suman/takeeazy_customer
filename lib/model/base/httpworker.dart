@@ -4,9 +4,11 @@ import 'dart:io';
 import 'dart:isolate';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
+import 'package:http/io_client.dart';
 import 'package:takeeazy_customer/model/base/calltype.dart';
 import 'package:takeeazy_customer/model/base/modelclassselector.dart';
 import 'package:takeeazy_customer/model/googleapis/base/googleapiconstructor.dart';
+import 'package:takeeazy_customer/model/googleapis/geocoding/address.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/base/modelconstructor.dart';
 
 
@@ -45,6 +47,9 @@ Future<T> sendRequest<T>(var data) async {
       data, _responsePort.sendPort]);
     T returnValue = await _responsePort.first;
     _responsePort.close();
+    print("Hello");
+    print(returnValue);
+    print("World");
     return returnValue;
 }
 
@@ -60,15 +65,16 @@ void _entryFunction(var meta) async{
 
   ReceivePort receivePort = ReceivePort();
   meta.send(receivePort.sendPort);
-  SendPort childSendPort;
 
-  _requestDataHandler.addListener(() async{
+  _requestDataHandler.addListener(() async {
+    SendPort childSendPort;
     print("child received");
     int id = _requestDataHandler.newId;
     childSendPort = _requestDataHandler._sendPorts[id];
-    var data = _requestDataHandler._datas.singleWhere((element) => element['id']==id);
+    var data = _requestDataHandler._datas.singleWhere((
+        element) => element['id'] == id);
     CALLTYPE call;
-    Client client = _requestDataHandler._clients[id];
+    IOClient client = _requestDataHandler._clients[id];
     bool auth;
     ModelClassSelector modelClassSelector;
     Map<String, String> header;
@@ -76,78 +82,179 @@ void _entryFunction(var meta) async{
     Map<String, dynamic> body;
     String route;
 
-    if(data is Map<String, dynamic>){
+    if (data is Map<String, dynamic>) {
       call = data['call'];
       auth = data['auth'];
       header = data['header'];
       param = data['param'];
       body = data['body'];
       route = data['route'];
-      modelClassSelector = data['selector'] as bool? googleClassSelector : classSelector;
+      modelClassSelector =
+      data['selector'] as bool ? googleClassSelector : classSelector;
     }
 
-    final Uri uri = Uri.https(modelClassSelector.URL,route, param);
-    Map<String, String> headerData = Map.from({HttpHeaders.contentTypeHeader: 'application/json'});
-    if(auth){
-      headerData.addAll(Map.from({HttpHeaders.authorizationHeader: data['token']}));
+    final Uri uri = Uri.https(modelClassSelector.URL, route, param);
+    print(uri);
+    Map<String, String> headerData = Map.from(
+        {HttpHeaders.contentTypeHeader: 'application/json'});
+    if (auth) {
+      headerData.addAll(
+          Map.from({HttpHeaders.authorizationHeader: data['token']}));
     }
-    if(header!=null) {
+    if (header != null) {
       headerData.addAll(header);
     }
     print(headerData.runtimeType);
-    Response response;
     print("waiting for response");
-    switch(call) {
+/*
+    String response="";
+    Request request = Request(callTypeMap[call], uri);
+    print("Sending Response");
+    if(!_requestDataHandler._isCancelled[id]){
+    IOStreamedResponse streamedResponse = await client.send(request);
+    StreamSubscription streamSubscription  = streamedResponse.stream.transform(utf8.decoder).listen((event) {
+      //print("A"+event);
+      response+=event;
+    });
+    // streamSubscription.cancel();
+    _requestDataHandler.addSubs(id, streamSubscription);
+
+    streamSubscription.onError((e){
+      childSendPort.send(e);
+      _requestDataHandler.removeData(id);
+      _requestDataHandler._isCancelled.remove(id);
+    });
+
+    streamSubscription.onDone(() {
+      print(response);
+      if(!_requestDataHandler._isCancelled[id]){
+        dynamic modelClass;
+        dynamic decoded = jsonDecode(response);
+        try {
+          if (decoded is List) {
+            modelClass = List();
+            for (dynamic m in decoded) {
+              modelClass.add(modelClassSelector.classSelector(route, m));
+            }
+          } else {
+            print("Deserialize");
+            modelClass = modelClassSelector.classSelector(route, decoded);
+          }
+          childSendPort.send(modelClass);
+          print("sent " + modelClass.toString());
+        } catch (e) {
+          print("Error: " + e.toString());
+          childSendPort.send(e);
+        } finally {
+          _requestDataHandler.removeData(id);
+        }
+      }
+      _requestDataHandler._isCancelled.remove(id);
+    });
+    }
+
+ */
+
+
+    switch (call) {
       case CALLTYPE.GET:
-        response = await (client == null ?
-        get(uri, headers: headerData):
-        client.get(uri, headers: headerData));
+        client.get(uri, headers: headerData).then((response) {
+          print(response.body);
+          if(!_requestDataHandler._isCancelled[id]){
+          dynamic modelClass;
+          dynamic decoded = jsonDecode(response.body);
+          try {
+            if (decoded is List) {
+              modelClass = List();
+              for (dynamic m in decoded) {
+                modelClass.add(modelClassSelector.classSelector(route, m));
+              }
+            } else {
+              print("Deserialize");
+              modelClass = modelClassSelector.classSelector(route, decoded);
+            }
+            childSendPort.send(modelClass);
+            print("sent " + modelClass.toString());
+          } catch (e) {
+            print("Error: " + e.toString());
+            childSendPort.send(e);
+          } finally {
+            _requestDataHandler.removeData(id);
+          }
+        }
+        _requestDataHandler._isCancelled.remove(id);
+        });
         break;
 
       case CALLTYPE.POST:
-        response = await (client == null ?
-        post(uri, headers: headerData, body: body) :
-        client.post(uri, headers: headerData, body: body));
+        client.post(uri, headers: headerData, body: body).then((response) {
+          print(response.body);
+          if(!_requestDataHandler._isCancelled[id]){
+          dynamic modelClass;
+          dynamic decoded = jsonDecode(response.body);
+          try{
+            if(decoded is List){
+              modelClass = List();
+              for(dynamic m in decoded){
+                modelClass.add(modelClassSelector.classSelector(route, m));
+              }
+            } else {
+              print("Deserialize");
+              modelClass = modelClassSelector.classSelector(route, decoded);
+            }
+            childSendPort.send(modelClass);
+            print("sent "+modelClass.toString());
+          }catch(e){
+            print("Error: " +e.toString());
+            childSendPort.send(e);
+          }finally{
+            _requestDataHandler.removeData(id);
+          }
+
+        }
+          _requestDataHandler._isCancelled.remove(id);
+        });
         break;
 
       case CALLTYPE.DEL:
-        response = await (client==null?
-        delete(uri, headers: headerData) :
-        client.delete(uri, headers: headerData)
-        );
+        client.delete(uri, headers: headerData).then((response) {
+          print(response.body);
+          if(!_requestDataHandler._isCancelled[id]){
+          dynamic modelClass;
+          dynamic decoded = jsonDecode(response.body);
+          try{
+            if(decoded is List){
+              modelClass = List();
+              for(dynamic m in decoded){
+                modelClass.add(modelClassSelector.classSelector(route, m));
+              }
+            } else {
+              print("Deserialize");
+              modelClass = modelClassSelector.classSelector(route, decoded);
+            }
+            childSendPort.send(modelClass);
+            print("sent "+modelClass.toString());
+          }catch(e){
+            print("Error: " +e.toString());
+            childSendPort.send(e);
+          }finally{
+            _requestDataHandler.removeData(id);
+          }
+          _requestDataHandler._isCancelled.remove(id);
+        }});
         break;
-    }
-    print(response.body);
-    dynamic modelClass;
-    dynamic decoded = jsonDecode(response.body);
-    try{
-      if(decoded is List){
-        modelClass = List();
-        for(dynamic m in decoded){
-          modelClass.add(modelClassSelector.classSelector(route, m));
-        }
-      } else {
-        print("Deserialize");
-        modelClass = modelClassSelector.classSelector(route, decoded);
-      }
-      childSendPort.send(modelClass);
-    }catch(e){
-      print(e);
-      childSendPort.send(e);
-    }finally{
-      _requestDataHandler.removeData(id);
     }
   });
 
 
-  await for(var message in receivePort){
+  receivePort.listen((message) {
     if(message[0] is Map){
       _requestDataHandler.addData(message);
     } else {
       print(message);
       _requestDataHandler.removeData(message[0]);
     }
-  }
+  });
 
 
 }
@@ -156,26 +263,56 @@ void _entryFunction(var meta) async{
 
 class RequestDataHandler with ChangeNotifier{
   Map<int, SendPort> _sendPorts = {};
-  Map<int,Client> _clients = {};
+  Map<int,IOClient> _clients = {};
+  Map<int, bool> _isCancelled = {};
+  Map<int, StreamSubscription> _subsList= {};
   List<Map> _datas = [];
   int newId;
+ /*
+  void addSubs(int id, StreamSubscription streamSubscription){
+    _subsList.addAll({id: streamSubscription});
+  }
+*/
+
   void addData(List data){
     var reqdata = data[0];
     newId = reqdata['id'];
     _sendPorts.addAll({newId: data[1]});
-    _clients.addAll({newId:Client()});
+    _isCancelled.addAll({newId: false});
+    _clients.addAll({newId:IOClient()});
     _datas.add(reqdata);
     notifyListeners();
   }
 
   void removeData(int id){
+    /*
+    if(_subsList[id]!=null){
+      _subsList[id].cancel()
+          .whenComplete(() {
+        print("Cancelling");
+        _subsList.remove(id);
+          });
+    }
+     */
     if(_clients[id]!=null) {
       _clients[id].close();
       _clients.remove(id);
     }
-    _sendPorts[id].send(null);
-    _sendPorts.remove(id);
-    _datas.removeWhere((element) => element['id']==id);
+   if(_sendPorts[id]!=null){
+     _sendPorts[id].send(null);
+     _sendPorts.remove(id);
+   }
+    _isCancelled[id] = true;
+     _datas.removeWhere((element) => element['id']==id);
 
   }
 }
+
+Map<CALLTYPE, String> callTypeMap={
+  CALLTYPE.GET: "GET",
+  CALLTYPE.POST: "POST",
+  CALLTYPE.DEL: "DELETE"
+};
+
+
+

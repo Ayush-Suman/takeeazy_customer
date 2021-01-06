@@ -5,19 +5,19 @@ import 'package:takeeazy_customer/model/googleapis/base/key.dart';
 import 'package:takeeazy_customer/model/googleapis/placeautocomplete/places.dart';
 
 class AutocompleteServices{
-  static Future getPlaces(String query, {double longitude, double latitude}) async{
+  static Future<TEResponse<Predictions>> getPlaces(String query, {double longitude, double latitude}) async{
     Map<String, String> param = {'input': query,'types': 'address', 'key': APIKey};
     if(longitude!=null || latitude != null){
       assert(longitude!=null && latitude != null);
       print("Biased Search");
       param.addAll({
         'location': '$latitude,$longitude',
-        'radius': '500000'
+        'radius': '50000'
       });
     }
 
     print("Requesting");
-    TEResponse response =  await  request<Predictions>(GoogleAPIURLRoutes.placeautocomplete, call: CALLTYPE.GET, isGoogleApi: true, param: param);
+    TEResponse<Predictions> response =  await  request<Predictions>(GoogleAPIURLRoutes.placeautocomplete, call: CALLTYPE.GET, isGoogleApi: true, param: param);
     return response;
   }
 }

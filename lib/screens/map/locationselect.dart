@@ -45,6 +45,7 @@ class _LocationSelectState extends State<LocationSelect>{
 
 
   return Scaffold(
+    resizeToAvoidBottomInset: false,
       body: Stack(
           children: [
               Container(height: height,),

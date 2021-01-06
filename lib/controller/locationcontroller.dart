@@ -1,10 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:takeeazy_customer/caching/caching.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
 import 'package:takeeazy_customer/model/base/exception.dart';
+import 'package:takeeazy_customer/model/base/networkcall.dart';
 import 'package:takeeazy_customer/model/dialog/dialogservice.dart';
-import 'package:takeeazy_customer/model/takeeazyapis/base/stores/storesModel.dart';
+import 'package:takeeazy_customer/model/googleapis/geocoding/address.dart';
+import 'package:takeeazy_customer/model/googleapis/geocoding/geocodingservices.dart';
+import 'package:takeeazy_customer/model/googleapis/placeautocomplete/autocompservices.dart';
+import 'package:takeeazy_customer/model/googleapis/placeautocomplete/places.dart';
+import 'package:takeeazy_customer/model/googleapis/placedetails/placedetails.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/meta/meta.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/meta/metamodel.dart';
 
 
 enum LocationStatus{
@@ -17,7 +27,7 @@ enum LocationStatus{
 
 class PositionController with ChangeNotifier{
   Position _position;
-  get position=>_position;
+  get position => _position;
   set position(p){
     if(_position != p){
       _position = p;
@@ -27,37 +37,52 @@ class PositionController with ChangeNotifier{
 }
 
 class ListStatusController with ChangeNotifier{
-  bool listOpen = false;
-  void openList(bool open){
-    listOpen = open;
+  bool _listOpen = false;
+  bool get listOpen => _listOpen;
+  set listOpen(bool open){
+    _listOpen = open;
     notifyListeners();
   }
 }
 
 
-// TODO: Change Location to self implemented Place API parsed class
 class AddressListController with ChangeNotifier {
-  List<Location> _addresses = List();
-  get addresses => _addresses;
-  set addresses(List<Location> a) {
+  List<Places> _addresses = List();
+
+  List<Places> get addresses => _addresses;
+
+  set addresses(List<Places> a) {
     _addresses = a;
     notifyListeners();
   }
 }
 
 class LocationStatusController with ChangeNotifier {
-  LocationStatus locationStatus = LocationStatus.Fetching;
+  LocationStatus _locationStatus = LocationStatus.Fetching;
+
+  get locationStatus => _locationStatus;
 
   set _newLocationStatus(v){
-    if(v!=locationStatus){
-      locationStatus = v;
+    if(v!=_locationStatus){
+      _locationStatus = v;
+      notifyListeners();
+    }
+  }
+}
+
+class ServiceableArea with ChangeNotifier{
+  bool _serviceAvailable;
+  bool get serviceAvailable =>_serviceAvailable;
+  set serviceAvailable(bool s){
+    if(s!=_serviceAvailable){
+      _serviceAvailable = s;
       notifyListeners();
     }
   }
 }
 
 
-class LocationController with ChangeNotifier{
+class LocationController{
   final _dialogService = DialogService();
   final TextController city = TextController();
   final TextEditingController addressLine = TextEditingController();
@@ -68,39 +93,49 @@ class LocationController with ChangeNotifier{
 
   final FocusNode focusNode = FocusNode();
 
+  ServiceableArea serviceableArea = ServiceableArea();
 
-  bool serviceAvailable;
+
 
   // TODO: Change to use self implemented Place API parsed class
- void selectAddress(Location address){
-    //positionController.position = Position(latitude: , longitude: address.longitude);
-   // city.text = address. as String;
-    //addressLine.text = address.longitude as String;
+ void selectAddress(Places place) async{
+    TEResponse<Address> response= await PlaceDetails.getPlaceDetails(place.id);
+    Address address = await response.response;
+    positionController.position = Position(latitude: address.latLng.latitude , longitude: address.latLng.longitude);
+    city.text = address.subLocality??address.town??address.state;
+    addressLine.text = place.main+" "+ place.secondary;
     focusNode.unfocus();
  }
 
- // TODO: Call Place API for autocompletion
+
+  TEResponse<Predictions> response;
   Future getLocationFromAddress(String query) async{
-    listController.addresses = await getLocationFromAddress(query);
+    if(response!=null){
+      response.dispose();
+    }
+    AutocompleteServices.getPlaces(query, longitude: positionController._position.longitude, latitude: positionController._position.latitude).then((response) async{
+    Predictions predictions = await response.response;
+    if(predictions!=null) {
+      listController.addresses = predictions.predictions;
+    }});
   }
 
   Future getMetaData() async {
     print("Fetching Meta Info");
     locationStatusController._newLocationStatus = LocationStatus.Fetching;
     try {
-      //MetaModel metaModel = await Meta.getMetaInfo(
-       //   longitude: positionController.position.longitude,
-        //  latitude: positionController.position.latitude);
-      //city.text = metaModel.city.cityName;
-      serviceAvailable = true;
+      TEResponse response = await Meta.getMetaInfo(
+        longitude: positionController.position.longitude,
+        latitude: positionController.position.latitude);
+      MetaModel metaModel = await response.response;
+      city.text = metaModel.city.cityName;
+      serviceableArea.serviceAvailable = true;
       locationStatusController._newLocationStatus = LocationStatus.Fetched;
-          notifyListeners();
     } catch (e) {
       if (e is ResponseException) {
         if (e.msg == "We are not available in your city yet.") {
-          serviceAvailable = true;
+          serviceableArea.serviceAvailable = true;
           locationStatusController._newLocationStatus = LocationStatus.Fetched;
-          notifyListeners();
         }else{
           locationStatusController._newLocationStatus = LocationStatus.Failed;
         }
@@ -109,24 +144,25 @@ class LocationController with ChangeNotifier{
     }
     locationStatusController._newLocationStatus = LocationStatus.Done;
     print("Fetched Meta Info");
-
   }
 
   Future getAddress() async {
     try {
-      //List<Address> placemarks =
-      //await placemarkFromCoordinates(
-     //     positionController.position.latitude,
-       //   positionController.position.longitude);
-      print("Get Address "+listController.addresses.toString());
-      if (listController.addresses.length > 0) {
-      //  Placemark address = listController.addresses[0];
-       // city.text = address.locality;
-        // addressLine.text = address.name;
-        // notifyListeners();
+      TEResponse<AddressResults> response = await GeocodingServices.getAddress(positionController.position.latitude, positionController.position.longitude);
+      // print("Reading response "+ (await response.response));
+      AddressResults addressResults = await response.response;
+      print(addressResults);
+      print("Received address");
+      print(addressResults.addresses);
+      if(addressResults.addresses.length>0){
+        print("Updating Values");
+        city.text = addressResults.addresses[0].subLocality??addressResults.addresses[0].town??addressResults.addresses[0].state;
+        addressLine.text = addressResults.addresses[0].formattedAddress;
       }
+      locationStatusController._newLocationStatus = LocationStatus.Fetched;
     } catch (e) {
       print(e.toString());
+      if(e is SocketException){
       _dialogService.openDialog(
           title: "No Internet Connection",
           content: "App needs internet connection to search locations",
@@ -134,14 +170,13 @@ class LocationController with ChangeNotifier{
             ActionHolder(title: "Okay", onPressed: (){})
           ]);
       locationStatusController._newLocationStatus = LocationStatus.Failed;
-    }
+    }}
   }
 
   Future getLocationData() async {
     try {
       positionController.position = await Geolocator.getCurrentPosition();
       print(positionController.position.toString() + " getLocationData");
-      await getAddress();
       locationStatusController._newLocationStatus = LocationStatus.Fetched;
     } catch (e) {
       print("Failed " + e.toString());
@@ -150,7 +185,7 @@ class LocationController with ChangeNotifier{
   }
 
   Future requestLocationAccess() async {
-   listStatusController.openList(false);
+   listStatusController.listOpen = false;
     print("Requesting Access");
     if ((await Geolocator.checkPermission()) ==
         LocationPermission.deniedForever) {
@@ -164,19 +199,19 @@ class LocationController with ChangeNotifier{
           ]
       );
     } else {
-      LocationPermission result = await Geolocator.requestPermission();
-      if (result == LocationPermission.always ||
-          result == LocationPermission.whileInUse) {
+      //LocationPermission result = await Geolocator.requestPermission();
+    //  if (result == LocationPermission.always ||
+      //    result == LocationPermission.whileInUse) {
         locationStatusController._newLocationStatus = LocationStatus.Fetching;
         await getLocationData();
         locationStatusController._newLocationStatus = LocationStatus.Fetched;
       }
-    }
+    //}
   }
 
   void storeValues(){
    Caching.city = city.text;
-   Caching.serviceableArea = serviceAvailable;
+   Caching.serviceableArea = serviceableArea.serviceAvailable;
  }
 
 }
