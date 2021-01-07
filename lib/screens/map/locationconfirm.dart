@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/locationcontroller.dart';
-import 'package:takeeazy_customer/main.dart';
 import 'package:takeeazy_customer/screens/components/custombutton.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
@@ -32,6 +31,7 @@ class _LocationConfirmState extends State{
   @override
   void initState() {
      _locationController = Provider.of<LocationController>(context, listen: false);
+     _locationController.focusNode.listStatusController = _locationController.listStatusController;
      _locationController.getLocationData();
      Timer timer = Timer(Duration(seconds: 1), (){print("Timer Ended");});
      _locationController.addressLine.addListener((){
@@ -40,11 +40,6 @@ class _LocationConfirmState extends State{
          print("Getting Address suggestions for "+_locationController.addressLine.text);
          _locationController.getLocationFromAddress(_locationController.addressLine.text);
        });
-
-     });
-
-     _locationController.focusNode.addListener(() {
-       _locationController.listStatusController.listOpen = _locationController.focusNode.hasFocus;
      });
     super.initState();
   }
@@ -61,170 +56,134 @@ class _LocationConfirmState extends State{
       ..layout())
         .size;
 
+
     return Container(child:Consumer<ListStatusController>(builder:(_, lscont, child)=>
         Stack(children:[
+
+          // AddressList
           lscont.listOpen
               ? Container(
             width: width,
-              height: height,
-              color: Colors.white,
-              child:Padding(
-                padding: EdgeInsets.only(top: top),
-                child: ChangeNotifierProvider.value(
-                    value: _locationController.listController,
-                    builder: (_, a) =>
-                        Consumer<AddressListController>(builder: (_, lcont, child)=>
-                            ListView.builder(
-                              itemBuilder: (_, pos)=>FlatButton(onPressed: (){
-                                lscont.listOpen = false;
-                                _locationController.selectAddress(lcont.addresses[pos]);
-                              },
-                                  child: TEText(text: lcont.addresses[pos].main+" "+lcont.addresses[pos].secondary,)),
-                              itemCount: lcont.addresses.length,
-                            ),
-                        )
-                )
-            )
-          ) : Container(height: 0,),
-lscont.listOpen?Positioned(
-    bottom: MediaQuery.of(context).viewInsets.bottom,
-    left: width*0.1,
-    child: child):
-          Container(
-      width: width,
-      height: 240+size.height,
-      decoration: BoxDecoration(
-          color: Colors.white ,
-          borderRadius: BorderRadius.only(
-              topRight:Radius.circular(20),
-              topLeft:Radius.circular(20)),
-          boxShadow: [BoxShadow(
-              color:Colors.black,
-              blurRadius: 10,
-              spreadRadius: -5)]
-      ),
-      child: ChangeNotifierProvider.value(
-          value: _locationController.locationStatusController,
-          builder: (_, a)=>
-              Consumer<LocationStatusController>(
-                builder: (_, locstatCont, c){
-                    switch(locstatCont.locationStatus){
-
-                      case LocationStatus.Fetched:
-                        return Column(
-                      children: [Row(
-                          children: [
-                            Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 20,
-                                    horizontal: 12),
-                                child: Icon(
-                                  Icons.location_on,
-                                  size: 40,
-                                  color: TakeEazyColors.gradient2Color,
-                                )
-                            ),
-                                    ConstrainedBox(
-                                      constraints: BoxConstraints(maxWidth: width*0.5) ,
-                                      child:TEText(
-                                        controller: _locationController.city,
-                                        fontColor: TakeEazyColors.gradient2Color,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 24,
-                                          maxLines: 1,
-                                        ),),
-                              Expanded(child: Container()),
-                              Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 20),
-                                  child:FlatButton(
-                                    onPressed: (){
-                                      _locationController.listStatusController.listOpen = true;
-                                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                                        _locationController.focusNode.requestFocus();
-                                      });
-
-                                    },
-                                    child: TEText(text: "Change"),
-                                    color: Color(0xffeeeeee),
-                                  ))
-                            ],),
-                          child,
-                          Expanded(child: Container()),
-                         Padding(
-                            padding: EdgeInsets.all(20),
-                            child:TEButton(
-                                height: 50,
-                                width: width,
-                                text: TEText(text: "CONFIRM LOCATION", fontWeight: FontWeight.w700, fontColor: Color(0xffffffff)),
-                                onPressed: () async{
-                                  await Provider.of<LocationController>(context, listen: false).getMetaData();
-                                  Provider.of<LocationController>(context, listen: false).storeValues();
-                                  Navigator.popAndPushNamed(context, TERoutes.home);
-                                })
+              height: height-top,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                color:Colors.white
+              ),
+                child: Column(
+                    children:[
+                      Padding(
+                          padding: EdgeInsets.only(top:12),
+                          child:FlatButton(child:Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 40,
                           ),
-                        ],
-                      );
-
-                      case LocationStatus.Fetching:
-                        return Center(child: CircularProgressIndicator());
-
-                      case LocationStatus.Denied:
-                        return Column(
-                          children: [
-                             Row(
-                              children: [
-                                Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 20,
-                                        horizontal: 12),
-                                    child: Icon(
-                                      Icons.location_on,
-                                      size: 40,
-                                      color: TakeEazyColors.gradient2Color,
-                                    )
+                            onPressed: (){
+                              lscont.listOpen = false;
+                              _locationController.focusNode.unfocus();
+                              _locationController.reSyncValues();
+                              },
+                          )
+                      ),
+                      Container(
+                        width: width,
+                        height: height-top-60,
+                        child:ChangeNotifierProvider.value(
+                        value: _locationController.listController,
+                        builder: (_, a) =>
+                            Consumer<AddressListController>(builder: (_, lcont, child)=>
+                                ListView.builder(
+                                  itemBuilder: (_, pos)=>FlatButton(onPressed: (){
+                                    lscont.listOpen = false;
+                                    _locationController.selectAddress(lcont.addresses[pos]);
+                                  },
+                                      child: TEText(text: lcont.addresses[pos].main+" "+lcont.addresses[pos].secondary,)),
+                                  itemCount: lcont.addresses.length,
                                 ),
-                                        ConstrainedBox(
-                                          constraints: BoxConstraints(maxWidth: width*0.5) ,
-                                          child:TEText(
-                                            controller: _locationController.city,
-                                            fontColor: TakeEazyColors.gradient2Color,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 24,
-                                            maxLines: 1,
-                                          ),),
-                                Expanded(child: Container()),
-                                Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 20),
-                                    child:FlatButton(
-                                      onPressed: (){
-                                        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                                          _locationController.focusNode.requestFocus();
-                                        });
+                            )
+                    ),)
+                ])
+          ) : Container(height: 0,),
 
-                                      },
-                                      child: TEText(text: "Change"),
-                                      color: Color(0xffeeeeee),
-                                    ))
-                              ],),
-                            child,
-                            Expanded(child: Container()),
-                            Padding(
-                                padding: EdgeInsets.all(20),
-                                child:TEButton(
-                                    height: 50,
-                                    width: width,
-                                    text: TEText(text: "CONFIRM LOCATION", fontWeight: FontWeight.w700, fontColor: Color(0xffffffff)),
-                                    onPressed: ()async{
-                                      await Provider.of<LocationController>(context, listen: false).getMetaData();
-                                      Provider.of<LocationController>(context, listen: false).storeValues();
-                                      Navigator.popAndPushNamed(context, TERoutes.home);
-                                    })
-                            ),
-                          ],
-                        );
-                      default: return Center(child: TEText(text: "Something Went Wrong"));
-                    }
-                })))
+          // BottomSheet
+          lscont.listOpen?Positioned(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              left: width*0.1,
+              child: child):
+                    Container(
+                width: width,
+                height: 240+size.height,
+                decoration: BoxDecoration(
+                    color: Colors.white ,
+                    borderRadius: BorderRadius.only(
+                        topRight:Radius.circular(20),
+                        topLeft:Radius.circular(20)),
+                    boxShadow: [BoxShadow(
+                        color:Colors.black,
+                        blurRadius: 10,
+                        spreadRadius: -5)]
+                ),
+                child: ChangeNotifierProvider.value(
+                    value: _locationController.locationStatusController,
+                    builder: (_, a)=>
+                        Consumer<LocationStatusController>(
+                          builder: (_, locstatCont, c){
+                             if(
+                             locstatCont.locationStatus == LocationStatus.Fetched
+                                 || locstatCont.locationStatus == LocationStatus.Failed
+                                 || locstatCont.locationStatus == LocationStatus.Done){
+                                  return Column(
+                                children: [Row(
+                                    children: [
+                                      Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 20,
+                                              horizontal: 12),
+                                          child: Icon(
+                                            Icons.location_on,
+                                            size: 40,
+                                            color: TakeEazyColors.gradient2Color,
+                                          )
+                                      ),
+                                              ConstrainedBox(
+                                                constraints: BoxConstraints(maxWidth: width*0.5) ,
+                                                child:TEText(
+                                                  controller: _locationController.city,
+                                                  fontColor: TakeEazyColors.gradient2Color,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 24,
+                                                    maxLines: 1,
+                                                  ),),
+                                        Expanded(child: Container()),
+                                        Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 20),
+                                            child:FlatButton(
+                                              onPressed: (){
+                                                  _locationController.focusNode.requestFocus();
+                                              },
+                                              child: TEText(text: "Change"),
+                                              color: Color(0xffeeeeee),
+                                            ))
+                                      ],),
+                                    child,
+                                    Expanded(child: Container()),
+                                   Padding(
+                                      padding: EdgeInsets.all(20),
+                                      child:TEButton(
+                                          height: 50,
+                                          width: width,
+                                          text: TEText(text: "CONFIRM LOCATION", fontWeight: FontWeight.w700, fontColor: Color(0xffffffff)),
+                                          onPressed: () async{
+                                            _locationController.getMetaData();
+                                          })
+                                    ),
+                                  ],
+                                );
+                             } else if(locstatCont.locationStatus == LocationStatus.Fetching){
+                               return Center(child: CircularProgressIndicator());
+                             } else{
+                                 return Center(child: TEText(text: "Something Went Wrong"));
+                              }
+                          })))
 
         ]),
       child: ConstrainedBox(

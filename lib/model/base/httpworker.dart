@@ -38,19 +38,19 @@ void destroy() {
 }
 
 
-Future<T> sendRequest<T>(var data) async {
+Future<dynamic> sendRequest(var data) async {
   ReceivePort _responsePort = ReceivePort();
   if(data is Map) {
     int id = data['id'];
   }
     _sendPort.send([
       data, _responsePort.sendPort]);
-    T returnValue = await _responsePort.first;
-    _responsePort.close();
-    print("Hello");
-    print(returnValue);
-    print("World");
-    return returnValue;
+    dynamic returnValue = await _responsePort.first;
+  _responsePort.close();
+  print("Hello");
+  print(returnValue);
+  print("World");
+  return returnValue;
 }
 
 void _entryFunction(var meta) async{
@@ -106,6 +106,7 @@ void _entryFunction(var meta) async{
     }
     print(headerData.runtimeType);
     print("waiting for response");
+
 /*
     String response="";
     Request request = Request(callTypeMap[call], uri);

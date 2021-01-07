@@ -20,13 +20,14 @@ class TEText extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
-    return ChangeNotifierProvider.value(
+    return controller!=null
+        ? ChangeNotifierProvider.value(
       value: controller,
       builder: (_, a)=>
           Consumer<TextController>(
             builder: (_, cont, child)=>
                 Text(
-                    text??cont.text??"",
+                    cont.text??"",
                     style: TextStyle(
                         fontFamily: 'Rubik',
                         color: fontColor,
@@ -34,7 +35,15 @@ class TEText extends StatelessWidget{
                         fontSize: fontSize),
                     maxLines: maxLines),
           ),
-    );
+    )
+    : Text(
+        text??"",
+        style: TextStyle(
+            fontFamily: 'Rubik',
+            color: fontColor,
+            fontWeight: fontWeight,
+            fontSize: fontSize),
+        maxLines: maxLines);
   }
 
 }

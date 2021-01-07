@@ -12,29 +12,26 @@ import 'package:takeeazy_customer/screens/values/colors.dart';
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
-    Provider.of<HomeController>(context, listen: false).updateValues();
+    HomeController homeController = Provider.of<HomeController>(context, listen: false);
+    homeController.updateValues();
 
     return Scaffold(
       appBar: AppBar(
-        title: Consumer<HomeController>(
-          builder: (_, hcont, child) => Padding(
+        title: Padding(
             padding: EdgeInsets.all(20),
             child: TEText(
-              controller: hcont.city,
+              controller: homeController.city,
               fontSize: 20,
               fontColor: TakeEazyColors.gradient2Color,
               fontWeight: FontWeight.w700,
             ),
           ),
-        ),
         actions: [
           HamBurgerButton(),
         ],
       ),
-      body: Consumer<ServiceableArea>(
-        builder: (_, serACont, child) => serACont.serviceableArea
+      body:
+        homeController.serviceableAreaController.serviceAvailable
             ? ListView(
                 children: [
                   SearchBar(),
@@ -127,8 +124,6 @@ class Home extends StatelessWidget {
               )
             : Center(
                 child: TEText(text: "We are not serviceable in your area"),
-              ),
-      ),
-    );
+    ));
   }
 }

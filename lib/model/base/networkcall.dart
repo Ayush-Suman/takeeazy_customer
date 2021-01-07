@@ -43,10 +43,9 @@ class TEResponse<T>{
   TEResponse(this._id);
   final int _id;
 
-  dispose(){
+  void dispose(){
     sendRequest(_id);
   }
-
   Completer<T> _response = Completer();
   Future<T> get response => _response.future;
 
@@ -79,10 +78,11 @@ Future<TEResponse<T>> request<T>(String route, {
     'selector': isGoogleApi
   };
   await isReady;
-  sendRequest<T>(data).then((value){
+  sendRequest(data).then((value){
     idQueue.remove(id);
-    if(value is ResponseException){
-      throw value;
+    if(value is Exception){
+      response._response.completeError(value);
+      return;
     }
     print("Value: "+T.toString());
     response._response.complete(value);

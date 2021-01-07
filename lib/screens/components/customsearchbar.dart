@@ -25,7 +25,7 @@ class SearchBar extends StatelessWidget {
             ),
             onPressed: () {},
           ),
-          hintText: ' Search for a store/item',
+          hintText: 'Search for a store/item',
           hintStyle: TextStyle(
             fontSize: 15,
             color: Colors.grey,
