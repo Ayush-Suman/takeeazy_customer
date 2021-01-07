@@ -47,6 +47,16 @@ class ListStatusController with ChangeNotifier{
   }
 }
 
+class SearchController with ChangeNotifier{
+  bool _isSearching=false;
+  bool get isSearching=>_isSearching;
+  set isSearching(bool s){
+    if(s!=_isSearching){
+      _isSearching = s;
+      notifyListeners();
+    }
+  }
+}
 
 class AddressListController with ChangeNotifier {
   List<Places> _addresses = List();
@@ -87,7 +97,6 @@ class CustomFocusNode extends FocusNode{
       super.requestFocus(node);
     });
 
-
   }
 }
 
@@ -101,6 +110,7 @@ class LocationController{
   final AddressListController listController = AddressListController();
   final PositionController positionController = PositionController();
   final LocationStatusController locationStatusController = LocationStatusController();
+  final SearchController searchController = SearchController();
 
   final CustomFocusNode focusNode = CustomFocusNode();
 
@@ -119,28 +129,33 @@ class LocationController{
     Address address = await response.response;
     positionController.position = Position(latitude: address.latLng.latitude , longitude: address.latLng.longitude);
     city.text = address.subLocality??address.town??address.state;
+    listStatusController.listOpen = false;
     focusNode.unfocus();
  }
 
 
   TEResponse<Predictions> response;
-  Future getLocationFromAddress(String query) async{
+  Future getLocationFromAddress() async{
     if(response!=null){
       response.dispose();
     }
+    searchController.isSearching = true;
     if(positionController._position!=null){
-      AutocompleteServices.getPlaces(query, longitude: positionController._position.longitude, latitude: positionController._position.latitude).then((response) async{
+      AutocompleteServices.getPlaces(addressLine.text, longitude: positionController._position.longitude, latitude: positionController._position.latitude).then((response) async{
         Predictions predictions = await response.response;
         if(predictions!=null) {
           listController.addresses = predictions.predictions;
+          searchController.isSearching = false;
         }});
     }else{
-      AutocompleteServices.getPlaces(query).then((response) async{
+      AutocompleteServices.getPlaces(addressLine.text).then((response) async{
         Predictions predictions = await response.response;
         if(predictions!=null) {
           listController.addresses = predictions.predictions;
+          searchController.isSearching = false;
         }});
     }
+
   }
 
   Future getMetaData() async {

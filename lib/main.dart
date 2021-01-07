@@ -8,6 +8,7 @@ import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 import 'package:takeeazy_customer/screens/home/home.dart';
 import 'package:takeeazy_customer/screens/map/locationselect.dart';
+import 'package:takeeazy_customer/screens/values/colors.dart';
 
 
 
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       ),
       title: 'TakeEazy',
       theme: ThemeData(
+        accentColor: TakeEazyColors.gradient2Color,
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           bottomSheetTheme: BottomSheetThemeData(modalBackgroundColor: Colors.transparent)

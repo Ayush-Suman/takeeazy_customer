@@ -38,7 +38,7 @@ class _LocationConfirmState extends State{
        timer.cancel();
        timer = Timer(Duration(seconds: 1), (){
          print("Getting Address suggestions for "+_locationController.addressLine.text);
-         _locationController.getLocationFromAddress(_locationController.addressLine.text);
+         _locationController.getLocationFromAddress();
        });
      });
     super.initState();
@@ -67,11 +67,16 @@ class _LocationConfirmState extends State{
               height: height-top,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                boxShadow: [BoxShadow(
+                  blurRadius: 10,
+                  offset: Offset(0, 2)
+                )],
                 color:Colors.white
               ),
                 child: Column(
                     children:[
-                      Padding(
+                      Stack(children:[
+                      Center(child:Padding(
                           padding: EdgeInsets.only(top:12),
                           child:FlatButton(child:Icon(
                             Icons.keyboard_arrow_down,
@@ -83,7 +88,22 @@ class _LocationConfirmState extends State{
                               _locationController.reSyncValues();
                               },
                           )
-                      ),
+                      )),
+                      Positioned(
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child:ChangeNotifierProvider.value(
+                                value: _locationController.searchController,
+                               builder:(_, a)=>
+                                   Consumer<SearchController>(
+                                     builder: (_, sc, child){
+                                        print(sc.isSearching.toString());
+                                        return _locationController.searchController.isSearching?child:Container();
+                                       },
+                                       child:CircularProgressIndicator(),))
+                        ),
+                        right: 10,)
+                      ]),
                       Container(
                         width: width,
                         height: height-top-60,
@@ -93,7 +113,6 @@ class _LocationConfirmState extends State{
                             Consumer<AddressListController>(builder: (_, lcont, child)=>
                                 ListView.builder(
                                   itemBuilder: (_, pos)=>FlatButton(onPressed: (){
-                                    lscont.listOpen = false;
                                     _locationController.selectAddress(lcont.addresses[pos]);
                                   },
                                       child: TEText(text: lcont.addresses[pos].main+" "+lcont.addresses[pos].secondary,)),
@@ -107,7 +126,7 @@ class _LocationConfirmState extends State{
           // BottomSheet
           lscont.listOpen?Positioned(
               bottom: MediaQuery.of(context).viewInsets.bottom,
-              left: width*0.1,
+              left: 25,
               child: child):
                     Container(
                 width: width,
@@ -189,7 +208,7 @@ class _LocationConfirmState extends State{
       child: ConstrainedBox(
                   constraints:BoxConstraints(
                       maxHeight: 70,
-                      maxWidth: width*0.8),
+                      maxWidth: width - 50),
                   child:Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
                       child: Container(
