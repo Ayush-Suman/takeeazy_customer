@@ -118,6 +118,7 @@ class LocationController{
   ServiceableArea serviceableArea = ServiceableArea();
 
 
+
   void reSyncValues(){
     print("Resyncing Values $currentAddress");
     addressLine.text = currentAddress;
