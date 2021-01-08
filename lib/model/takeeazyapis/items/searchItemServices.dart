@@ -8,7 +8,7 @@ class SearchItemServices {
       {String store = '5f8facab45134c286cc5f46f'}) async {
     Map<String, String> param = {'store': store};
 
-    TEResponse<SearchItemModel> searchItemModel = await request<SearchItemModel>(
+    TEResponse searchItemModel = await request<SearchItemModel>(
         URLRoutes.searchItem,
         call: CALLTYPE.GET,
         param: param,
@@ -21,7 +21,7 @@ class SearchItemServices {
       {String store = '5f8facab45134c286cc5f46f', String q = 'aggi2'}) async {
     Map<String, String> param = {'store': store, 'q': q};
 
-    TEResponse<SearchItemModel> searchItemModel = await request<SearchItemModel>(
+    TEResponse searchItemModel = await request<SearchItemModel>(
         URLRoutes.searchItem,
         call: CALLTYPE.GET,
         param: param,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'customtext.dart';
 
 class ServicesWidget extends StatelessWidget {
@@ -10,43 +9,35 @@ class ServicesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    return Expanded(
-      flex: 1,
-      child: GestureDetector(
+    return GestureDetector(
         onTap: () {
           print(widgetName);
         },
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(1,5),
+                spreadRadius: -4,
+                blurRadius: 6,
+              ),
+            ],
             color: Colors.white,
           ),
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                  blurRadius: 2.5,
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(18),
-              child: Image.asset(
+          child:ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
                 'assets/' + widgetName + '.png',
                 fit: BoxFit.contain,
-                height: height * 0.16,
                 errorBuilder: (context, error, stackTrace) => TEText(
                     text:
                     widgetName[0].toUpperCase() + widgetName.substring(1)),
               ),
-            ),
-          ),
-        ),
-      ),
-    );
+            )
+      ));
   }
 }

@@ -27,9 +27,9 @@ void main() async{
  test("Autocomplete Response Test", () async{
    print("Test Started");
    //WidgetsFlutterBinding.ensureInitialized();
-   TEResponse<Predictions> response = await AutocompleteServices.getPlaces("D", latitude: 27.0, longitude: 77);
+   TEResponse response = await AutocompleteServices.getPlaces("D", latitude: 27.0, longitude: 77);
    response.dispose();
-   TEResponse<Predictions> response2 = await AutocompleteServices.getPlaces("D/6, Kalyan Vihar, Ambedkar Path", latitude: 27.0, longitude: 77);
+   TEResponse response2 = await AutocompleteServices.getPlaces("D/6, Kalyan Vihar, Ambedkar Path", latitude: 27.0, longitude: 77);
    await response2.response;
    Predictions predictions  = await response.response;
    print("Test "+predictions.toString());

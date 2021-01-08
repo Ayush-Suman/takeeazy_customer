@@ -54,7 +54,7 @@ class Shop extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
               child: TEText(
                 text: 'Best Sellers',
@@ -81,7 +81,7 @@ class Shop extends StatelessWidget {
                 ),
                 itemCount: 9,
               ),
-            ),
+            ),*/
           ],
         ),
       ),

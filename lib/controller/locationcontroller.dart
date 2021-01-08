@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:takeeazy_customer/caching/caching.dart';
 import 'package:takeeazy_customer/controller/serviceablearea.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
 import 'package:takeeazy_customer/main.dart';
@@ -126,7 +125,7 @@ class LocationController{
 
 
  void selectAddress(Places place) async{
-    TEResponse<Address> response= await PlaceDetails.getPlaceDetails(place.id);
+    TEResponse response= await PlaceDetails.getPlaceDetails(place.id);
     locationStatusController._newLocationStatus = LocationStatus.Fetching;
     Address address = await response.response;
     positionController.position = Position(latitude: address.latLng.latitude , longitude: address.latLng.longitude);
@@ -136,7 +135,7 @@ class LocationController{
  }
 
 
-  TEResponse<Predictions> response;
+  TEResponse response;
   Future getLocationFromAddress() async{
     if(response!=null){
       response.dispose();
@@ -188,7 +187,7 @@ class LocationController{
 
   Future getAddress() async {
 
-    TEResponse<AddressResults> response = await GeocodingServices.getAddress(positionController.position.latitude, positionController.position.longitude);
+    TEResponse response = await GeocodingServices.getAddress(positionController.position.latitude, positionController.position.longitude);
 
       response.response.then((addressResults) {
         print(addressResults);

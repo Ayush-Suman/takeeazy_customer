@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class MetaModel{
   final City city;
   final List<Containers> containers;
@@ -8,9 +10,10 @@ class MetaModel{
   });
 
   factory MetaModel.fromJSON(Map<String, dynamic> map){
+    print("Metamodel");
     return MetaModel(
       city: City.fromJSON(map['city']),
-      containers: map['containers'].map((e)=>Containers.fromJSON(e)).toList()
+      containers: map['containers'].map((e)=>Containers.fromJSON(e)).toList().cast<Containers>()
     );
   }
 }
@@ -23,7 +26,8 @@ class City{
   City({this.id, this.cityName, this.containers});
 
   factory City.fromJSON(Map<String, dynamic> data){
-    return City(id: data['_id'], cityName: data['cityName'], containers: data['containers']);
+    print("Metamodel city");
+    return City(id: data['_id'], cityName: data['cityName'], containers: data['containers'].cast<String>());
   }
 }
 

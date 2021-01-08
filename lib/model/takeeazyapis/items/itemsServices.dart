@@ -9,7 +9,7 @@ class ItemsServices {
       {String store = '5f8facab45134c286cc5f46f'}) async {
     Map<String, String> param = {'store': store};
 
-    TEResponse<ItemsModel> itemsModel = await request<ItemsModel>(URLRoutes.getShopItems,
+    TEResponse itemsModel = await request<ItemsModel>(URLRoutes.getShopItems,
         call: CALLTYPE.GET, param: param, auth: true);
 
     return itemsModel;
@@ -20,7 +20,7 @@ class ItemsServices {
       String store = '5f8facab45134c286cc5f46f'}) async {
     Map<String, String> param = {'category': category, 'store': store};
 
-    TEResponse<ItemsModel> itemsModel = await request<ItemsModel>(URLRoutes.getShopItems,
+    TEResponse itemsModel = await request<ItemsModel>(URLRoutes.getShopItems,
         call: CALLTYPE.GET, param: param, auth: true);
 
     return itemsModel;

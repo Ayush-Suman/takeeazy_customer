@@ -10,7 +10,7 @@ class StoresServices {
       'dist': dist.toString(),
       'geo': latitude.toString() + ',' + longitude.toString()
     };
-    TEResponse<ShopModel> shopModel = await request<ShopModel>(URLRoutes.getShops,
+    TEResponse shopModel = await request<ShopModel>(URLRoutes.getShops,
         call: CALLTYPE.GET, param: param, auth: true);
     return shopModel;
   }
@@ -20,7 +20,7 @@ class StoresServices {
     Map<String, String> param = {
       'container': container,
     };
-    TEResponse<ShopModel> shopModel = await request<ShopModel>(URLRoutes.getShops,
+    TEResponse shopModel = await request<ShopModel>(URLRoutes.getShops,
         call: CALLTYPE.GET, param: param, auth: true);
     return shopModel;
   }
@@ -35,7 +35,7 @@ class StoresServices {
       'geo': latitude.toString() + ',' + longitude.toString(),
       'container': container
     };
-    TEResponse<ShopModel> shopModel = await request<ShopModel>(URLRoutes.getShops,
+    TEResponse shopModel = await request<ShopModel>(URLRoutes.getShops,
         call: CALLTYPE.GET, param: param, auth: true);
     return shopModel;
   }

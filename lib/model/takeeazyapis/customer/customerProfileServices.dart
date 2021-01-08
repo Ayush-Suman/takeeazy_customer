@@ -5,7 +5,7 @@ import 'package:takeeazy_customer/model/takeeazyapis/customer/customerProfileMod
 
 class CustomerProfileServices {
   static Future<TEResponse> getCustomerProfile() async {
-    TEResponse<CustomerProfileModel> customerProfileModel =
+    TEResponse customerProfileModel =
         await request<CustomerProfileModel>(URLRoutes.getCustomerProfile,
             call: CALLTYPE.GET, auth: true);
 

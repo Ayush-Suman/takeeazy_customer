@@ -1,6 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:takeeazy_customer/screens/item/item.dart';
-
 import 'customtext.dart';
 
 class SubCategoryWidget extends StatelessWidget {
@@ -42,15 +42,12 @@ class SubCategoryWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  'https://ik.imagekit.io/dunzo/tr:w-488,h-360_home_icon/dunzo/icons/newHome/promoBanner/kitImageUrl/largeIcons/default_grocery_secondary2_1607672711525.png',
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  imageUrl:'https://ik.imagekit.io/dunzo/tr:w-488,h-360_home_icon/dunzo/icons/newHome/promoBanner/kitImageUrl/largeIcons/default_grocery_secondary2_1607672711525.png',
                   fit: BoxFit.contain,
                   height: height * 0.13,
-                  errorBuilder: (context, error, stackTrace) => TEText(
-                      text: widgetName[0].toUpperCase() +
-                          widgetName.substring(1)),
-                ),
+                )
               ),
               Padding(
                 padding:

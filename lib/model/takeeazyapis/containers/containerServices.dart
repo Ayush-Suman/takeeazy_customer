@@ -5,7 +5,7 @@ import 'package:takeeazy_customer/model/takeeazyapis/containers/containersModel.
 
 class ContainerServices {
   static Future<TEResponse> getContainers() async {
-    TEResponse<ContainerModel> containerModel = await request<ContainerModel>(
+    TEResponse containerModel = await request<ContainerModel>(
         URLRoutes.getShopContainers,
         call: CALLTYPE.GET);
     return containerModel;

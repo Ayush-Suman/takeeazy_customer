@@ -24,7 +24,7 @@ Future<void> get isReady => _isolateReady.future;
 
 List<Map<String, dynamic>> responseQueue = List<Map<String, dynamic>>();
 
-void init() async {
+Future init() async {
   _isolate = await Isolate.spawn(_entryFunction, _receivePort.sendPort);
   _sendPort = await _receivePort.first;
   await initialiseCaching();
@@ -196,8 +196,10 @@ void _entryFunction(var meta) async{
           if(!_requestDataHandler._isCancelled[id]){
           dynamic modelClass;
           dynamic decoded = jsonDecode(response.body);
+          print(decoded.toString());
           try {
             if (decoded is List) {
+              print("Decoded is list");
               modelClass = List();
               for (dynamic m in decoded) {
                 modelClass.add(modelClassSelector.classSelector(route, m));
@@ -298,7 +300,7 @@ class RequestDataHandler with ChangeNotifier{
   Map<int, SendPort> _cachedSendPorts = {};
   Map<int,IOClient> _clients = {};
   Map<int, bool> _isCancelled = {};
-  Map<int, StreamSubscription> _subsList= {};
+
   List<Map> _datas = [];
   int newId;
  /*

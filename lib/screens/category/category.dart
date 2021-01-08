@@ -12,13 +12,14 @@ class Category extends StatelessWidget {
       appBar: AppBar(
         title: TEText(
           text: 'Daily Groceries',
+          fontWeight: FontWeight.w700,
         ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SearchBar(),
-          Padding(
+        /*  Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
             child: Container(
               height: 150,
@@ -29,7 +30,7 @@ class Category extends StatelessWidget {
                 ),
               ),
             ),
-          ),
+          ),*/
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
             child: TEText(

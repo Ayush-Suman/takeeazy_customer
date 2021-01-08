@@ -7,7 +7,7 @@ class SearchStoreServices {
   static Future<TEResponse> searchByQuery({String query = 'mall'}) async {
     Map<String, String> param = {'q': query};
 
-    TEResponse<SearchStoreModel> searchStoreModel = await request<SearchStoreModel>(
+    TEResponse searchStoreModel = await request<SearchStoreModel>(
         URLRoutes.searchStore,
         call: CALLTYPE.GET,
         param: param,

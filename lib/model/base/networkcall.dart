@@ -18,9 +18,9 @@ void setTokenModifier({Function tokenModifier}){
 get _token => _modifyToken(TokenHandler.token);
 
 
-void initialise({Function tokenModifier}){
+Future initialise({Function tokenModifier}) async{
   _modifyToken = tokenModifier;
-  init();
+  await init();
 }
 
 
@@ -39,21 +39,21 @@ Future<int> _idGenerator() async{
   return rand;
 }
 
-class TEResponse<T>{
+class TEResponse{
   TEResponse(this._id);
   final int _id;
-  Completer<T> cachedResponseCompleter = Completer<T>();
-  Future<T> get cachedResponse => cachedResponseCompleter.future;
+  Completer cachedResponseCompleter = Completer();
+  Future get cachedResponse => cachedResponseCompleter.future;
 
   void dispose(){
     sendRequest(_id);
   }
-  Completer<T> _response = Completer<T>();
-  Future<T> get response => _response.future;
+  Completer _response = Completer();
+  Future get response => _response.future;
 
 }
 
-Future<TEResponse<T>> request<T>(String route, {
+Future<TEResponse> request<T>(String route, {
   @required CALLTYPE call,
   Map<String, String> param,
   Map<String, dynamic> header,
@@ -66,7 +66,7 @@ Future<TEResponse<T>> request<T>(String route, {
 
   int id = await _idGenerator();
   print(id);
-  TEResponse<T> response = TEResponse(id);
+  TEResponse response = TEResponse(id);
 
   Map<String, dynamic> data = {
     'id':id,
@@ -82,12 +82,18 @@ Future<TEResponse<T>> request<T>(String route, {
   await isReady;
   sendRequest(data, response: response).then((value){
     idQueue.remove(id);
-    if(value is Exception){
+    if(value is Exception || value is Error){
       response._response.completeError(value);
       return;
     }
-    print("Value: "+T.toString());
-    response._response.complete(value);
+    if(value is List){
+      print("Value: "+T.toString());
+      response._response.complete(value.cast<T>());
+    }else{
+      print("Value: "+T.toString());
+      response._response.complete(value);
+    }
+
   });
   return response;
 }

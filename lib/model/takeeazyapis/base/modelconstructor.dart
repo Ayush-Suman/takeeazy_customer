@@ -18,15 +18,17 @@ class ClassSelector extends ModelClassSelector{
     }
     switch(route){
       case URLRoutes.getShops:
+        print("shop");
         return ShopModel.fromJSON(map);
         break;
       case URLRoutes.getMeta:
+        print("meta-model");
         return MetaModel.fromJSON(map);
         break;
-      case URLRoutes.getContainers:
+      case URLRoutes.getShopContainers:
+        print("containers");
         return ContainerModel.fromJSON(map);
-      case URLRoutes.getShops:
-        return ShopModel.fromJSON(map);
+        break;
       default: return map;
     }
   }

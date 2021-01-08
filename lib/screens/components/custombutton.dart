@@ -28,7 +28,7 @@ class TEButton extends StatelessWidget{
         ),
         decoration: BoxDecoration(
           color: colored?null:Color(0xffaaaaaa),
-            borderRadius: rounded?BorderRadius.all(Radius.circular(8)):null,
+            borderRadius: rounded?BorderRadius.all(Radius.circular(10)):null,
             gradient: colored?LinearGradient(
                 begin:  Alignment.centerLeft,
                 end: Alignment.centerRight,

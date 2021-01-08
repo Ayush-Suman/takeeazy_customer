@@ -6,10 +6,10 @@ import 'package:takeeazy_customer/model/googleapis/geocoding/address.dart';
 
 class GeocodingServices{
 
-  static Future<TEResponse<AddressResults>> getAddress(double latitude, double longitude) async {
+  static Future<TEResponse> getAddress(double latitude, double longitude) async {
     Map<String, String> param = {'latlng': '${latitude},${longitude}', 'key':APIKey};
     print(param.toString());
-    TEResponse<AddressResults> response = await request<AddressResults>(GoogleAPIURLRoutes.geocoding, call: CALLTYPE.GET, isGoogleApi: true, param: param);
+    TEResponse response = await request<AddressResults>(GoogleAPIURLRoutes.geocoding, call: CALLTYPE.GET, isGoogleApi: true, param: param);
     //response.dispose();
     return response;
   }

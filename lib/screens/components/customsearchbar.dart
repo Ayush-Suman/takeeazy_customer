@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:takeeazy_customer/screens/values/colors.dart';
 
 class SearchBar extends StatelessWidget {
   @override
@@ -9,19 +10,19 @@ class SearchBar extends StatelessWidget {
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(10),
           ),
-          fillColor: Color(0xfff3f2f2),
+          fillColor: Color(0xffeeeeee),
           filled: true,
           prefixIcon: Icon(
             Icons.search,
-            color: Color(0xff3b6e9e),
+            color: TakeEazyColors.gradient2Color,
           ),
           suffixIcon: IconButton(
+            iconSize: 20,
             icon: Icon(
-              Icons.cancel_outlined,
-              color: Color(0xff3b6e9e),
-              size: 20,
+              Icons.close,
+              color: TakeEazyColors.gradient2Color,
             ),
             onPressed: () {},
           ),
