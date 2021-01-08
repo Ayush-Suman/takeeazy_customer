@@ -42,11 +42,13 @@ Future<int> _idGenerator() async{
 class TEResponse<T>{
   TEResponse(this._id);
   final int _id;
+  Completer<T> cachedResponseCompleter = Completer<T>();
+  Future<T> get cachedResponse => cachedResponseCompleter.future;
 
   void dispose(){
     sendRequest(_id);
   }
-  Completer<T> _response = Completer();
+  Completer<T> _response = Completer<T>();
   Future<T> get response => _response.future;
 
 }
@@ -78,7 +80,7 @@ Future<TEResponse<T>> request<T>(String route, {
     'selector': isGoogleApi
   };
   await isReady;
-  sendRequest(data).then((value){
+  sendRequest(data, response: response).then((value){
     idQueue.remove(id);
     if(value is Exception){
       response._response.completeError(value);

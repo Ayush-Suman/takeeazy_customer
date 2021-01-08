@@ -2,7 +2,7 @@ import 'package:takeeazy_customer/main.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/base/URLRoutes.dart';
 import 'package:takeeazy_customer/model/base/calltype.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart';
-import 'package:takeeazy_customer/model/categories/categoriesModel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/categories/categoriesModel.dart';
 
 class CategoriesServices {
   static Future<TEResponse> getCategoriesByContainer(

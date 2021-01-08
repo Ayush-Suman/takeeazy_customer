@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart';
 import 'package:http/io_client.dart';
+import 'package:takeeazy_customer/model/base/caching.dart';
 import 'package:takeeazy_customer/model/base/calltype.dart';
 import 'package:takeeazy_customer/model/base/modelclassselector.dart';
+import 'package:takeeazy_customer/model/base/networkcall.dart';
 import 'package:takeeazy_customer/model/googleapis/base/googleapiconstructor.dart';
-import 'package:takeeazy_customer/model/googleapis/geocoding/address.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/base/modelconstructor.dart';
 
 
@@ -27,6 +27,7 @@ List<Map<String, dynamic>> responseQueue = List<Map<String, dynamic>>();
 void init() async {
   _isolate = await Isolate.spawn(_entryFunction, _receivePort.sendPort);
   _sendPort = await _receivePort.first;
+  await initialiseCaching();
   _isolateReady.complete();
 }
 
@@ -38,14 +39,21 @@ void destroy() {
 }
 
 
-Future<dynamic> sendRequest(var data) async {
+Future<dynamic> sendRequest(var data, {TEResponse response}) async {
   ReceivePort _responsePort = ReceivePort();
+  ReceivePort _cachedResponsePort = ReceivePort();
   if(data is Map) {
     int id = data['id'];
   }
-    _sendPort.send([
-      data, _responsePort.sendPort]);
-    dynamic returnValue = await _responsePort.first;
+  _sendPort.send([
+    data,
+    _responsePort.sendPort,
+    _cachedResponsePort.sendPort]);
+  _cachedResponsePort.first.then((value) {
+    response.cachedResponseCompleter.complete(value);
+    _cachedResponsePort.close();
+  });
+  dynamic returnValue = await _responsePort.first;
   _responsePort.close();
   print("Hello");
   print(returnValue);
@@ -62,15 +70,16 @@ void _entryFunction(var meta) async{
   final GoogleClassSelector googleClassSelector = GoogleClassSelector();
   final ClassSelector classSelector = ClassSelector();
   print("entry function started");
-
   ReceivePort receivePort = ReceivePort();
   meta.send(receivePort.sendPort);
 
   _requestDataHandler.addListener(() async {
     SendPort childSendPort;
+    SendPort cachedChildSendPort;
     print("child received");
     int id = _requestDataHandler.newId;
     childSendPort = _requestDataHandler._sendPorts[id];
+    cachedChildSendPort = _requestDataHandler._cachedSendPorts[id];
     var data = _requestDataHandler._datas.singleWhere((
         element) => element['id'] == id);
     CALLTYPE call;
@@ -81,6 +90,7 @@ void _entryFunction(var meta) async{
     Map<String, String> param;
     Map<String, dynamic> body;
     String route;
+    bool needCachedData;
 
     if (data is Map<String, dynamic>) {
       call = data['call'];
@@ -91,6 +101,28 @@ void _entryFunction(var meta) async{
       route = data['route'];
       modelClassSelector =
       data['selector'] as bool ? googleClassSelector : classSelector;
+      needCachedData = data['isCached'];
+    }
+    if(needCachedData??false){
+      getCachedData(apiToLocal[route])
+          .then((value){
+            dynamic modelClass;
+            if(value!=null){
+                dynamic decoded = jsonDecode(value);
+                  if(decoded is List){
+                    modelClass = List();
+                    for(dynamic m in decoded){
+                      modelClass.add(modelClassSelector.classSelector(route, m));
+                    }
+                  } else {
+                    print("Deserialize");
+                    modelClass = modelClassSelector.classSelector(route, decoded);
+                  }
+            }
+            cachedChildSendPort.send(modelClass);
+      });
+    }else{
+     cachedChildSendPort.send(null);
     }
 
     final Uri uri = Uri.https(modelClassSelector.URL, route, param);
@@ -203,6 +235,7 @@ void _entryFunction(var meta) async{
               print("Deserialize");
               modelClass = modelClassSelector.classSelector(route, decoded);
             }
+            cacheData(response.body, apiToLocal[route]);
             childSendPort.send(modelClass);
             print("sent "+modelClass.toString());
           }catch(e){
@@ -256,14 +289,13 @@ void _entryFunction(var meta) async{
       _requestDataHandler.removeData(message[0]);
     }
   });
-
-
 }
 
 
 
 class RequestDataHandler with ChangeNotifier{
   Map<int, SendPort> _sendPorts = {};
+  Map<int, SendPort> _cachedSendPorts = {};
   Map<int,IOClient> _clients = {};
   Map<int, bool> _isCancelled = {};
   Map<int, StreamSubscription> _subsList= {};
@@ -279,6 +311,7 @@ class RequestDataHandler with ChangeNotifier{
     var reqdata = data[0];
     newId = reqdata['id'];
     _sendPorts.addAll({newId: data[1]});
+    _cachedSendPorts.addAll({newId: data[2]});
     _isCancelled.addAll({newId: false});
     _clients.addAll({newId:IOClient()});
     _datas.add(reqdata);
@@ -300,6 +333,8 @@ class RequestDataHandler with ChangeNotifier{
       _clients.remove(id);
     }
    if(_sendPorts[id]!=null){
+     _cachedSendPorts[id].send(null);
+     _cachedSendPorts.remove(id);
      _sendPorts[id].send(null);
      _sendPorts.remove(id);
    }

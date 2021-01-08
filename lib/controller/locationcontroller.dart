@@ -17,6 +17,7 @@ import 'package:takeeazy_customer/model/googleapis/placeautocomplete/places.dart
 import 'package:takeeazy_customer/model/googleapis/placedetails/placedetails.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/meta/meta.dart';
+import 'package:takeeazy_customer/model/base/caching.dart';
 
 
 enum LocationStatus{
@@ -250,8 +251,8 @@ class LocationController{
 
   void storeValues(){
     print("Saving ${city.text} ${serviceableArea.serviceAvailable}");
-   Caching.city = city.text;
-   Caching.serviceableArea = serviceableArea.serviceAvailable;
+    Map data = {'city': city.text, 'ser': serviceableArea.serviceAvailable};
+    storeData(data, "City");
  }
 
 }
