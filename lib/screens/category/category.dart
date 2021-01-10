@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:takeeazy_customer/controller/shopController.dart';
+import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
+import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/components/shopCard.dart';
-import 'package:takeeazy_customer/screens/shop/shop.dart';
 
 class Category extends StatelessWidget {
   @override
@@ -18,7 +21,7 @@ class Category extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //SearchBar(),
-        /*  Padding(
+          /*  Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
             child: Container(
               height: 150,
@@ -46,13 +49,12 @@ class Category extends StatelessWidget {
               itemBuilder: (context, index) => GestureDetector(
                 child: ShopCard(),
                 onTap: () {
-                  // will be shifted to named routes later
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Shop(),
-                    ),
-                  );
+                  final ShopController shopController =
+                      Provider.of<ShopController>(context, listen: false);
+                  shopController.categoriesController
+                      .setCategories(['Fruits', 'Vegetables']);
+                  NavigatorService.rootNavigator
+                      .popAndPushNamed(HomeNavigator.shop);
                 },
               ),
               itemCount: 10,

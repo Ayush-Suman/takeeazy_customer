@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
-class ShopController {}
+class ShopController {
+  String _containerName = '';
+  final ShopDetailsController shopDetailsController = ShopDetailsController();
+  final CategoriesController categoriesController = CategoriesController();
+
+  void setContainerName(String container) {
+    _containerName = container;
+  }
+
+  String get containerName => _containerName;
+}
 
 class ShopDetails {
   final String imageUrl;
@@ -22,7 +32,7 @@ class ShopDetails {
 class ShopDetailsController with ChangeNotifier {
   ShopDetails _shopDetails;
 
-  set setShopDetails(ShopDetails shopDetails) {
+  void setShopDetails(ShopDetails shopDetails) {
     _shopDetails = shopDetails;
     notifyListeners();
   }
@@ -31,9 +41,9 @@ class ShopDetailsController with ChangeNotifier {
 }
 
 class CategoriesController with ChangeNotifier {
-  List<String> _categories;
+  List<String> _categories = ["Fruits", "Vegetables"];
 
-  set setCategories(List<String> categories) {
+  void setCategories(List<String> categories) {
     _categories = categories;
     notifyListeners();
   }

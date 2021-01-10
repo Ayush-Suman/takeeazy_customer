@@ -6,6 +6,7 @@ import 'package:takeeazy_customer/screens/components/subcategory.dart';
 class Shop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final String itemId = ModalRoute.of(context).settings.arguments as String;
     return Scaffold(
       appBar: AppBar(
         title: TEText(
