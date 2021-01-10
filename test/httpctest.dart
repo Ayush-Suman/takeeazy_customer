@@ -3,6 +3,7 @@ import 'package:takeeazy_customer/model/base/calltype.dart';
 import 'package:takeeazy_customer/model/base/httpworker.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/base/URLRoutes.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/categories/categoriesServices.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/containers/containerServices.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/containers/containersModel.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/meta/meta.dart';
@@ -18,7 +19,7 @@ void main()async {
   }, skip: true);
 
   test('test Meta Info',() async{
-    TEResponse response = await Meta.getMetaInfo();
+    TEResponse response = await CategoriesServices.getCategoriesByContainer();
     await response.response;
     //print(containers[0].containerName);
   });

@@ -20,7 +20,7 @@ class StoresServices {
     Map<String, String> param = {
       'container': container,
     };
-    TEResponse shopModel = await request<ShopModel>(URLRoutes.getShops,
+    TEResponse shopModel = await request<List<ShopModel>>(URLRoutes.getShops,
         call: CALLTYPE.GET, param: param, auth: true);
     return shopModel;
   }

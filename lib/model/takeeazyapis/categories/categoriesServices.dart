@@ -9,7 +9,7 @@ class CategoriesServices {
       {String container = 'Groceries %26 Essentials'}) async {
     Map<String, String> param = {'container': container};
 
-    TEResponse categoriesModel = await request<CategoriesModel>(
+    TEResponse categoriesModel = await request<List<CategoriesModel>>(
         URLRoutes.getCategories,
         call: CALLTYPE.GET,
         param: param);

@@ -18,7 +18,7 @@ class ShopModel{
     shopName: shopData['shopName'],
     primaryPhone : shopData['primaryPhone'],
     createdAt : shopData['createdAt'],
-    categories : shopData['categories'],
+    categories : shopData['categories'].cast<String>(),
     location : Location.fromJSON(shopData['location'])
     );
   }
@@ -32,6 +32,6 @@ class Location {
   Location({this.type, this.coordinates});
 
   factory Location.fromJSON(Map<String, dynamic> location){
-    return Location(type: location['type'], coordinates: location['coordinates']);
+    return Location(type: location['type'], coordinates: location['coordinates'].cast<double>());
   }
 }

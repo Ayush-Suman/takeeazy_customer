@@ -27,12 +27,10 @@ class HomeController{
 
 
   void updateValues() async{
-    if(!updatedController.isUpdated) {
       Map data = await readData("City");
       city.text = data['city'];
       serviceableAreaController.serviceAvailable = data['ser'];
       updatedController.isUpdated = true;
-    }
   }
 
 

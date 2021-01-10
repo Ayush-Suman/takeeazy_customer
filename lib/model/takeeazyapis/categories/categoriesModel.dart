@@ -22,7 +22,7 @@ class CategoriesModel {
     return CategoriesModel(
         description: map['description'],
         hasSubCategories: map['hasSubCategories'],
-        subCategories: map['subCategories'],
+        subCategories: map['subCategories'].cast<String>(),
         id: map['_id'],
         categoryName: map['categoryName'],
         containerId: map['containerId'],
