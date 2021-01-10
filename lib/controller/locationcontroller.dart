@@ -29,12 +29,16 @@ enum LocationStatus{
 
 class PositionController with ChangeNotifier{
   Position _position;
-  get position => _position;
+  Position get position => _position;
   set position(p){
     if(_position != p){
       _position = p;
       notifyListeners();
     }
+  }
+
+  void notify(){
+    notifyListeners();
   }
 }
 
@@ -83,7 +87,7 @@ class LocationStatusController with ChangeNotifier {
 }
 
 
-
+// TODO:
 class CustomFocusNode extends FocusNode{
   ListStatusController _listStatusController;
   set listStatusController(ListStatusController lsc){
@@ -98,11 +102,13 @@ class CustomFocusNode extends FocusNode{
     });
 
   }
+
 }
 
 
 class LocationController{
   String currentAddress="";
+  bool liveLocationRequired = true;
   final _dialogService = DialogService();
   final TextController city = TextController();
   final TextEditingController addressLine = TextEditingController();
@@ -161,6 +167,7 @@ class LocationController{
 
   Future getMetaData() async {
     print("Fetching Meta Info");
+    liveLocationRequired =false;
     locationStatusController._newLocationStatus = LocationStatus.Fetching;
     TEResponse response = await Meta.getMetaInfo(
         longitude: positionController.position.longitude,
@@ -170,7 +177,7 @@ class LocationController{
       serviceableArea.serviceAvailable = true;
       print("Serviceable Area");
       storeValues();
-      NavigatorService.rootNavigator.popAndPushNamed(TERoutes.home);
+      NavigatorService.rootNavigator.popAndPushNamed(TERoutes.bottomnav);
       locationStatusController._newLocationStatus = LocationStatus.Fetched;
     }).catchError((e){
       print("ERROR " + e.toString());
@@ -178,7 +185,7 @@ class LocationController{
         print("NonServiceable Area");
         serviceableArea.serviceAvailable = false;
         storeValues();
-        NavigatorService.rootNavigator.popAndPushNamed(TERoutes.home);
+        NavigatorService.rootNavigator.popAndPushNamed(TERoutes.bottomnav);
         locationStatusController._newLocationStatus = LocationStatus.Fetched;
       }
     });
@@ -251,7 +258,13 @@ class LocationController{
 
   void storeValues(){
     print("Saving ${city.text} ${serviceableArea.serviceAvailable}");
-    Map data = {'city': city.text, 'ser': serviceableArea.serviceAvailable};
+    Map data = {
+      'city': city.text,
+      'ser': serviceableArea.serviceAvailable,
+      'lat': positionController.position.latitude.toString(),
+      'lng': positionController.position.longitude.toString(),
+      'addressLine': currentAddress
+    };
     storeData(data, "City");
  }
 

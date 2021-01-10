@@ -58,12 +58,10 @@ flutter:
   assets:
     - assets/assistant.png
     - assets/pickupanddrop.png
-    - assets/fruits and Vegetables.png
-    - assets/daily Groceries.png
-    - assets/meat and Fish.png
-    - assets/medicines.png
-    - assets/pet Care.png
     - assets/hamburger.png
+    - assets/takeeazy_icon.png
+    - assets/description.png
+    -
   fonts:
     - family: Rubik
       fonts:

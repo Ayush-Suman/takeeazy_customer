@@ -9,6 +9,7 @@ class Cart extends StatelessWidget {
       appBar: AppBar(
         title: TEText(
           text: 'Cart',
+          fontWeight: FontWeight.w700,
         ),
       ),
       body: ListView.builder(

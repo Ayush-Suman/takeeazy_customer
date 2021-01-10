@@ -32,7 +32,10 @@ class _LocationConfirmState extends State{
   void initState() {
      _locationController = Provider.of<LocationController>(context, listen: false);
      _locationController.focusNode.listStatusController = _locationController.listStatusController;
-     _locationController.getLocationData();
+     _locationController.focusNode.addListener(() {
+       _locationController.addressLine.selection = TextSelection(baseOffset: 0, extentOffset: _locationController.addressLine.text.length);
+     });
+     if(_locationController.liveLocationRequired) {_locationController.getLocationData();} else {_locationController.positionController.notify();}
      Timer timer = Timer(Duration(seconds: 1), (){print("Timer Ended");});
      _locationController.addressLine.addListener((){
        timer.cancel();
