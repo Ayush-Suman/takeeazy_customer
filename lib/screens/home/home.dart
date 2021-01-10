@@ -86,8 +86,8 @@ class Home extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          ServicesWidget(widgetName: 'pickupanddrop'),
-                          ServicesWidget(widgetName: 'assistant'),
+                          RoundedImage(imageAsset:'assets/pickupanddrop.png'),
+                          RoundedImage(imageAsset:'assets/assistant.png'),
                         ],
                       ),
                     ),
