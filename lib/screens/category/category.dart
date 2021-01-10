@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:takeeazy_customer/screens/components/customsearchbar.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/components/shopCard.dart';
 import 'package:takeeazy_customer/screens/shop/shop.dart';
@@ -18,7 +17,7 @@ class Category extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SearchBar(),
+          //SearchBar(),
         /*  Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 16),
             child: Container(

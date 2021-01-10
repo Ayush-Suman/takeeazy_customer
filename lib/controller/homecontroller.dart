@@ -10,23 +10,29 @@ import 'package:takeeazy_customer/model/takeeazyapis/containers/containersModel.
 class HomeController{
 
   final TextController city = TextController();
+  final TextEditingController search = TextEditingController();
+  final FocusNode searchFocus = FocusNode();
   final ServiceableArea serviceableAreaController = ServiceableArea();
   final UpdatedController updatedController = UpdatedController();
   final ContainerListController containerListController = ContainerListController();
 
 
-  void getContainers() async{
+  void getContainers({bool forced=false}) async{
+    if(!containerListController.containerUpdatedController.isUpdated || forced){
     TEResponse response = await ContainerServices.getContainers();
     containerListController.containerList = await response.response;
     containerListController.containerUpdatedController.isUpdated = true;
+    }
   }
 
 
   void updateValues() async{
-    Map data = await readData("City");
-    city.text = data['city'];
-    serviceableAreaController.serviceAvailable = data['ser'];
-    updatedController.isUpdated = true;
+    if(!updatedController.isUpdated) {
+      Map data = await readData("City");
+      city.text = data['city'];
+      serviceableAreaController.serviceAvailable = data['ser'];
+      updatedController.isUpdated = true;
+    }
   }
 
 

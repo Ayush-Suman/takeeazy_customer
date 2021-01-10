@@ -29,12 +29,10 @@ class Home extends StatelessWidget {
 
 
 
-    final double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    HomeController homeController = Provider.of<HomeController>(
-        context, listen: false);
+    final double width = MediaQuery.of(context).size.width;
+
+    HomeController homeController = Provider.of<HomeController>(context, listen: false);
+
     homeController.updateValues();
     homeController.getContainers();
 
@@ -81,7 +79,7 @@ class Home extends StatelessWidget {
                 homeController.serviceableAreaController.serviceAvailable
                     ? ListView(
                   children: [
-                    SearchBar(),
+                    SearchBar(controller: homeController.search, focusNode: homeController.searchFocus,),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 5),

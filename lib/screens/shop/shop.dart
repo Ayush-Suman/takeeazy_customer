@@ -21,7 +21,7 @@ class Shop extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ShopCard(),
             ),
-            SearchBar(),
+            //SearchBar(),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),

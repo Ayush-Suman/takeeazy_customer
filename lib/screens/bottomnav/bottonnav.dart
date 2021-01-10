@@ -76,7 +76,7 @@ class HomeNavigator extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    print("Rebuilding Home");
+    print("Rebuilding Home homeNavigator");
     print(currentPage);
     return Navigator(
       key: NavigatorService.homeNavigatorKey,
@@ -89,6 +89,7 @@ class HomeNavigator extends StatelessWidget{
     print("generating route");
     switch(settings.name){
       case home:
+        print('generating new Home');
         currentPage = home;
         return MaterialPageRoute(builder: (_)=>Provider.value(value:homeController,
           builder: (_, a) => Home(),
