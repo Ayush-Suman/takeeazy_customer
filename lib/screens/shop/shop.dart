@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:takeeazy_customer/screens/components/customsearchbar.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/nearbystores/shopCard.dart';
 import 'package:takeeazy_customer/screens/components/subcategory.dart';
@@ -7,6 +6,7 @@ import 'package:takeeazy_customer/screens/components/subcategory.dart';
 class Shop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final String itemId = ModalRoute.of(context).settings.arguments as String;
     return Scaffold(
       appBar: AppBar(
         title: TEText(
