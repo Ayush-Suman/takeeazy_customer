@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/homecontroller.dart';
+import 'package:takeeazy_customer/controller/nearbystorescontroller.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/screens/cart/cart.dart';
-import 'package:takeeazy_customer/screens/category/category.dart';
+import 'package:takeeazy_customer/screens/nearbystores//nearbystores.dart';
 import 'package:takeeazy_customer/screens/home/home.dart';
 import 'package:takeeazy_customer/screens/item/item.dart';
 import 'package:takeeazy_customer/screens/shop/shop.dart';
@@ -26,12 +27,21 @@ class _BottomNavState extends State{
     HomeNavigator(),
     Cart(),
   ];
+  Map<int, GlobalKey<NavigatorState>> navigatorMap = {
+    1: NavigatorService.homeNavigatorKey,
+    0: NavigatorService.ordersNavigatorKey,
+    2: NavigatorService.cartNavigatorKey
+  };
+
+
 
 
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async=>!await navigatorMap[_currentIndex].currentState.maybePop(),
+        child: Scaffold(
       key:globalKey,
       body: widgets[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -57,7 +67,7 @@ class _BottomNavState extends State{
           )
         ]
       ),
-    );
+    ));
   }
 }
 
@@ -71,6 +81,7 @@ class HomeNavigator extends StatelessWidget{
   static const String items = '/items';
 
   static final HomeController homeController = HomeController();
+  static final NearbyStoresController nearbyStoresController = NearbyStoresController();
 
   static String currentPage = home;
 
@@ -82,8 +93,10 @@ class HomeNavigator extends StatelessWidget{
       key: NavigatorService.homeNavigatorKey,
       initialRoute: currentPage,
       onGenerateRoute: generateRoutes,
-    );;
+    );
   }
+
+
 
   static Route<dynamic> generateRoutes(RouteSettings settings){
     print("generating route");
@@ -97,7 +110,8 @@ class HomeNavigator extends StatelessWidget{
         break;
       case stores:
         currentPage = stores;
-        return MaterialPageRoute(builder: (_)=>Category());
+        return MaterialPageRoute(builder: (_)=> Provider.value(value:nearbyStoresController,
+            builder: (_,a)=> NearbyStores()));
         break;
       case shop:
         currentPage = shop;

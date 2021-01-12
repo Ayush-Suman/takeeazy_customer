@@ -20,19 +20,19 @@ class StoresServices {
     Map<String, String> param = {
       'container': container,
     };
-    TEResponse shopModel = await request<List<ShopModel>>(URLRoutes.getShops,
+    TEResponse shopModel = await request<ShopModel>(URLRoutes.getShops,
         call: CALLTYPE.GET, param: param, auth: true);
     return shopModel;
   }
 
   static Future<TEResponse> getStoresByDistanceInAContainer(
-      {String container = 'Groceries %26 Essentials',
-      double latitude = 0.0,
-      double longitude = 0.0,
+      {String container = '',
+      String latitude = '0.0',
+      String longitude = '0.0',
       double dist = 0}) async {
     Map<String, String> param = {
       'dist': dist.toString(),
-      'geo': latitude.toString() + ',' + longitude.toString(),
+      'geo': latitude+','+longitude,
       'container': container
     };
     TEResponse shopModel = await request<ShopModel>(URLRoutes.getShops,

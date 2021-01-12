@@ -8,6 +8,7 @@ import 'package:takeeazy_customer/controller/textcontroller.dart';
 import 'package:takeeazy_customer/main.dart';
 import 'package:takeeazy_customer/model/base/exception.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart';
+import 'package:takeeazy_customer/model/caching/runtimecaching.dart';
 import 'package:takeeazy_customer/model/dialog/dialogservice.dart';
 import 'package:takeeazy_customer/model/googleapis/geocoding/address.dart';
 import 'package:takeeazy_customer/model/googleapis/geocoding/geocodingservices.dart';
@@ -266,6 +267,10 @@ class LocationController{
       'addressLine': currentAddress
     };
     storeData(data, "City");
+    RuntimeCaching.city = city.text;
+    RuntimeCaching.serviceableArea = serviceableArea.serviceAvailable;
+    RuntimeCaching.lng = positionController.position.latitude.toString();
+    RuntimeCaching.lng = positionController.position.longitude.toString();
  }
 
 }

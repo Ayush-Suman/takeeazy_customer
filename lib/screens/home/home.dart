@@ -128,14 +128,13 @@ class Home extends StatelessWidget {
                                                         horizontal: 5),
                                                       child: GestureDetector(
                                                           onTap: () {
-                                                            NavigatorService.homeNavigator.pushNamed(HomeNavigator.stores, arguments: e);
+                                                            homeController.openContainer(e);
                                                           },
                                                           child: Container(
                                                             decoration: BoxDecoration(
                                                                 boxShadow: [
                                                                   BoxShadow(
-                                                                    color: Colors
-                                                                        .grey,
+                                                                    color: Colors.grey,
                                                                     offset: Offset(1, 5),
                                                                     spreadRadius: -4,
                                                                     blurRadius: 6,
@@ -153,10 +152,8 @@ class Home extends StatelessWidget {
                                                                     width: (width - 20) / 3 - 10,
                                                                     child: Center(
                                                                         child: CachedNetworkImage(
-                                                                          imageUrl: e
-                                                                              .imagePath,
-                                                                          fit: BoxFit
-                                                                              .fitWidth,))),
+                                                                          imageUrl: e.imagePath,
+                                                                          fit: BoxFit.fitWidth,))),
                                                                 Center(
                                                                     child: Padding(
                                                                         padding: EdgeInsets
@@ -164,14 +161,11 @@ class Home extends StatelessWidget {
                                                                             10),
                                                                         child: FittedBox(
                                                                             child: TEText(
-                                                                              text: e
-                                                                                  .containerName,
-                                                                              fontColor: TakeEazyColors
-                                                                                  .gradient2Color,
+                                                                              text: e.containerName,
+                                                                              fontColor: TakeEazyColors.gradient2Color,
                                                                               fontSize: 12,
                                                                               maxLines: 1,
-                                                                              fontWeight: FontWeight
-                                                                                  .w700,))))
+                                                                              fontWeight: FontWeight.w700,))))
                                                               ],
                                                             ),
                                                           )),

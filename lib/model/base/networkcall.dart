@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:takeeazy_customer/model/base/calltype.dart';
-import 'package:takeeazy_customer/model/base/exception.dart';
 import 'package:takeeazy_customer/model/base/httpworker.dart';
 import 'package:takeeazy_customer/model/base/tokenhandler.dart' as TokenHandler;
 
@@ -87,8 +86,8 @@ Future<TEResponse> request<T>(String route, {
       return;
     }
     if(value is List){
-      print("Value: "+T.toString());
-      response._response.complete(value.cast<T>());
+      print("Value: "+value.cast<T>().runtimeType.toString());
+        response._response.complete(value.cast<T>());
     }else{
       print("Value: "+T.toString());
       response._response.complete(value);

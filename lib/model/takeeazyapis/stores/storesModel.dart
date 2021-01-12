@@ -1,6 +1,4 @@
-ShopModel shopModel(Map<String, dynamic> map){
-  return ShopModel.fromJSON(map);
-}
+
 
 
 class ShopModel{
@@ -15,7 +13,7 @@ class ShopModel{
 
   factory ShopModel.fromJSON(Map<String, dynamic> shopData) {
     return ShopModel(id : shopData['_id'],
-    shopName: shopData['shopName'],
+    shopName: shopData['storeName'],
     primaryPhone : shopData['primaryPhone'],
     createdAt : shopData['createdAt'],
     categories : shopData['categories'].cast<String>(),

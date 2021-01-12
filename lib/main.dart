@@ -7,6 +7,7 @@ import 'package:takeeazy_customer/controller/homecontroller.dart';
 import 'package:takeeazy_customer/controller/locationcontroller.dart';
 import 'package:takeeazy_customer/model/base/caching.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart' as NetworkCalls;
+import 'package:takeeazy_customer/model/caching/runtimecaching.dart';
 import 'package:takeeazy_customer/model/dialog/dialogmanager.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
@@ -43,6 +44,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     if(data!=null){
+      RuntimeCaching.city = data['city'];
+      RuntimeCaching.serviceableArea = data['ser'];
+      RuntimeCaching.lat = data['lat'];
+      RuntimeCaching.lng = data['lng'];
         TERoutes.locationController.positionController.position = Position(latitude: double.parse(data['lat']), longitude: double.parse(data['lng']));
         TERoutes.locationController.liveLocationRequired = false;
     }

@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
-import 'customtext.dart';
+import 'package:takeeazy_customer/model/caching/runtimecaching.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/stores/storesModel.dart';
+import 'package:takeeazy_customer/screens/components/servicesWidget.dart';
+import 'package:takeeazy_customer/screens/values/colors.dart';
+import '../components/customtext.dart';
 
 class ShopCard extends StatelessWidget {
+  final ShopModel shopModel;
+  ShopCard({this.shopModel});
+
+
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final Size size = (TextPainter(
+        text: TextSpan(text: "3.8", style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, fontFamily: 'Rubik')),
+        maxLines: 1,
+        textScaleFactor: MediaQuery
+            .of(context)
+            .textScaleFactor,
+        textDirection: TextDirection.ltr)
+      ..layout())
+        .size;
+
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                  blurRadius: 5.0,
-                ),
-              ],
-            ),
-            child: Image.asset(
-              'assets/assistant.png',
-              height: 100,
-              width: 100,
-              fit: BoxFit.cover,
-            ),
-          ),
+        children: [RoundedImage(imageURL: null, height: width*0.25, width: width*0.25),
           Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: 10,
+              horizontal: 2,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,22 +39,27 @@ class ShopCard extends StatelessWidget {
                   padding: const EdgeInsets.all(2.0),
                   child: Row(
                     children: [
-                      TEText(
-                        text: 'ShopName',
+                      ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: width*0.75-100-size.width
+                          ),
+                          child:TEText(
+                        text: shopModel.shopName,
                         fontWeight: FontWeight.normal,
                         fontSize: 17,
+                        maxLines: 1,
                         fontColor: Color(0xff3b6e9e),
-                      ),
+                      )),
                       const SizedBox(
                         width: 12,
                       ),
                       CircleAvatar(
+                        backgroundColor: Colors.white,
                         radius: 9,
-                        backgroundColor: Colors.grey,
                         child: Icon(
                           Icons.star,
                           size: 13,
-                          color: Color(0xff3b6e9e),
+                          color: TakeEazyColors.gradient2Color,
                         ),
                       ),
                       const SizedBox(
@@ -88,7 +95,7 @@ class ShopCard extends StatelessWidget {
                         width: 12,
                       ),
                       TEText(
-                        text: 'Gandhi Nagar',
+                        text: RuntimeCaching.city,
                         fontColor: Color(0xffA19F9F),
                       ),
                     ],

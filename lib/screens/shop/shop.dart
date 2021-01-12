@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:takeeazy_customer/screens/components/customsearchbar.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
-import 'package:takeeazy_customer/screens/components/shopCard.dart';
+import 'package:takeeazy_customer/screens/nearbystores/shopCard.dart';
 import 'package:takeeazy_customer/screens/components/subcategory.dart';
 
 class Shop extends StatelessWidget {

@@ -6,8 +6,12 @@ class RoundedImage extends StatelessWidget {
   final String imageAsset;
   final String imageURL;
   final Function onTap;
+  final double height;
+  final double width;
 
   const RoundedImage({
+    this.width,
+    this.height,
     this.imageAsset,
     this.imageURL,
     this.onTap
@@ -16,10 +20,10 @@ class RoundedImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: onTap??(){
-          print("Tapped Rounded Image");
-        },
+        onTap: onTap,
         child: Container(
+          height: height,
+          width: width,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -39,7 +43,7 @@ class RoundedImage extends StatelessWidget {
             child: imageAsset!=null?Image.asset(
                 imageAsset,
                 fit: BoxFit.contain,
-            ):CachedNetworkImage(imageUrl: imageURL)
+            ):imageURL!=null?CachedNetworkImage(imageUrl: imageURL,): Image.asset('assets/takeeazy_icon.png')
             )
       ));
   }
