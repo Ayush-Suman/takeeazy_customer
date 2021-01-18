@@ -98,10 +98,10 @@ class _LocationConfirmState extends State{
                             child:ChangeNotifierProvider.value(
                                 value: _locationController.searchController,
                                builder:(_, a)=>
-                                   Consumer<SearchController>(
+                                   Consumer<ValueNotifier<bool>>(
                                      builder: (_, sc, child){
-                                        print(sc.isSearching.toString());
-                                        return _locationController.searchController.isSearching?child:Container();
+                                        print(sc.value.toString());
+                                        return sc.value?child:Container();
                                        },
                                        child:CircularProgressIndicator(),))
                         ),

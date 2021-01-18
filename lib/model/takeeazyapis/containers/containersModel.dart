@@ -1,11 +1,12 @@
-class ContainerModel {
-  final String containerName;
+
+import 'package:takeeazy_customer/model/takeeazyapis/options/optionsmodel.dart';
+
+class ContainerModel extends OptionsModel {
   final String description;
   final String id;
-  final String imagePath;
   final String updatedAt;
 
-  ContainerModel({this.containerName, this.description, this.id, this.imagePath, this.updatedAt});
+  ContainerModel({containerName, this.description, this.id, imagePath, this.updatedAt}):super(name: containerName, imageURL: imagePath );
 
   factory ContainerModel.fromJSON(Map<String, dynamic> map) {
     return ContainerModel(

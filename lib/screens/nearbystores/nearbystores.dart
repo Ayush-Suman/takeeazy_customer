@@ -12,9 +12,11 @@ import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 class NearbyStores extends StatelessWidget {
 
   @override
-  Widget build(BuildContext context) {;
+  Widget build(BuildContext context) {
+    ;
 
-    final NearbyStoresController nearbyStoresController = Provider.of<NearbyStoresController>(context, listen: false);
+    final NearbyStoresController nearbyStoresController = Provider.of<
+        NearbyStoresController>(context, listen: false);
 
     nearbyStoresController.updateValues();
     nearbyStoresController.getStoresNearby();
@@ -22,14 +24,15 @@ class NearbyStores extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: TEText(
-          text: nearbyStoresController.container.containerName,
+          text: nearbyStoresController.container.name,
           fontWeight: FontWeight.w700,
         ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SearchBar(controller: nearbyStoresController.search, focusNode: nearbyStoresController.searchFocus),
+          SearchBar(controller: nearbyStoresController.search,
+              focusNode: nearbyStoresController.searchFocus),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
             child: TEText(
@@ -40,18 +43,28 @@ class NearbyStores extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ChangeNotifierProvider.value(value: nearbyStoresController.storesListController, builder: (_,a)=>Consumer<StoresListController>(builder: (_, slc, child)=>slc.updatedController.value?slc.shops.length>0?ListView.builder(
-              padding: const EdgeInsets.all(8.0),
-              physics: BouncingScrollPhysics(),
-              itemBuilder: (context, index) => GestureDetector(
-                child: ShopCard(shopModel: slc.shops[index],),
-                onTap: () {
-                  nearbyStoresController.openShop(slc.shops[index]);
-                }),
-              itemCount: slc.shops.length,
-              ):Center(child:TEText(text: 'No Stores Found',)):Center(child: CircularProgressIndicator(),),
-            ),
-          )),
+              child: ChangeNotifierProvider.value(
+                value: nearbyStoresController.storesListController,
+                builder: (_, a) =>
+                    Consumer<StoresListController>(
+                      builder: (_, slc, child) =>
+                      slc.updatedController.value
+                          ? slc.shops.length > 0
+                          ? ListView.builder(
+                        padding: const EdgeInsets.all(8.0),
+                        physics: BouncingScrollPhysics(),
+                        itemBuilder: (context, index) =>
+                            InkWell(
+                                child: ShopCard(shopModel: slc.shops[index],),
+                                onTap: () {
+                                  nearbyStoresController.openShop(
+                                      slc.shops[index]);
+                                }),
+                        itemCount: slc.shops.length,
+                      ) : Center(child: TEText(text: 'No Stores Found',))
+                          : Center(child: CircularProgressIndicator(),),
+                    ),
+              )),
         ],
       ),
     );

@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:takeeazy_customer/controller/itemscontroller.dart';
+import 'package:takeeazy_customer/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/components/itemCard.dart';
 
 class Item extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      initialIndex: 0,
-      child: Scaffold(
+    ItemsController itemsController = Provider.of<ItemsController>(context);
+    itemsController.updateValues();
+    itemsController.getItems();
+
+
+    return  Scaffold(
         appBar: AppBar(
-          bottom: TabBar(tabs: [
+          /*bottom: TabBar(tabs: [
             TEText(
               text: 'Bread',
               fontColor: Colors.black,
@@ -23,12 +28,17 @@ class Item extends StatelessWidget {
               text: 'View All',
               fontColor: Colors.black,
             ),
-          ]),
+          ])*/
           title: TEText(
-            text: 'Category Name comes here',
+            text: itemsController.categoriesModel.name,
           ),
         ),
-        body: TabBarView(
+        body: ChangeNotifierProvider.value(value: itemsController.itemListController,builder:(_,a)=>Consumer<OptionController>(builder: (_, oc, child)=>oc.updatedController.value?ListView.builder(
+            itemBuilder: (_, pos)=> ItemCard(oc.list[pos]),
+          itemCount: oc.list.length,
+        ):Center(child: CircularProgressIndicator(),)))
+
+        /*TabBarView(
           children: [
             ListView.builder(
               padding: const EdgeInsets.all(8),
@@ -46,8 +56,7 @@ class Item extends StatelessWidget {
               itemBuilder: (context, index) => ItemCard(isCart: false,),
             ),
           ],
-        ),
-      ),
-    );
+        )*/
+      );
   }
 }

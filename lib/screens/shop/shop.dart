@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:takeeazy_customer/controller/shopController.dart';
+import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/containers/containersModel.dart';
+import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
+import 'package:takeeazy_customer/screens/components/customsearchbar.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
+import 'package:takeeazy_customer/screens/components/options.dart';
 import 'package:takeeazy_customer/screens/nearbystores/shopCard.dart';
-import 'package:takeeazy_customer/screens/components/subcategory.dart';
+
 
 class Shop extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
-    final String itemId = ModalRoute.of(context).settings.arguments as String;
+    final ShopController shopController = Provider.of<ShopController>(context);
+    shopController.updateValues();
+    shopController.getCategories();
+
     return Scaffold(
       appBar: AppBar(
         title: TEText(
-          text: 'Daily Groceries',
+          text: (NavigatorService.homeArgument[HomeNavigator.stores] as ContainerModel).name,
         ),
       ),
       body: SingleChildScrollView(
@@ -19,10 +31,18 @@ class Shop extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ShopCard(),
+              child: ShopCard(shopModel: shopController.shopModel),
             ),
-            //SearchBar(),
-            Container(
+            SearchBar(controller: null, focusNode: null),
+            Options(
+              title: 'Categories',
+              controller: shopController.categoriesController,
+              onTap: (o){
+                shopController.openCategory(o);
+              },
+            )
+
+            /*Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
                 color: Color.fromRGBO(196, 196, 196, 0.46),
@@ -53,7 +73,7 @@ class Shop extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
+            )*/
             /*Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 14),
               child: TEText(

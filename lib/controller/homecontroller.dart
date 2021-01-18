@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:takeeazy_customer/controller/serviceablearea.dart';
+import 'package:takeeazy_customer/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
-import 'package:takeeazy_customer/model/base/caching.dart';
+
 import 'package:takeeazy_customer/model/base/networkcall.dart';
 import 'package:takeeazy_customer/model/caching/runtimecaching.dart';
-import 'package:takeeazy_customer/model/dialog/dialogservice.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/containers/containerServices.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/containers/containersModel.dart';
@@ -18,9 +17,9 @@ class HomeController{
   final TextController city = TextController();
   final TextEditingController search = TextEditingController();
   final FocusNode searchFocus = FocusNode();
-  final ServiceableArea serviceableAreaController = ServiceableArea();
-  final UpdatedController updatedController = UpdatedController();
-  final ContainerListController containerListController = ContainerListController();
+  final ValueNotifier serviceableAreaController = ValueNotifier(false);
+  final ValueNotifier<bool> updatedController = ValueNotifier<bool>(false);
+  final OptionController containerListController = OptionController();
 
   void openContainer(ContainerModel c){
     NavigatorService.homeArgument.addAll({HomeNavigator.stores:c});
@@ -28,11 +27,11 @@ class HomeController{
   }
 
   void getContainers({bool forced=false}) async{
-    if(!containerListController.containerUpdatedController.isUpdated || forced){
+    if(!containerListController.updatedController.value || forced){
       TEResponse response = await ContainerServices.getContainers();
       try{
-        containerListController.containerList = await response.response;
-        containerListController.containerUpdatedController.isUpdated = true;
+        containerListController.list = await response.response;
+        containerListController.updatedController.value = true;
       }catch(e){
         if(e is SocketException){
           print('No Internet');
@@ -44,8 +43,8 @@ class HomeController{
 
   void updateValues() async{
       city.text = RuntimeCaching.city;
-      serviceableAreaController.serviceAvailable = RuntimeCaching.serviceableArea;
-      updatedController.isUpdated = true;
+      serviceableAreaController.value = RuntimeCaching.serviceableArea;
+      updatedController.value = true;
   }
 
 
@@ -53,31 +52,8 @@ class HomeController{
 
 
 
-class ContainerListController with ChangeNotifier{
-  final UpdatedController containerUpdatedController = UpdatedController();
 
 
-  List<ContainerModel> _containerList;
-  List<ContainerModel> get containerList => _containerList;
-  set containerList(List<ContainerModel> list){
-    if(list!=_containerList){
-      _containerList = list;
-      notifyListeners();
-    }
-  }
-}
-
-class UpdatedController with ChangeNotifier{
-  bool _updated = false;
-  bool get isUpdated=>_updated;
-  set isUpdated(bool u){
-    if(u!=_updated){
-      _updated = u;
-      notifyListeners();
-    }
-  }
-
-}
 
 
 

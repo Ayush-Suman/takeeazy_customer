@@ -29,7 +29,7 @@ class StoresServices {
       {String container = '',
       String latitude = '0.0',
       String longitude = '0.0',
-      double dist = 0}) async {
+      double dist = 50}) async {
     Map<String, String> param = {
       'dist': dist.toString(),
       'geo': latitude+','+longitude,

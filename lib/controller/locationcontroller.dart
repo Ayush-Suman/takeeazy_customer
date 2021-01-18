@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:takeeazy_customer/controller/serviceablearea.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
 import 'package:takeeazy_customer/main.dart';
 import 'package:takeeazy_customer/model/base/exception.dart';
@@ -87,8 +86,6 @@ class LocationStatusController with ChangeNotifier {
   }
 }
 
-
-// TODO:
 class CustomFocusNode extends FocusNode{
   ListStatusController _listStatusController;
   set listStatusController(ListStatusController lsc){
@@ -117,11 +114,11 @@ class LocationController{
   final AddressListController listController = AddressListController();
   final PositionController positionController = PositionController();
   final LocationStatusController locationStatusController = LocationStatusController();
-  final SearchController searchController = SearchController();
+  final ValueNotifier<bool> searchController = ValueNotifier<bool>(false);
 
   final CustomFocusNode focusNode = CustomFocusNode();
 
-  ServiceableArea serviceableArea = ServiceableArea();
+  final ValueNotifier<bool> serviceableArea = ValueNotifier<bool>(false);
 
 
 
@@ -147,20 +144,20 @@ class LocationController{
     if(response!=null){
       response.dispose();
     }
-    searchController.isSearching = true;
+    searchController.value = true;
     if(positionController._position!=null){
       AutocompleteServices.getPlaces(addressLine.text, longitude: positionController._position.longitude, latitude: positionController._position.latitude).then((response) async{
         Predictions predictions = await response.response;
         if(predictions!=null) {
           listController.addresses = predictions.predictions;
-          searchController.isSearching = false;
+          searchController.value = false;
         }});
     }else{
       AutocompleteServices.getPlaces(addressLine.text).then((response) async{
         Predictions predictions = await response.response;
         if(predictions!=null) {
           listController.addresses = predictions.predictions;
-          searchController.isSearching = false;
+          searchController.value = false;
         }});
     }
 
@@ -175,7 +172,7 @@ class LocationController{
         latitude: positionController.position.latitude);
     response.response.then((metaModel) {
       city.text = metaModel.city.cityName;
-      serviceableArea.serviceAvailable = true;
+      serviceableArea.value = true;
       print("Serviceable Area");
       storeValues();
       NavigatorService.rootNavigator.popAndPushNamed(TERoutes.bottomnav);
@@ -184,7 +181,7 @@ class LocationController{
       print("ERROR " + e.toString());
       if (e is ResponseException) {
         print("NonServiceable Area");
-        serviceableArea.serviceAvailable = false;
+        serviceableArea.value= false;
         storeValues();
         NavigatorService.rootNavigator.popAndPushNamed(TERoutes.bottomnav);
         locationStatusController._newLocationStatus = LocationStatus.Fetched;
@@ -258,18 +255,18 @@ class LocationController{
 
 
   void storeValues(){
-    print("Saving ${city.text} ${serviceableArea.serviceAvailable}");
+    print("Saving ${city.text} ${serviceableArea.value}");
     Map data = {
       'city': city.text,
-      'ser': serviceableArea.serviceAvailable,
+      'ser': serviceableArea.value,
       'lat': positionController.position.latitude.toString(),
       'lng': positionController.position.longitude.toString(),
       'addressLine': currentAddress
     };
     storeData(data, "City");
     RuntimeCaching.city = city.text;
-    RuntimeCaching.serviceableArea = serviceableArea.serviceAvailable;
-    RuntimeCaching.lng = positionController.position.latitude.toString();
+    RuntimeCaching.serviceableArea = serviceableArea.value;
+    RuntimeCaching.lat = positionController.position.latitude.toString();
     RuntimeCaching.lng = positionController.position.longitude.toString();
  }
 

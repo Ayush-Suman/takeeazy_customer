@@ -1,9 +1,9 @@
-class ItemsModel {
+import 'package:takeeazy_customer/model/takeeazyapis/options/optionsmodel.dart';
+
+class ItemsModel extends OptionsModel{
   final String description;
-  final List<String> imagePaths;
   final List<String> labels;
   final String id;
-  final String itemName;
   final String categoryId;
   final String subCategory;
   final String createdAt;
@@ -15,10 +15,10 @@ class ItemsModel {
 
   ItemsModel(
       {this.description,
-      this.imagePaths,
+      String imagePath,
       this.labels,
       this.id,
-      this.itemName,
+      String itemName,
       this.categoryId,
       this.subCategory,
       this.createdAt,
@@ -26,12 +26,12 @@ class ItemsModel {
       this.categoryName,
       this.containerId,
       this.v,
-      this.variants});
+      this.variants}):super(imageURL: imagePath, name: itemName);
 
   factory ItemsModel.fromJSON(Map<String, dynamic> map) {
     return ItemsModel(
       description: map['description'],
-      imagePaths: map['imagePaths'],
+      imagePath: map['imagePath'],
       labels: map['labels'],
       id: map['id'],
       itemName: map['itemName'],

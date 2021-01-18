@@ -7,7 +7,7 @@ import '../components/customtext.dart';
 
 class ShopCard extends StatelessWidget {
   final ShopModel shopModel;
-  ShopCard({this.shopModel});
+  ShopCard({@required this.shopModel});
 
 
   @override
@@ -24,7 +24,7 @@ class ShopCard extends StatelessWidget {
         .size;
 
 
-    return Padding(
+    return Container(child:Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [RoundedImage(imageURL: null, height: width*0.25, width: width*0.25),
@@ -126,6 +126,6 @@ class ShopCard extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

@@ -1,52 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:takeeazy_customer/controller/optioncontroller.dart';
+import 'package:takeeazy_customer/model/base/networkcall.dart';
+import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/categories/categoriesModel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/stores/storesModel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/categories/categoriesServices.dart';
+import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 
 class ShopController {
-  String _containerName = '';
-  final ShopDetailsController shopDetailsController = ShopDetailsController();
-  final CategoriesController categoriesController = CategoriesController();
+  final OptionController categoriesController = OptionController();
 
-  void setContainerName(String container) {
-    _containerName = container;
+  ShopModel shopModel;
+
+  void updateValues(){
+    shopModel  = NavigatorService.homeArgument[HomeNavigator.shop];
   }
 
-  String get containerName => _containerName;
-}
+  void getCategories() async{
+    categoriesController.updatedController.value = false;
+    TEResponse response =  await CategoriesServices.getCategoriesByContainer();
+    try {
+      List<CategoriesModel> categories = await response.response;
+      List<String> ids = shopModel.categories.map((e) => e.categoryId).toList();
+      categoriesController.list = categories.where((element) { print('Ids: ' + ids.toString()); return ids.contains(element.id);}).toList();
+      categoriesController.updatedController.value = true;
+    }catch(e){
+      print(e.toString());
+    }
 
-class ShopDetails {
-  final String imageUrl;
-  final String shopName;
-  final double rating;
-  final double distance;
-  final String locality;
-  final double duration;
-
-  ShopDetails(
-      {this.imageUrl = "assets/pickupanddrop.png",
-      this.shopName = "Meerut Mall",
-      this.rating = 3.8,
-      this.distance = 3,
-      this.locality = "Gandhi Nagar",
-      this.duration = 40});
-}
-
-class ShopDetailsController with ChangeNotifier {
-  ShopDetails _shopDetails;
-
-  void setShopDetails(ShopDetails shopDetails) {
-    _shopDetails = shopDetails;
-    notifyListeners();
   }
 
-  ShopDetails get shopDetails => _shopDetails;
-}
-
-class CategoriesController with ChangeNotifier {
-  List<String> _categories = ["Fruits", "Vegetables"];
-
-  void setCategories(List<String> categories) {
-    _categories = categories;
-    notifyListeners();
+  openCategory(CategoriesModel c){
+    NavigatorService.homeArgument.addAll({HomeNavigator.items: c});
+    NavigatorService.homeNavigator.pushNamed(HomeNavigator.items);
   }
 
-  List<String> get categories => _categories;
+
 }
+
+
+

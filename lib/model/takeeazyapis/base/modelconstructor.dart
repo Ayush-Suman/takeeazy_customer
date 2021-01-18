@@ -2,6 +2,8 @@
 import 'package:takeeazy_customer/model/base/exception.dart';
 import 'package:takeeazy_customer/model/base/modelclassselector.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/base/URLRoutes.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/categories/categoriesModel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/meta/metamodel.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/stores/storesModel.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/containers/containersModel.dart';
@@ -29,6 +31,13 @@ class ClassSelector extends ModelClassSelector{
         print("containers");
         return ContainerModel.fromJSON(map);
         break;
+      case URLRoutes.getCategories:
+        print('Categories');
+        return CategoriesModel.fromJSON(map);
+        break;
+      case URLRoutes.getShopItems:
+
+        return ItemsModel.fromJSON(map);
       default: return map;
     }
   }

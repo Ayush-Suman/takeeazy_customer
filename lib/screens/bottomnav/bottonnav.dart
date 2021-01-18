@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/homecontroller.dart';
+import 'package:takeeazy_customer/controller/itemscontroller.dart';
 import 'package:takeeazy_customer/controller/nearbystorescontroller.dart';
+import 'package:takeeazy_customer/controller/shopController.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/screens/cart/cart.dart';
 import 'package:takeeazy_customer/screens/nearbystores//nearbystores.dart';
@@ -82,6 +84,8 @@ class HomeNavigator extends StatelessWidget{
 
   static final HomeController homeController = HomeController();
   static final NearbyStoresController nearbyStoresController = NearbyStoresController();
+  static final ShopController shopController = ShopController();
+  static final ItemsController itemsController = ItemsController();
 
   static String currentPage = home;
 
@@ -104,22 +108,28 @@ class HomeNavigator extends StatelessWidget{
       case home:
         print('generating new Home');
         currentPage = home;
-        return MaterialPageRoute(builder: (_)=>Provider.value(value:homeController,
+        return MaterialPageRoute(builder: (_)=>Provider.value(
+          value:homeController,
           builder: (_, a) => Home(),
         ),);
         break;
       case stores:
         currentPage = stores;
-        return MaterialPageRoute(builder: (_)=> Provider.value(value:nearbyStoresController,
+        return MaterialPageRoute(builder: (_)=> Provider.value(
+            value:nearbyStoresController,
             builder: (_,a)=> NearbyStores()));
         break;
       case shop:
         currentPage = shop;
-        return MaterialPageRoute(builder: (_)=>Shop());
+        return MaterialPageRoute(builder: (_)=> Provider.value(
+            value: shopController,
+            builder: (_,a) => Shop()));
         break;
       case items:
         currentPage = items;
-        return MaterialPageRoute(builder: (_)=>Item());
+        return MaterialPageRoute(builder: (_)=>Provider.value(
+            value: itemsController,
+            builder:(_,a)=>Item()));
         break;
     }
   }

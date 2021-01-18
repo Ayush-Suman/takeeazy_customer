@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/homecontroller.dart';
+import 'package:takeeazy_customer/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/main.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/screens/components/customsearchbar.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
+import 'package:takeeazy_customer/screens/components/options.dart';
 import 'package:takeeazy_customer/screens/components/servicesWidget.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
-import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 
 
 class Home extends StatelessWidget {
@@ -39,8 +40,8 @@ class Home extends StatelessWidget {
     return ChangeNotifierProvider.value(
         value: homeController.updatedController,
         builder: (_, a) =>
-            Consumer<UpdatedController>(builder: (_, uc, child) =>
-            uc.isUpdated ? Scaffold(
+            Consumer<ValueNotifier<bool>>(builder: (_, uc, child) =>
+            uc.value ? Scaffold(
                 appBar: AppBar(
                   title: FlatButton(
                       padding: EdgeInsets.zero,
@@ -76,7 +77,7 @@ class Home extends StatelessWidget {
                   ),
                 ),
                 body:
-                homeController.serviceableAreaController.serviceAvailable
+                uc.value
                     ? ListView(
                   children: [
                     SearchBar(controller: homeController.search, focusNode: homeController.searchFocus,),
@@ -91,90 +92,12 @@ class Home extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          //color: Color(0xffeeeeee),
-                        ),
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 20, horizontal: 10),
-                                child: TEText(
-                                  text: 'Instant delivery to your doorstep',
-                                  fontColor: TakeEazyColors.gradient2Color,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              ChangeNotifierProvider.value(
-                                  value: homeController.containerListController,
-                                  builder: (_, a) =>
-                                      Consumer<ContainerListController>(
-                                          builder: (_, clc, child) =>
-                                          clc.containerUpdatedController
-                                              .isUpdated ? GridView.count(
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            crossAxisCount: 3,
-                                            children: clc.containerList.map(
-                                                    (e) =>
-                                                    Padding(padding: EdgeInsets
-                                                        .symmetric(vertical: 5,
-                                                        horizontal: 5),
-                                                      child: GestureDetector(
-                                                          onTap: () {
-                                                            homeController.openContainer(e);
-                                                          },
-                                                          child: Container(
-                                                            decoration: BoxDecoration(
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Colors.grey,
-                                                                    offset: Offset(1, 5),
-                                                                    spreadRadius: -4,
-                                                                    blurRadius: 6,
-                                                                  ),
-                                                                ],
-                                                                color: Colors.white,
-                                                                borderRadius: BorderRadius.circular(10)
-                                                            ),
-                                                            height: (width - 20) / 3 - 10,
-                                                            width: (width - 20) / 3 - 10,
-                                                            child: Column(
-                                                              children: [
-                                                                Container(
-                                                                    height: ((width - 20) / 3 - 10) - size.height - 20,
-                                                                    width: (width - 20) / 3 - 10,
-                                                                    child: Center(
-                                                                        child: CachedNetworkImage(
-                                                                          imageUrl: e.imagePath,
-                                                                          fit: BoxFit.fitWidth,))),
-                                                                Center(
-                                                                    child: Padding(
-                                                                        padding: EdgeInsets
-                                                                            .all(
-                                                                            10),
-                                                                        child: FittedBox(
-                                                                            child: TEText(
-                                                                              text: e.containerName,
-                                                                              fontColor: TakeEazyColors.gradient2Color,
-                                                                              fontSize: 12,
-                                                                              maxLines: 1,
-                                                                              fontWeight: FontWeight.w700,))))
-                                                              ],
-                                                            ),
-                                                          )),
-                                                    )).toList(),
-                                          ) : Center(child: Padding(
-                                              padding: EdgeInsets.all(50),
-                                              child: CircularProgressIndicator()))))
-                            ]
-                        )
+                    Options(
+                      controller: homeController.containerListController,
+                      title: 'Instant Delivery to your doorstep',
+                      onTap: (o){
+                        homeController.openContainer(o);
+                      },
                     ),
                     Container(
                         height: 192/315*(width-20),

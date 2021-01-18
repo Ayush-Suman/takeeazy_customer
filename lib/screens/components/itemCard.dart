@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
+import 'package:takeeazy_customer/screens/components/servicesWidget.dart';
 
 class ItemCard extends StatelessWidget {
-  final bool isCart;
-
-  const ItemCard({this.isCart});
+  final ItemsModel itemModel;
+  ItemCard(this.itemModel);
 
   @override
   Widget build(BuildContext context) {
@@ -17,29 +18,21 @@ class ItemCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                'assets/assistant.png',
+              child: RoundedImage(
+                imageURL:itemModel.imageURL,
                 width: 100,
                 height: 100,
-                fit: BoxFit.cover,
               ),
             ),
             Column(
               children: [
                 TEText(
-                  text: 'itemName',
+                  text: itemModel.name,
                   fontColor: Color(0xff3b6e9e),
                   fontSize: 16.59,
                   fontWeight: FontWeight.w400,
                 ),
-                isCart
-                    ? TEText(
-                        text: 'itemName',
-                        fontColor: Color(0xff3b6e9e),
-                        fontSize: 16.59,
-                        fontWeight: FontWeight.w400,
-                      )
-                    : Container(),
+
               ],
             ),
             Container(),
@@ -55,7 +48,7 @@ class ItemCard extends StatelessWidget {
                   onPressed: () {},
                 ),
                 TEText(
-                  text: '1',
+                  controller: null,
                   fontColor: Color(0xff3b6e9e),
                   fontSize: 14.06,
                   fontWeight: FontWeight.w400,
