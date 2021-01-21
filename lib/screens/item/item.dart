@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/itemscontroller.dart';
 import 'package:takeeazy_customer/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
-import 'package:takeeazy_customer/screens/components/itemCard.dart';
+import 'package:takeeazy_customer/screens/item/itemcard.dart';
 
 class Item extends StatelessWidget {
   @override
@@ -34,7 +34,7 @@ class Item extends StatelessWidget {
           ),
         ),
         body: ChangeNotifierProvider.value(value: itemsController.itemListController,builder:(_,a)=>Consumer<OptionController>(builder: (_, oc, child)=>oc.updatedController.value?ListView.builder(
-            itemBuilder: (_, pos)=> ItemCard(oc.list[pos]),
+            itemBuilder: (_, pos)=> ItemCard(oc.list[pos], itemsController.quantities[pos]),
           itemCount: oc.list.length,
         ):Center(child: CircularProgressIndicator(),)))
 

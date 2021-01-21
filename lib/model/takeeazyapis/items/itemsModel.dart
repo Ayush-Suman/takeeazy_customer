@@ -33,7 +33,7 @@ class ItemsModel extends OptionsModel{
       description: map['description'],
       imagePath: map['imagePath'],
       labels: map['labels'],
-      id: map['id'],
+      id: map['itemId'],
       itemName: map['itemName'],
       categoryId: map['categoryId'],
       subCategory: map['subCategory'],
@@ -42,7 +42,7 @@ class ItemsModel extends OptionsModel{
       categoryName: map['categoryName'],
       containerId: map['containerId'],
       v: map['__v'],
-      variants: map['variants'].map((e) => Variants.fromJSON(e)).toList(),
+      variants: map['variants'].map((e) => Variants.fromJSON(e)).toList().cast<Variants>(),
     );
   }
 }
@@ -50,12 +50,13 @@ class ItemsModel extends OptionsModel{
 class Variants {
   final String id;
   final String variantName;
-  final double MRP;
+  final int mrp;
+  final int sellingPrice;
 
-  Variants({this.id, this.variantName, this.MRP});
+  Variants({this.id, this.variantName, this.mrp, this.sellingPrice});
 
   factory Variants.fromJSON(Map<String, dynamic> data) {
     return Variants(
-        id: data['_id'], variantName: data['variantName'], MRP: data['MRP']);
+        id: data['variantId'], variantName: data['variantName'], mrp: data['mrp'], sellingPrice: data['sellingPrice']);
   }
 }

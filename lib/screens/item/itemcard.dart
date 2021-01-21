@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:takeeazy_customer/controller/itemscontroller.dart';
+import 'package:takeeazy_customer/controller/textcontroller.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/components/servicesWidget.dart';
 
 class ItemCard extends StatelessWidget {
   final ItemsModel itemModel;
-  ItemCard(this.itemModel);
+  final TextController quantity;
+  ItemCard(this.itemModel, this.quantity);
+
+
 
   @override
   Widget build(BuildContext context) {
+
+    ItemsController itemsController = Provider.of<ItemsController>(context, listen: false);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Container(
+        decoration:BoxDecoration(
+          borderRadius: BorderRadius.circular(5)
+        ),// RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -45,10 +56,15 @@ class ItemCard extends StatelessWidget {
                     color: Color(0xff3b6e9e),
                     size: 15.23,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    if(quantity.text!='0'){
+                    quantity.text = (int.parse(quantity.text)-1).toString();
+                    }
+                    itemsController.updateCart(itemModel, quantity.text);
+                  },
                 ),
                 TEText(
-                  controller: null,
+                  controller: quantity,
                   fontColor: Color(0xff3b6e9e),
                   fontSize: 14.06,
                   fontWeight: FontWeight.w400,
@@ -59,7 +75,10 @@ class ItemCard extends StatelessWidget {
                     color: Color(0xff3b6e9e),
                     size: 15.23,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    quantity.text = (int.parse(quantity.text)+1).toString();
+                    itemsController.updateCart(itemModel, quantity.text);
+                  },
                 ),
               ],
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:takeeazy_customer/controller/cartcontroller.dart';
 import 'package:takeeazy_customer/controller/homecontroller.dart';
 import 'package:takeeazy_customer/controller/itemscontroller.dart';
 import 'package:takeeazy_customer/controller/nearbystorescontroller.dart';
@@ -27,7 +28,7 @@ class _BottomNavState extends State{
   List<Widget> widgets = [
     Container(child: Center(child: CircularProgressIndicator(),),),
     HomeNavigator(),
-    Cart(),
+    CartNavigator(),
   ];
   Map<int, GlobalKey<NavigatorState>> navigatorMap = {
     1: NavigatorService.homeNavigatorKey,
@@ -135,4 +136,37 @@ class HomeNavigator extends StatelessWidget{
   }
 
 
+}
+
+
+class CartNavigator extends StatelessWidget{
+  static const String cart = '/';
+
+  static final CartController cartController = CartController();
+
+  static String currentPage = cart;
+
+  @override
+  Widget build(BuildContext context) {
+    print(currentPage);
+    return Navigator(
+      key: NavigatorService.cartNavigatorKey,
+      initialRoute: currentPage,
+      onGenerateRoute: generateRoutes,
+    );
+  }
+
+
+  static Route<dynamic> generateRoutes(RouteSettings settings){
+    print("generating route");
+    switch(settings.name){
+      case cart:
+        currentPage = cart;
+        return MaterialPageRoute(builder: (_)=>Provider.value(
+          value: cartController,
+          builder: (_, a)=> Cart()
+        ));
+        break;
+    }
+  }
 }
