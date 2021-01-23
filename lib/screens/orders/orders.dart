@@ -1,29 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:takeeazy_customer/controller/ordersController.dart';
 import 'package:takeeazy_customer/screens/components/custombutton.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 
-class Orders extends StatefulWidget {
-  @override
-  _OrdersState createState() => _OrdersState();
-}
-
-class _OrdersState extends State<Orders> {
-  Razorpay _razorpay = Razorpay();
-  var options = {
-    'key': 'rzp_test_c0Q0CAbLzJuzhU',
-    'amount': 500, //in the smallest currency sub-unit.
-    'name': 'takeEazy',
-    'order_id': 'order_GLYM8hYUKIKBnG', // Generate order_id using Orders API
-    'description': 'Milk packet',
-    'timeout': 600, // in seconds
-    'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'}
-  };
-
+class Orders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final OrdersController ordersController =
+        Provider.of(context, listen: false);
     final width = MediaQuery.of(context).size.width;
+    ordersController.initializeRazorPay();
+    ordersController.updateValues();
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
@@ -35,7 +24,9 @@ class _OrdersState extends State<Orders> {
                 text: "CONTINUE",
                 fontWeight: FontWeight.w700,
                 fontColor: Color(0xffffffff)),
-            onPressed: () async {}),
+            onPressed: () async {
+              ordersController.continuePayment();
+            }),
       ),
       body: ListView(
         children: [
@@ -325,35 +316,5 @@ class _OrdersState extends State<Orders> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _razorpay.clear();
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-  }
-
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    print(response.orderId);
-    print('pavankalyan');
-    _razorpay.clear();
-    // Do something when payment succeeds
-  }
-
-  void _handlePaymentError(PaymentFailureResponse response) {
-    // Do something when payment fails
-    print(response.message);
-  }
-
-  void _handleExternalWallet(ExternalWalletResponse response) {
-    // Do something when an external wallet is selected
   }
 }

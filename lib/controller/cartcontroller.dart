@@ -6,7 +6,6 @@ import 'package:takeeazy_customer/model/takeeazyapis/cart/cartmodel.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 
 class CartController {
-
   final CartListController cartListController = CartListController();
   final List<TextController> quantities = List();
   List<Map> cartData = List();
@@ -15,11 +14,17 @@ class CartController {
     readData('cart').then((value) {
       cartData = value.cast<Map>();
       print(value);
-      cartListController.list = cartData.map((e) => CartModel(id: e['id'], name: e['name'], quantity: int.parse(e['quan']), imageURL: e['imageURL'])).toList();
-      cartListController.updatedController.value=true;
+      cartListController.list = cartData
+          .map((e) => CartModel(
+              id: e['id'],
+              name: e['name'],
+              quantity: int.parse(e['quan']),
+              imageURL: e['imageURL']))
+          .toList();
+      cartListController.updatedController.value = true;
     });
     cartListController.addListener(() {
-      if(cartListController.list!=null) {
+      if (cartListController.list != null) {
         int diff = cartListController.list.length - quantities.length;
         if (diff > 0) {
           for (int i = 0; i < diff; i++) {
@@ -29,14 +34,13 @@ class CartController {
         }
         for (int i = 0; i < cartListController.list.length; i++) {
           Map single;
-          try{
-            single = cartData.singleWhere((element) => element['id']==cartListController.list[i].id);
-          }catch(e){
-
-          }
-          if(single!=null){
+          try {
+            single = cartData.singleWhere(
+                (element) => element['id'] == cartListController.list[i].id);
+          } catch (e) {}
+          if (single != null) {
             quantities[i].text = single['quan'];
-          }else {
+          } else {
             quantities[i].text = '0';
           }
         }
@@ -44,13 +48,13 @@ class CartController {
     });
   }
 
-  void updateCart(CartModel item, String quantity) async{
-    if(cartData!=null) {
+  void updateCart(CartModel item, String quantity) async {
+    if (cartData != null) {
       cartData.removeWhere((value) => (value['id'] == item.id));
-    }else{
+    } else {
       cartData = List<Map>();
     }
-    if(quantity!='0') {
+    if (quantity != '0') {
       Map data = {
         'id': item.id,
         'name': item.name,
@@ -60,24 +64,25 @@ class CartController {
       cartData.add(data);
     }
     storeData(cartData, 'cart');
-
   }
 
-  void orderNow(){
+  void orderNow() {
+    NavigatorService.cartArgument.addAll({CartNavigator.cart: cartData});
     NavigatorService.cartNavigator.pushNamed(CartNavigator.orders);
   }
 }
 
-class CartListController with ChangeNotifier{
+class CartListController with ChangeNotifier {
   final ValueNotifier<bool> updatedController = ValueNotifier(false);
 
   List<CartModel> _list;
+
   List<CartModel> get list => _list;
-  set list(List<CartModel> list){
-    if(list!=_list){
+
+  set list(List<CartModel> list) {
+    if (list != _list) {
       _list = list;
       notifyListeners();
     }
   }
-
 }
