@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:takeeazy_customer/screens/components/custombutton.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 
-class Order extends StatefulWidget {
+class Orders extends StatefulWidget {
   @override
-  _OrderState createState() => _OrderState();
+  _OrdersState createState() => _OrdersState();
 }
 
-class _OrderState extends State<Order> {
+class _OrdersState extends State<Orders> {
   Razorpay _razorpay = Razorpay();
   var options = {
     'key': 'rzp_test_c0Q0CAbLzJuzhU',
@@ -17,38 +18,24 @@ class _OrderState extends State<Order> {
     'order_id': 'order_GLYM8hYUKIKBnG', // Generate order_id using Orders API
     'description': 'Milk packet',
     'timeout': 600, // in seconds
-    'prefill': {
-      'contact': '8888888888',
-      'email': 'test@razorpay.com'
-    }
+    'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'}
   };
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: InkWell(
-        onTap: () {
-          _razorpay.open(options);
-          print('PavanKalyan');
-        },
-        child: Container(
-          color: Colors.deepOrangeAccent,
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              TEText(
-                text: 'CONTINUE',
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                fontColor: Colors.white,
-              ),
-            ],
-          ),
-        ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: TEButton(
+            height: 50,
+            width: width,
+            text: TEText(
+                text: "CONTINUE",
+                fontWeight: FontWeight.w700,
+                fontColor: Color(0xffffffff)),
+            onPressed: () async {}),
       ),
       body: ListView(
         children: [

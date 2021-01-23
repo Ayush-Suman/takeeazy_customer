@@ -5,28 +5,32 @@ import 'package:takeeazy_customer/controller/cartcontroller.dart';
 import 'package:takeeazy_customer/controller/homecontroller.dart';
 import 'package:takeeazy_customer/controller/itemscontroller.dart';
 import 'package:takeeazy_customer/controller/nearbystorescontroller.dart';
+import 'package:takeeazy_customer/controller/ordersController.dart';
 import 'package:takeeazy_customer/controller/shopController.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/screens/cart/cart.dart';
-import 'package:takeeazy_customer/screens/nearbystores//nearbystores.dart';
 import 'package:takeeazy_customer/screens/home/home.dart';
 import 'package:takeeazy_customer/screens/item/item.dart';
+import 'package:takeeazy_customer/screens/nearbystores//nearbystores.dart';
+import 'package:takeeazy_customer/screens/orders/orders.dart';
 import 'package:takeeazy_customer/screens/shop/shop.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
 
-class BottomNav extends StatefulWidget{
-
+class BottomNav extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _BottomNavState();
 }
 
-class _BottomNavState extends State{
+class _BottomNavState extends State {
   final GlobalKey globalKey = GlobalKey();
   int _currentIndex = 1;
-  
 
   List<Widget> widgets = [
-    Container(child: Center(child: CircularProgressIndicator(),),),
+    Container(
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    ),
     HomeNavigator(),
     CartNavigator(),
   ];
@@ -36,55 +40,48 @@ class _BottomNavState extends State{
     2: NavigatorService.cartNavigatorKey
   };
 
-
-
-
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
-        onWillPop: () async=>!await navigatorMap[_currentIndex].currentState.maybePop(),
+        onWillPop: () async =>
+            !await navigatorMap[_currentIndex].currentState.maybePop(),
         child: Scaffold(
-      key:globalKey,
-      body: widgets[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (i){
-          setState(() {
-            _currentIndex = i;
-          });
-        },
-        items:[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shop, color: TakeEazyColors.gradient2Color),
-              label: "Orders"
-          ),
-
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home, color: TakeEazyColors.gradient2Color),
-              label: "Home"
-          ),
-          BottomNavigationBarItem(
-              icon:Icon(Icons.shopping_cart, color: TakeEazyColors.gradient2Color),
-              label: "Cart"
-          )
-        ]
-      ),
-    ));
+          key: globalKey,
+          body: widgets[_currentIndex],
+          bottomNavigationBar: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              onTap: (i) {
+                setState(() {
+                  _currentIndex = i;
+                });
+              },
+              items: [
+                BottomNavigationBarItem(
+                    icon:
+                        Icon(Icons.shop, color: TakeEazyColors.gradient2Color),
+                    label: "Orders"),
+                BottomNavigationBarItem(
+                    icon:
+                        Icon(Icons.home, color: TakeEazyColors.gradient2Color),
+                    label: "Home"),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.shopping_cart,
+                        color: TakeEazyColors.gradient2Color),
+                    label: "Cart")
+              ]),
+        ));
   }
 }
 
-
-class HomeNavigator extends StatelessWidget{
-
-
+class HomeNavigator extends StatelessWidget {
   static const String home = '/';
   static const String stores = '/stores';
   static const String shop = '/stores/shop';
   static const String items = '/items';
 
   static final HomeController homeController = HomeController();
-  static final NearbyStoresController nearbyStoresController = NearbyStoresController();
+  static final NearbyStoresController nearbyStoresController =
+      NearbyStoresController();
   static final ShopController shopController = ShopController();
   static final ItemsController itemsController = ItemsController();
 
@@ -101,46 +98,48 @@ class HomeNavigator extends StatelessWidget{
     );
   }
 
-
-
-  static Route<dynamic> generateRoutes(RouteSettings settings){
+  static Route<dynamic> generateRoutes(RouteSettings settings) {
     print("generating route");
-    switch(settings.name){
+    switch (settings.name) {
       case home:
         print('generating new Home');
         currentPage = home;
-        return MaterialPageRoute(builder: (_)=>Provider.value(
-          value:homeController,
-          builder: (_, a) => Home(),
-        ),);
+        return MaterialPageRoute(
+          builder: (_) => Provider.value(
+            value: homeController,
+            builder: (_, a) => Home(),
+          ),
+        );
         break;
       case stores:
         currentPage = stores;
-        return MaterialPageRoute(builder: (_)=> Provider.value(
-            value:nearbyStoresController,
-            builder: (_,a)=> NearbyStores()));
+        return MaterialPageRoute(
+            builder: (_) => Provider.value(
+                value: nearbyStoresController,
+                builder: (_, a) => NearbyStores()));
         break;
       case shop:
         currentPage = shop;
-        return MaterialPageRoute(builder: (_)=> Provider.value(
-            value: shopController,
-            builder: (_,a) => Shop()));
+        return MaterialPageRoute(
+            builder: (_) => Provider.value(
+                value: shopController, builder: (_, a) => Shop()));
         break;
       case items:
         currentPage = items;
-        return MaterialPageRoute(builder: (_)=>Provider.value(
-            value: itemsController,
-            builder:(_,a)=>Item()));
+        return MaterialPageRoute(
+            builder: (_) => Provider.value(
+                value: itemsController, builder: (_, a) => Item()));
         break;
     }
   }
-
-
 }
 
-
-class CartNavigator extends StatelessWidget{
+class CartNavigator extends StatelessWidget {
   static const String cart = '/';
+
+  static const String orders = '/orders';
+
+  static final OrdersController ordersController = OrdersController();
 
   static final CartController cartController = CartController();
 
@@ -156,16 +155,26 @@ class CartNavigator extends StatelessWidget{
     );
   }
 
-
-  static Route<dynamic> generateRoutes(RouteSettings settings){
+  static Route<dynamic> generateRoutes(RouteSettings settings) {
     print("generating route");
-    switch(settings.name){
+    switch (settings.name) {
       case cart:
         currentPage = cart;
-        return MaterialPageRoute(builder: (_)=>Provider.value(
-          value: cartController,
-          builder: (_, a)=> Cart()
-        ));
+        return MaterialPageRoute(
+          builder: (_) => Provider.value(
+            value: cartController,
+            builder: (_, a) => Cart(),
+          ),
+        );
+        break;
+      case orders:
+        currentPage = orders;
+        return MaterialPageRoute(
+          builder: (_) => Provider.value(
+            value: ordersController,
+            builder: (_, a) => Orders(),
+          ),
+        );
         break;
     }
   }
