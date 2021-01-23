@@ -5,14 +5,15 @@ import 'package:takeeazy_customer/model/takeeazyapis/cart/cartmodel.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 
 class ListController with ChangeNotifier {
-  List<Map> _orderDetails = [];
+  Map<String, List<CartModel>> _orderDetails = Map<String, List<CartModel>>();
 
-  void setDetails(List<Map<String, List<CartModel>>> orderDetails) {
+  void setDetails(Map<String, List<CartModel>> orderDetails) {
     _orderDetails = orderDetails;
+    notifyListeners();
   }
 
-  List<Map<String, List<CartModel>>> get orderDetails {
-    return [..._orderDetails];
+  Map<String, List<CartModel>> get orderDetails {
+    return {..._orderDetails};
   }
 }
 
@@ -71,6 +72,7 @@ class OrdersController {
         ),
       );
     }
+    listController.setDetails(orders);
     print(orders);
     print("pavanKalyan");
     print(orderDetails);
