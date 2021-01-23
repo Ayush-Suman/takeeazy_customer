@@ -57,7 +57,21 @@ class OrdersController {
   }
 
   void updateValues() {
-    var orderDetails = NavigatorService.cartArgument[CartNavigator.cart];
+    List<Map> orderDetails = NavigatorService.cartArgument[CartNavigator.cart];
+    Map<String, List<CartModel>> orders = Map<String, List<CartModel>>();
+    for (Map order in orderDetails) {
+      if (!orders.keys.contains(order['shopName'].toString()))
+        orders[order['shopName'].toString()] = [];
+      orders[order['shopName'].toString()].add(
+        CartModel(
+          id: order['id'],
+          name: order['name'],
+          quantity: int.parse(order['quan']),
+          imageURL: order['imageURL'],
+        ),
+      );
+    }
+    print(orders);
     print("pavanKalyan");
     print(orderDetails);
   }

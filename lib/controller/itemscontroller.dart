@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:takeeazy_customer/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
 import 'package:takeeazy_customer/model/base/caching.dart';
@@ -11,80 +9,74 @@ import 'package:takeeazy_customer/model/takeeazyapis/items/itemsServices.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/stores/storesModel.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 
-class ItemsController{
+class ItemsController {
   final OptionController itemListController = OptionController();
   final List<TextController> quantities = List();
   List<Map> cartData = List();
   ShopModel shopModel;
   CategoriesModel categoriesModel;
 
-
-  void updateValues(){
+  void updateValues() {
     readData('cart').then((value) {
       cartData = value.cast<Map>();
       print(value);
     });
     itemListController.addListener(() {
-      if(itemListController.list!=null) {
+      if (itemListController.list != null) {
         int diff = itemListController.list.length - quantities.length;
-          if (diff > 0) {
-            for (int i = 0; i < diff; i++) {
-              quantities.add(TextController());
-              quantities[quantities.length - 1].text = '0';
-            }
+        if (diff > 0) {
+          for (int i = 0; i < diff; i++) {
+            quantities.add(TextController());
+            quantities[quantities.length - 1].text = '0';
           }
+        }
         for (int i = 0; i < itemListController.list.length; i++) {
           Map single;
-          try{
-          single = cartData.singleWhere((element) => element['id']==(itemListController.list[i] as ItemsModel).id);
-          }catch(e){
-
-          }
-          if(single!=null){
+          try {
+            single = cartData.singleWhere((element) =>
+                element['id'] == (itemListController.list[i] as ItemsModel).id);
+          } catch (e) {}
+          if (single != null) {
             quantities[i].text = single['quan'];
-          }else {
+          } else {
             quantities[i].text = '0';
           }
         }
-      }});
-
+      }
+    });
 
     shopModel = NavigatorService.homeArgument[HomeNavigator.shop];
     categoriesModel = NavigatorService.homeArgument[HomeNavigator.items];
   }
 
-  void updateCart(ItemsModel item, String quantity) async{
-
-
-    if(cartData!=null) {
+  void updateCart(ItemsModel item, String quantity) async {
+    if (cartData != null) {
       cartData.removeWhere((value) => (value['id'] == item.id));
-    }else{
+    } else {
       cartData = List<Map>();
     }
-    if(quantity!='0') {
+    if (quantity != '0') {
       Map data = {
         'id': item.id,
         'name': item.name,
         'quan': quantity,
-        'imageURL': item.imageURL
+        'imageURL': item.imageURL,
+        'shopName':shopModel.shopName,
       };
       cartData.add(data);
     }
     storeData(cartData, 'cart');
-
   }
 
-
-  void getItems() async{
+  void getItems() async {
     itemListController.updatedController.value = false;
-      TEResponse response = await ItemsServices.getItemsByCategoryAndStore(category: categoriesModel.id, store:shopModel.id );
-      try {
-        itemListController.list = await response.response;
-        itemListController.updatedController.value = true;
-      }catch(e){
-        print(e.toString());
-      }
+    TEResponse response = await ItemsServices.getItemsByCategoryAndStore(
+        category: categoriesModel.id, store: shopModel.id);
+    try {
+      itemListController.list = await response.response;
+      itemListController.updatedController.value = true;
+    } catch (e) {
+      print(e.toString());
+    }
   }
-
-
 }

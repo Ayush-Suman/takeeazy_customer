@@ -15,11 +15,15 @@ class CartController {
       cartData = value.cast<Map>();
       print(value);
       cartListController.list = cartData
-          .map((e) => CartModel(
+          .map(
+            (e) => CartModel(
               id: e['id'],
               name: e['name'],
               quantity: int.parse(e['quan']),
-              imageURL: e['imageURL']))
+              imageURL: e['imageURL'],
+              shopName: e['shopName'],
+            ),
+          )
           .toList();
       cartListController.updatedController.value = true;
     });
@@ -59,7 +63,8 @@ class CartController {
         'id': item.id,
         'name': item.name,
         'quan': quantity,
-        'imageURL': item.imageURL
+        'imageURL': item.imageURL,
+        'shopName': item.shopName,
       };
       cartData.add(data);
     }
