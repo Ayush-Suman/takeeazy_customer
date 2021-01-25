@@ -83,31 +83,35 @@ class Orders extends StatelessWidget {
                     ));
                     value.forEach(
                       (cartModel) => widgets.add(
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Icon(
-                              Icons.adjust_rounded,
-                              color: Colors.redAccent,
-                            ),
-                            TEText(
-                              text: cartModel.name,
-                              fontColor: Colors.black87,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            Container(),
-                            TEText(
-                              text: cartModel.quantity.toString(),
-                              fontColor: Colors.black,
-                              fontWeight: FontWeight.w800,
-                            ),
-                            Container(),
-                            TEText(
-                              fontColor: Colors.black,
-                              text: 'Rs.1234',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.adjust_rounded,
+                                color: Colors.redAccent,
+                              ),
+                              Spacer(),
+                              TEText(
+                                text: cartModel.name,
+                                fontColor: Colors.black87,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              Spacer(),
+                              TEText(
+                                text: cartModel.quantity.toString(),
+                                fontColor: Colors.black,
+                                fontWeight: FontWeight.w800,
+                              ),
+                              Spacer(),
+                              TEText(
+                                fontColor: Colors.black,
+                                text: 'Rs.1234',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );

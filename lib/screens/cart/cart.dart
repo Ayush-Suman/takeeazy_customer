@@ -38,7 +38,6 @@ class Cart extends StatelessWidget {
         builder: (_, a) => Consumer<CartListController>(
           builder: (_, cc, child) => cc.updatedController.value
               ? ListView.builder(
-                  padding: const EdgeInsets.all(8),
                   itemBuilder: (context, index) => CartCard(
                       cc.list[index], cartController.quantities[index]),
                   itemCount: cc.list.length,

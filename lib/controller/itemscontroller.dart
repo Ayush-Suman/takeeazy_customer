@@ -6,6 +6,7 @@ import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/categories/categoriesModel.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/items/itemsServices.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/options/optionsmodel.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/stores/storesModel.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 
@@ -34,7 +35,7 @@ class ItemsController {
           Map single;
           try {
             single = cartData.singleWhere((element) =>
-                element['id'] == (itemListController.list[i] as ItemsModel).id);
+                element['id'] == (itemListController.list[i]).id);
           } catch (e) {}
           if (single != null) {
             quantities[i].text = single['quan'];
@@ -49,7 +50,7 @@ class ItemsController {
     categoriesModel = NavigatorService.homeArgument[HomeNavigator.items];
   }
 
-  void updateCart(ItemsModel item, String quantity) async {
+  void updateCart(OptionsModel item, String quantity) async {
     if (cartData != null) {
       cartData.removeWhere((value) => (value['id'] == item.id));
     } else {
@@ -61,7 +62,7 @@ class ItemsController {
         'name': item.name,
         'quan': quantity,
         'imageURL': item.imageURL,
-        'shopName':shopModel.shopName,
+        'shopName': shopModel.shopName,
       };
       cartData.add(data);
     }
@@ -73,7 +74,22 @@ class ItemsController {
     TEResponse response = await ItemsServices.getItemsByCategoryAndStore(
         category: categoriesModel.id, store: shopModel.id);
     try {
-      itemListController.list = await response.response;
+      List<ItemsModel> itemsList = await response.response;
+      List<OptionsModel> items = [];
+      itemsList.forEach((e) {
+        e.variants.forEach(
+          (element) {
+            items.add(
+              OptionsModel(
+                imageURL: e.imageURL,
+                name: e.name.toString() + ' - ' + element.variantName,
+                id: element.id,
+              ),
+            );
+          },
+        );
+      });
+      itemListController.list = items;
       itemListController.updatedController.value = true;
     } catch (e) {
       print(e.toString());
