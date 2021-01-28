@@ -42,6 +42,7 @@ class HomeController{
 
 
   void updateValues() async{
+    HomeNavigator.currentPageIndex=1;
       city.text = RuntimeCaching.city;
       serviceableAreaController.value = RuntimeCaching.serviceableArea;
       updatedController.value = true;

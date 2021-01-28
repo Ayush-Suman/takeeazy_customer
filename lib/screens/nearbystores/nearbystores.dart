@@ -2,18 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/nearbystorescontroller.dart';
-import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
-import 'package:takeeazy_customer/model/takeeazyapis/containers/containersModel.dart';
 import 'package:takeeazy_customer/screens/components/customsearchbar.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/nearbystores/shopCard.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 
-class NearbyStores extends StatelessWidget {
+class NearbyStores extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _NearbyStoresState();
+  }
+}
 
+class _NearbyStoresState extends State<NearbyStores>{
   @override
   Widget build(BuildContext context) {
-    ;
 
     final NearbyStoresController nearbyStoresController = Provider.of<
         NearbyStoresController>(context, listen: false);
@@ -68,6 +71,12 @@ class NearbyStores extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    HomeNavigator.currentPageIndex=0;
+    super.dispose();
   }
 
 }

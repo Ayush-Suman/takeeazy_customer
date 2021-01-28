@@ -47,7 +47,6 @@ class CartCard extends StatelessWidget {
 
               ],
             ),
-            Container(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

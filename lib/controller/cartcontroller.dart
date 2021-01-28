@@ -10,12 +10,21 @@ class CartController {
   List<Map> cartData = List();
 
   void updateValues() {
-    readData('cart').then((value) {
-      cartData = value.cast<Map>();
-      print(value);
-      cartListController.list = cartData.map((e) => CartModel(id: e['id'], name: e['name'], quantity: int.parse(e['quan']), imageURL: e['imageURL'])).toList();
-      cartListController.updatedController.value=true;
-    });
+    try {
+      readData('cart').then((value) {
+        cartData = value.cast<Map>();
+        print(value);
+        cartListController.list = cartData.map((e) =>
+            CartModel(id: e['id'],
+                name: e['name'],
+                quantity: int.parse(e['quan']),
+                imageURL: e['imageURL'])).toList();
+        cartListController.updatedController.value = true;
+      });
+    }catch(e){
+      print("No cart item");
+      cartListController.updatedController.value = true;
+    }
     cartListController.addListener(() {
       if(cartListController.list!=null) {
         int diff = cartListController.list.length - quantities.length;

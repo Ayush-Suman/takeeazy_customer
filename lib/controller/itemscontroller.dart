@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:takeeazy_customer/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
 import 'package:takeeazy_customer/model/base/caching.dart';
@@ -11,19 +9,25 @@ import 'package:takeeazy_customer/model/takeeazyapis/items/itemsServices.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/stores/storesModel.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 
+
 class ItemsController{
   final OptionController itemListController = OptionController();
   final List<TextController> quantities = List();
   List<Map> cartData = List();
   ShopModel shopModel;
   CategoriesModel categoriesModel;
-
+  bool needUpdate;
 
   void updateValues(){
+    HomeNavigator.currentPageIndex=3;
+    try{
     readData('cart').then((value) {
       cartData = value.cast<Map>();
       print(value);
     });
+    }catch(e){
+      print(e.toString());
+    }
     itemListController.addListener(() {
       if(itemListController.list!=null) {
         int diff = itemListController.list.length - quantities.length;
@@ -48,14 +52,17 @@ class ItemsController{
         }
       }});
 
-
-    shopModel = NavigatorService.homeArgument[HomeNavigator.shop];
-    categoriesModel = NavigatorService.homeArgument[HomeNavigator.items];
+    if((shopModel != NavigatorService.homeArgument[HomeNavigator.shop]) && (categoriesModel != NavigatorService.homeArgument[HomeNavigator.items]) ){
+      shopModel = NavigatorService.homeArgument[HomeNavigator.shop];
+      categoriesModel = NavigatorService.homeArgument[HomeNavigator.items];
+      needUpdate=true;
+    }else{
+      needUpdate=false;
+    }
   }
 
+
   void updateCart(ItemsModel item, String quantity) async{
-
-
     if(cartData!=null) {
       cartData.removeWhere((value) => (value['id'] == item.id));
     }else{
@@ -77,13 +84,15 @@ class ItemsController{
 
   void getItems() async{
     itemListController.updatedController.value = false;
+    if(needUpdate){
       TEResponse response = await ItemsServices.getItemsByCategoryAndStore(category: categoriesModel.id, store:shopModel.id );
       try {
         itemListController.list = await response.response;
-        itemListController.updatedController.value = true;
       }catch(e){
         print(e.toString());
       }
+    }
+    itemListController.updatedController.value = true;
   }
 
 

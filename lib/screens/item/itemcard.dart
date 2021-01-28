@@ -46,7 +46,6 @@ class ItemCard extends StatelessWidget {
 
               ],
             ),
-            Container(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

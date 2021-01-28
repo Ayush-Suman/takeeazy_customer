@@ -10,9 +10,14 @@ import 'package:takeeazy_customer/screens/components/options.dart';
 import 'package:takeeazy_customer/screens/nearbystores/shopCard.dart';
 
 
-class Shop extends StatelessWidget {
+class Shop extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _ShopState();
+  }
+}
 
-
+class _ShopState extends State{
   @override
   Widget build(BuildContext context) {
     final ShopController shopController = Provider.of<ShopController>(context);
@@ -106,5 +111,11 @@ class Shop extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    HomeNavigator.currentPageIndex=1;
+    super.dispose();
   }
 }

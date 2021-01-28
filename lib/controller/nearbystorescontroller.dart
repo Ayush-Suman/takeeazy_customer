@@ -12,6 +12,7 @@ class StoresListController with ChangeNotifier{
   final ValueNotifier<bool> updatedController = ValueNotifier(false);
   List<ShopModel> _shops;
   List<ShopModel> get shops =>_shops;
+
   set shops(List<ShopModel> l){
     if(l!=_shops){
       _shops = l;
@@ -27,6 +28,7 @@ class NearbyStoresController{
   String lat;
   String lng;
   ContainerModel container;
+  bool needUpdate;
 
   void openShop(ShopModel s){
     NavigatorService.homeArgument.addAll({HomeNavigator.shop: s});
@@ -34,16 +36,24 @@ class NearbyStoresController{
   }
 
   void updateValues() {
+    HomeNavigator.currentPageIndex=2;
     storesListController.updatedController.value = false;
-    container = NavigatorService.homeArgument[HomeNavigator.stores];
+    if(container!=NavigatorService.homeArgument[HomeNavigator.stores]){
+      container = NavigatorService.homeArgument[HomeNavigator.stores];
+      needUpdate = true;
+    }else{
+      needUpdate=false;
+    }
     lat = RuntimeCaching.lat;
     lng = RuntimeCaching.lng;
 
   }
 
   void getStoresNearby() async{
-    TEResponse response = await StoresServices.getStoresByDistanceInAContainer(dist:50, container: container.id, latitude: lat, longitude: lng);
-    storesListController.shops = await response.response;
+    if(needUpdate){
+      TEResponse response = await StoresServices.getStoresByDistanceInAContainer(dist:50, container: container.id, latitude: lat, longitude: lng);
+      storesListController.shops = await response.response;
+    }
     storesListController.updatedController.value = true;
   }
 

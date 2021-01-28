@@ -23,7 +23,6 @@ class BottomNav extends StatefulWidget{
 class _BottomNavState extends State{
   final GlobalKey globalKey = GlobalKey();
   int _currentIndex = 1;
-  
 
   List<Widget> widgets = [
     Container(child: Center(child: CircularProgressIndicator(),),),
@@ -41,7 +40,6 @@ class _BottomNavState extends State{
 
   @override
   Widget build(BuildContext context) {
-
     return WillPopScope(
         onWillPop: () async=>!await navigatorMap[_currentIndex].currentState.maybePop(),
         child: Scaffold(
@@ -50,10 +48,14 @@ class _BottomNavState extends State{
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (i){
+          if(_currentIndex!=i){
           setState(() {
             _currentIndex = i;
+            if(i==1){
+              HomeNavigator.currentPageIndex++;
+            }
           });
-        },
+        }},
         items:[
           BottomNavigationBarItem(
               icon: Icon(Icons.shop, color: TakeEazyColors.gradient2Color),
@@ -88,15 +90,16 @@ class HomeNavigator extends StatelessWidget{
   static final ShopController shopController = ShopController();
   static final ItemsController itemsController = ItemsController();
 
-  static String currentPage = home;
+  static int currentPageIndex = 0;
+  static List<String> pageStack = [home, stores, shop, items];
 
   @override
   Widget build(BuildContext context) {
     print("Rebuilding Home homeNavigator");
-    print(currentPage);
+    print(currentPageIndex);
     return Navigator(
       key: NavigatorService.homeNavigatorKey,
-      initialRoute: currentPage,
+      initialRoute: pageStack[currentPageIndex],
       onGenerateRoute: generateRoutes,
     );
   }
@@ -108,26 +111,22 @@ class HomeNavigator extends StatelessWidget{
     switch(settings.name){
       case home:
         print('generating new Home');
-        currentPage = home;
         return MaterialPageRoute(builder: (_)=>Provider.value(
           value:homeController,
           builder: (_, a) => Home(),
         ),);
         break;
       case stores:
-        currentPage = stores;
         return MaterialPageRoute(builder: (_)=> Provider.value(
             value:nearbyStoresController,
             builder: (_,a)=> NearbyStores()));
         break;
       case shop:
-        currentPage = shop;
         return MaterialPageRoute(builder: (_)=> Provider.value(
             value: shopController,
             builder: (_,a) => Shop()));
         break;
       case items:
-        currentPage = items;
         return MaterialPageRoute(builder: (_)=>Provider.value(
             value: itemsController,
             builder:(_,a)=>Item()));

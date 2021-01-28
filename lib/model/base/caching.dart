@@ -29,8 +29,14 @@ Future storeData(dynamic data, String name) async{
 
 Future<dynamic> readData(String name) async{
   File file = File("$_path/$name.txt");
+  try{
    String data = await file.readAsString();
    return jsonDecode(data);
+  }catch(e){
+    print(e);
+    rethrow;
+  }
+
 }
 
 Map<String, String> apiToLocal = {

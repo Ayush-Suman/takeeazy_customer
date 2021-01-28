@@ -23,11 +23,11 @@ class Cart extends StatelessWidget {
           fontWeight: FontWeight.w700,
         ),
       ),
-      body: ChangeNotifierProvider.value(value: cartController.cartListController, builder: (_,a)=>Consumer<CartListController>(builder: (_, cc, child)=>cc.updatedController.value?ListView.builder(
+      body: ChangeNotifierProvider.value(value: cartController.cartListController, builder: (_,a)=>Consumer<CartListController>(builder: (_, cc, child)=>cc.updatedController.value?cc.list.length!=0?ListView.builder(
         padding: const EdgeInsets.all(8),
         itemBuilder: (context, index) => CartCard(cc.list[index], cartController.quantities[index]),
         itemCount: cc.list.length,
-      ):Center(child: CircularProgressIndicator()),
+      ):Center(child:TEText(text: "No item in the cart",)):Center(child: CircularProgressIndicator()),
     )));
   }
 }

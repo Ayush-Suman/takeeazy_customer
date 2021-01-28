@@ -2,10 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/itemscontroller.dart';
 import 'package:takeeazy_customer/controller/optioncontroller.dart';
+import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/item/itemcard.dart';
 
-class Item extends StatelessWidget {
+
+class Item extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ItemState();
+}
+
+class _ItemState extends State<Item>{
+
   @override
   Widget build(BuildContext context) {
     ItemsController itemsController = Provider.of<ItemsController>(context);
@@ -58,5 +66,13 @@ class Item extends StatelessWidget {
           ],
         )*/
       );
+  }
+
+
+
+  @override
+  void dispose() {
+    HomeNavigator.currentPageIndex=2;
+    super.dispose();
   }
 }

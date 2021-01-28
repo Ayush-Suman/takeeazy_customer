@@ -6,6 +6,7 @@ import 'package:takeeazy_customer/controller/homecontroller.dart';
 import 'package:takeeazy_customer/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/main.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
+import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 import 'package:takeeazy_customer/screens/components/customsearchbar.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/components/options.dart';
@@ -13,7 +14,14 @@ import 'package:takeeazy_customer/screens/components/servicesWidget.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
 
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeState();
+  }
+}
+
+class _HomeState extends State<Home>{
 
   @override
   Widget build(BuildContext context) {
@@ -130,5 +138,13 @@ class Home extends StatelessWidget {
                   child: TEText(text: "We are not serviceable in your area"),
                 )) : Scaffold(
               body: Center(child: CircularProgressIndicator()),)));
+  }
+
+
+  @override
+  void dispose() {
+    HomeNavigator.currentPageIndex=-1;
+    print('reduced index to ' + HomeNavigator.currentPageIndex.toString());
+    super.dispose();
   }
 }
