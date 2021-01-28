@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
 import 'package:takeeazy_customer/model/base/caching.dart';
+import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/cart/cartmodel.dart';
+import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 
 class CartController {
 
@@ -70,6 +72,10 @@ class CartController {
 
   }
 
+  void orderNow() {
+    NavigatorService.cartArgument.addAll({CartNavigator.cart: cartData});
+    NavigatorService.cartNavigator.pushNamed(CartNavigator.orders);
+  }
 
 }
 
