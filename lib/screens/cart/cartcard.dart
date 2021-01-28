@@ -28,27 +28,19 @@ class CartCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: RoundedImage(
-                imageURL:cartModel.imageURL,
-                width: 100,
-                height: 100,
-              ),
+            RoundedImage(
+              imageURL:cartModel.imageURL,
+              width: 100,
+              height: 100,
             ),
-            Column(
-              children: [
-                TEText(
-                  text: cartModel.name,
-                  fontColor: Color(0xff3b6e9e),
-                  fontSize: 16.59,
-                  fontWeight: FontWeight.w400,
-                ),
-
-              ],
+            TEText(
+              text: cartModel.name,
+              fontColor: Color(0xff3b6e9e),
+              fontSize: 16.59,
+              fontWeight: FontWeight.w400,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 IconButton(
                   icon: new Icon(

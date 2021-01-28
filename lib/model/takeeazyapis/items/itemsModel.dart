@@ -1,6 +1,6 @@
 import 'package:takeeazy_customer/model/takeeazyapis/options/optionsmodel.dart';
 
-class ItemsModel extends OptionsModel{
+class ItemsModel extends OptionsModel {
   final String description;
   final List<String> labels;
   final String id;
@@ -26,7 +26,8 @@ class ItemsModel extends OptionsModel{
       this.categoryName,
       this.containerId,
       this.v,
-      this.variants}):super(imageURL: imagePath, name: itemName);
+      this.variants})
+      : super(imageURL: imagePath, name: itemName, id: id);
 
   factory ItemsModel.fromJSON(Map<String, dynamic> map) {
     return ItemsModel(
@@ -42,7 +43,10 @@ class ItemsModel extends OptionsModel{
       categoryName: map['categoryName'],
       containerId: map['containerId'],
       v: map['__v'],
-      variants: map['variants'].map((e) => Variants.fromJSON(e)).toList().cast<Variants>(),
+      variants: map['variants']
+          .map((e) => Variants.fromJSON(e))
+          .toList()
+          .cast<Variants>(),
     );
   }
 }
@@ -57,6 +61,9 @@ class Variants {
 
   factory Variants.fromJSON(Map<String, dynamic> data) {
     return Variants(
-        id: data['variantId'], variantName: data['variantName'], mrp: data['mrp'], sellingPrice: data['sellingPrice']);
+        id: data['variantId'],
+        variantName: data['variantName'],
+        mrp: data['mrp'],
+        sellingPrice: data['sellingPrice']);
   }
 }

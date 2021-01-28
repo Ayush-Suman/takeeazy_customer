@@ -61,7 +61,6 @@ flutter:
     - assets/hamburger.png
     - assets/takeeazy_icon.png
     - assets/description.png
-    -
   fonts:
     - family: Rubik
       fonts:
