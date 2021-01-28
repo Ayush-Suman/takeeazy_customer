@@ -11,6 +11,7 @@ import 'package:takeeazy_customer/screens/cart/cart.dart';
 import 'package:takeeazy_customer/screens/nearbystores//nearbystores.dart';
 import 'package:takeeazy_customer/screens/home/home.dart';
 import 'package:takeeazy_customer/screens/item/item.dart';
+import 'package:takeeazy_customer/screens/order/order.dart';
 import 'package:takeeazy_customer/screens/shop/shop.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
 
@@ -141,6 +142,10 @@ class HomeNavigator extends StatelessWidget{
 class CartNavigator extends StatelessWidget{
   static const String cart = '/';
 
+  static const String orders = '/orders';
+
+  static final OrdersController ordersController = OrdersController();
+
   static final CartController cartController = CartController();
 
   static String currentPage = cart;
@@ -171,7 +176,7 @@ class CartNavigator extends StatelessWidget{
         return MaterialPageRoute(
           builder: (_) => Provider.value(
             value: ordersController,
-            builder: (_, a) => Orders(),
+            builder: (_, a) => Order(),
           ),
         );
         break;
