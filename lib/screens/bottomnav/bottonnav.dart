@@ -166,6 +166,15 @@ class CartNavigator extends StatelessWidget{
           builder: (_, a)=> Cart()
         ));
         break;
+      case orders:
+        currentPage = orders;
+        return MaterialPageRoute(
+          builder: (_) => Provider.value(
+            value: ordersController,
+            builder: (_, a) => Orders(),
+          ),
+        );
+        break;
     }
   }
 }
