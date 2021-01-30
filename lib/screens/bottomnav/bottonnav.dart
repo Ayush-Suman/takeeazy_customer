@@ -5,13 +5,14 @@ import 'package:takeeazy_customer/controller/cartcontroller.dart';
 import 'package:takeeazy_customer/controller/homecontroller.dart';
 import 'package:takeeazy_customer/controller/itemscontroller.dart';
 import 'package:takeeazy_customer/controller/nearbystorescontroller.dart';
+import 'package:takeeazy_customer/controller/ordersController.dart';
 import 'package:takeeazy_customer/controller/shopController.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/screens/cart/cart.dart';
 import 'package:takeeazy_customer/screens/nearbystores//nearbystores.dart';
 import 'package:takeeazy_customer/screens/home/home.dart';
 import 'package:takeeazy_customer/screens/item/item.dart';
-import 'package:takeeazy_customer/screens/order/order.dart';
+import 'package:takeeazy_customer/screens/orders/orders.dart';
 import 'package:takeeazy_customer/screens/shop/shop.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
 
@@ -176,7 +177,7 @@ class CartNavigator extends StatelessWidget{
         return MaterialPageRoute(
           builder: (_) => Provider.value(
             value: ordersController,
-            builder: (_, a) => Order(),
+            builder: (_, a) => Orders(),
           ),
         );
         break;

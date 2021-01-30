@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/itemscontroller.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/options/optionsmodel.dart';
+import 'package:takeeazy_customer/screens/components/customdropdown.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/components/servicesWidget.dart';
 
 class ItemCard extends StatelessWidget {
-  final OptionsModel itemModel;
+  final ItemsModel itemModel;
   final TextController quantity;
+  final ValueNotifier valueController;
 
-  ItemCard(this.itemModel, this.quantity);
+  ItemCard({this.itemModel, this.quantity, this.valueController});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +32,27 @@ class ItemCard extends StatelessWidget {
               width: 100,
               height: 100,
             ),
-            TEText(
-              text: itemModel.name,
-              fontColor: Color(0xff3b6e9e),
-              fontSize: 16.59,
-              fontWeight: FontWeight.w400,
-            ),
+            SizedBox(width: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+              TEText(
+                text: itemModel.name,
+                fontColor: Color(0xff3b6e9e),
+                fontSize: 16.59,
+                fontWeight: FontWeight.w400,
+              ),
+              itemModel.variants.length>1 ?  TEDropDown<Variants>(
+                valueController: valueController,
+                items: itemModel.variants.map((e) => DropdownMenuItem(child: TEText(text: e.variantName), value: e,)).toList(),
+                onChanged: (e) {
+                  valueController.value = e;
+                  itemModel.selectedVariant = e;
+                  itemsController.updateCart(itemModel, quantity.text);
+                } ,
+              ):Padding(padding: EdgeInsets.only(top: 5), child:TEText(text: itemModel.variants[0].variantName))
+            ]),
+            Expanded(child: Container(),),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[

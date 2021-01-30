@@ -12,6 +12,7 @@ class ItemsModel extends OptionsModel {
   final String containerId;
   final int v;
   final List<Variants> variants;
+  Variants selectedVariant;
 
   ItemsModel(
       {this.description,
@@ -26,7 +27,8 @@ class ItemsModel extends OptionsModel {
       this.categoryName,
       this.containerId,
       this.v,
-      this.variants})
+      this.variants,
+      })
       : super(imageURL: imagePath, name: itemName, id: id);
 
   factory ItemsModel.fromJSON(Map<String, dynamic> map) {
@@ -56,14 +58,19 @@ class Variants {
   final String variantName;
   final int mrp;
   final int sellingPrice;
+  Map _json;
 
   Variants({this.id, this.variantName, this.mrp, this.sellingPrice});
 
   factory Variants.fromJSON(Map<String, dynamic> data) {
-    return Variants(
+    Variants variants = Variants(
         id: data['variantId'],
         variantName: data['variantName'],
         mrp: data['mrp'],
         sellingPrice: data['sellingPrice']);
+    variants._json = data;
+    return variants;
   }
+
+  get toJson => _json;
 }

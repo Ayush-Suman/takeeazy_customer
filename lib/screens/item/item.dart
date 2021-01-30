@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/itemscontroller.dart';
 import 'package:takeeazy_customer/controller/optioncontroller.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/item/itemcard.dart';
@@ -41,8 +42,8 @@ class _ItemState extends State<Item>{
             text: itemsController.categoriesModel.name,
           ),
         ),
-        body: ChangeNotifierProvider.value(value: itemsController.itemListController,builder:(_,a)=>Consumer<OptionController>(builder: (_, oc, child)=>oc.updatedController.value?ListView.builder(
-            itemBuilder: (_, pos)=> ItemCard(oc.list[pos], itemsController.quantities[pos]),
+        body: ChangeNotifierProvider.value(value: itemsController.itemListController,builder:(_,a)=>Consumer<OptionController<ItemsModel>>(builder: (_, oc, child)=>oc.updatedController.value?ListView.builder(
+            itemBuilder: (_, pos)=> ItemCard(itemModel: oc.list[pos], quantity:itemsController.quantities[pos], valueController: itemsController.valueControllers[pos]),
           itemCount: oc.list.length,
         ):Center(child: CircularProgressIndicator(),)))
 

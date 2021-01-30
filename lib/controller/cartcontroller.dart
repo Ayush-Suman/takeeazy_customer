@@ -1,15 +1,20 @@
+
 import 'package:flutter/cupertino.dart';
+import 'package:takeeazy_customer/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
 import 'package:takeeazy_customer/model/base/caching.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/cart/cartmodel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 
 class CartController {
 
-  final CartListController cartListController = CartListController();
+  final OptionController<CartModel> cartListController = OptionController();
   final List<TextController> quantities = List();
   List<Map> cartData = List();
+
+  final List<ValueNotifier<Variants>> valueControllers = List();
 
   void updateValues() {
     try {
@@ -20,34 +25,28 @@ class CartController {
             CartModel(id: e['id'],
                 name: e['name'],
                 quantity: int.parse(e['quan']),
-                imageURL: e['imageURL'])).toList();
+                imageURL: e['imageURL'],
+                variants: (e['variants'] as List).map((m) =>
+                    Variants.fromJSON(m)).toList().cast<Variants>(),
+                selectedVariant: Variants.fromJSON(e['selectedVariants'])
+            )).toList();
         cartListController.updatedController.value = true;
       });
-    }catch(e){
+    } catch (e) {
       print("No cart item");
       cartListController.updatedController.value = true;
     }
     cartListController.addListener(() {
-      if(cartListController.list!=null) {
-        int diff = cartListController.list.length - quantities.length;
-        if (diff > 0) {
-          for (int i = 0; i < diff; i++) {
-            quantities.add(TextController());
-            quantities[quantities.length - 1].text = '0';
-          }
-        }
+      quantities.removeWhere((element) => true);
+      valueControllers.removeWhere((element) => true);
+      if (cartListController.list != null) {
         for (int i = 0; i < cartListController.list.length; i++) {
-          Map single;
-          try{
-            single = cartData.singleWhere((element) => element['id']==cartListController.list[i].id);
-          }catch(e){
-
-          }
-          if(single!=null){
-            quantities[i].text = single['quan'];
-          }else {
-            quantities[i].text = '0';
-          }
+          Map single = cartData.singleWhere((element) =>
+          element['id'] == cartListController.list[i].id);
+          quantities.add(TextController());
+          quantities[i].text = single['quan'];
+          valueControllers.add(
+              ValueNotifier(Variants.fromJSON(single['selectedVariants'])));
         }
       }
     });
@@ -64,7 +63,9 @@ class CartController {
         'id': item.id,
         'name': item.name,
         'quan': quantity,
-        'imageURL': item.imageURL
+        'imageURL': item.imageURL,
+        'variants': item.variants.map((e) => e.toJson).toList(),
+        'selectedVariants': item.selectedVariant.toJson
       };
       cartData.add(data);
     }
@@ -75,20 +76,6 @@ class CartController {
   void orderNow() {
     NavigatorService.cartArgument.addAll({CartNavigator.cart: cartData});
     NavigatorService.cartNavigator.pushNamed(CartNavigator.orders);
-  }
-
-}
-
-class CartListController with ChangeNotifier{
-  final ValueNotifier<bool> updatedController = ValueNotifier(false);
-
-  List<CartModel> _list;
-  List<CartModel> get list => _list;
-  set list(List<CartModel> list){
-    if(list!=_list){
-      _list = list;
-      notifyListeners();
-    }
   }
 
 }

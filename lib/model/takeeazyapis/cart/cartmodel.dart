@@ -1,17 +1,21 @@
-import 'package:takeeazy_customer/model/takeeazyapis/stores/storesModel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/options/optionsmodel.dart';
 
-class CartModel {
-  final String id;
-  final String name;
+
+class CartModel extends OptionsModel{
   final int quantity;
   final String imageURL;
   final String shopName;
+  final List<Variants> variants;
+  Variants selectedVariant;
 
   CartModel({
-    this.id,
-    this.name,
+    String id,
+    String name,
     this.imageURL,
     this.quantity,
     this.shopName,
-  });
+    this.variants,
+    this.selectedVariant
+  }):super(id: id, name: name);
 }

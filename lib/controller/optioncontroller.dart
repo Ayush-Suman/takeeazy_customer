@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/options/optionsmodel.dart';
 
-class OptionController with ChangeNotifier{
+class OptionController<E extends OptionsModel> with ChangeNotifier{
   final ValueNotifier updatedController = ValueNotifier(false);
 
-  List<OptionsModel> _list;
-  List<OptionsModel> get list => _list;
-  set list(List<OptionsModel> list){
+  List<E> _list;
+  List<E> get list => _list;
+  set list(List<E> list){
     if(list!=_list){
       _list = list;
       notifyListeners();

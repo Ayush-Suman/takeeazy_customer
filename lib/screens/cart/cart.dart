@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takeeazy_customer/controller/cartcontroller.dart';
+import 'package:takeeazy_customer/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/controller/textcontroller.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/cart/cartmodel.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/stores/storesModel.dart';
 import 'package:takeeazy_customer/screens/cart/cartcard.dart';
+import 'package:takeeazy_customer/screens/components/custombutton.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/item/itemcard.dart';
 
@@ -13,6 +16,7 @@ class Cart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final CartController cartController = Provider.of<CartController>(context, listen: false);
     cartController.updateValues();
 
@@ -37,9 +41,9 @@ class Cart extends StatelessWidget {
               }),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: ChangeNotifierProvider.value(value: cartController.cartListController, builder: (_,a)=>Consumer<CartListController>(builder: (_, cc, child)=>cc.updatedController.value?cc.list.length!=0?ListView.builder(
+      body: ChangeNotifierProvider.value(value: cartController.cartListController, builder: (_,a)=>Consumer<OptionController<CartModel>>(builder: (_, cc, child)=>cc.updatedController.value?cc.list.length!=0?ListView.builder(
         padding: const EdgeInsets.all(8),
-        itemBuilder: (context, index) => CartCard(cc.list[index], cartController.quantities[index]),
+        itemBuilder: (context, index) => CartCard(cartModel: cc.list[index], quantity: cartController.quantities[index], valueController: cartController.valueControllers[index]),
         itemCount: cc.list.length,
       ):Center(child:TEText(text: "No item in the cart",)):Center(child: CircularProgressIndicator()),
     )));
