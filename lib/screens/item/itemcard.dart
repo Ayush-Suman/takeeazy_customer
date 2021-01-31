@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/itemscontroller.dart';
-import 'package:takeeazy_customer/controller/textcontroller.dart';
+import 'package:takeeazy_customer/screens/item/itemscontroller.dart';
+import 'package:takeeazy_customer/screens/controller/textcontroller.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
-import 'package:takeeazy_customer/model/takeeazyapis/options/optionsmodel.dart';
 import 'package:takeeazy_customer/screens/components/customdropdown.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
-import 'package:takeeazy_customer/screens/components/servicesWidget.dart';
+import 'package:takeeazy_customer/screens/components/roundedimage.dart';
 
 class ItemCard extends StatelessWidget {
   final ItemsModel itemModel;

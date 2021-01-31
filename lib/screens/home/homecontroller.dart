@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:takeeazy_customer/controller/optioncontroller.dart';
-import 'package:takeeazy_customer/controller/textcontroller.dart';
+import 'package:takeeazy_customer/screens/controller/optioncontroller.dart';
+import 'package:takeeazy_customer/screens/controller/textcontroller.dart';
 
 import 'package:takeeazy_customer/model/base/networkcall.dart';
 import 'package:takeeazy_customer/model/caching/runtimecaching.dart';
@@ -17,7 +17,7 @@ class HomeController{
   final TextController city = TextController();
   final TextEditingController search = TextEditingController();
   final FocusNode searchFocus = FocusNode();
-  final ValueNotifier serviceableAreaController = ValueNotifier(false);
+  final ValueNotifier<bool> serviceableAreaController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> updatedController = ValueNotifier<bool>(false);
   final OptionController containerListController = OptionController();
 

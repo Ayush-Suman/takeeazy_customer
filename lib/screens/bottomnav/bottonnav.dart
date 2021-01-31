@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/cartcontroller.dart';
-import 'package:takeeazy_customer/controller/homecontroller.dart';
-import 'package:takeeazy_customer/controller/itemscontroller.dart';
-import 'package:takeeazy_customer/controller/nearbystorescontroller.dart';
-import 'package:takeeazy_customer/controller/ordersController.dart';
-import 'package:takeeazy_customer/controller/shopController.dart';
+import 'package:takeeazy_customer/model/caching/runtimecaching.dart';
+import 'package:takeeazy_customer/screens/cart/cartcontroller.dart';
+import 'package:takeeazy_customer/screens/components/customtext.dart';
+import 'package:takeeazy_customer/screens/home/homecontroller.dart';
+import 'package:takeeazy_customer/screens/item/itemscontroller.dart';
+import 'package:takeeazy_customer/screens/nearbystores/nearbystorescontroller.dart';
+import 'package:takeeazy_customer/screens/orders/ordersController.dart';
+import 'package:takeeazy_customer/screens/shop/shopController.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/screens/cart/cart.dart';
 import 'package:takeeazy_customer/screens/nearbystores//nearbystores.dart';
@@ -50,6 +52,7 @@ class _BottomNavState extends State{
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (i){
+
           if(_currentIndex!=i){
           setState(() {
             _currentIndex = i;
@@ -149,14 +152,12 @@ class CartNavigator extends StatelessWidget{
 
   static final CartController cartController = CartController();
 
-  static String currentPage = cart;
 
   @override
   Widget build(BuildContext context) {
-    print(currentPage);
     return Navigator(
       key: NavigatorService.cartNavigatorKey,
-      initialRoute: currentPage,
+      initialRoute: cart,
       onGenerateRoute: generateRoutes,
     );
   }
@@ -166,14 +167,12 @@ class CartNavigator extends StatelessWidget{
     print("generating route");
     switch(settings.name){
       case cart:
-        currentPage = cart;
-        return MaterialPageRoute(builder: (_)=>Provider.value(
+        return MaterialPageRoute(builder: (_)=> Provider.value(
           value: cartController,
           builder: (_, a)=> Cart()
         ));
         break;
       case orders:
-        currentPage = orders;
         return MaterialPageRoute(
           builder: (_) => Provider.value(
             value: ordersController,

@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
-import 'package:takeeazy_customer/controller/optioncontroller.dart';
-import 'package:takeeazy_customer/controller/textcontroller.dart';
+import 'package:takeeazy_customer/screens/controller/optioncontroller.dart';
+import 'package:takeeazy_customer/screens/controller/textcontroller.dart';
 import 'package:takeeazy_customer/model/base/caching.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/cart/cartmodel.dart';

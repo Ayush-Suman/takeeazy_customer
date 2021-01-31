@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/cartcontroller.dart';
-import 'package:takeeazy_customer/controller/textcontroller.dart';
+import 'package:takeeazy_customer/screens/cart/cartcontroller.dart';
+import 'package:takeeazy_customer/screens/controller/textcontroller.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/cart/cartmodel.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
 import 'package:takeeazy_customer/screens/components/customdropdown.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
-import 'package:takeeazy_customer/screens/components/servicesWidget.dart';
+import 'package:takeeazy_customer/screens/components/roundedimage.dart';
 
 class CartCard extends StatelessWidget {
   final CartModel cartModel;
@@ -55,15 +55,7 @@ class CartCard extends StatelessWidget {
                           cartModel.selectedVariant = e;
                           cartController.updateCart(cartModel, quantity.text);
                         } ,
-                      )
-
-                  /*DropdownButton(
-                    value: cartModel.selectedVariant,
-                      items: cartModel.variants.map((e) => DropdownMenuItem(child: TEText(text: e.variantName), value: e,)).toList(),
-                      onChanged: (e){
-                        cartModel.selectedVariant = e;
-                        cartController.updateCart(cartModel, quantity.text);
-                      })*/:Padding(padding: EdgeInsets.only(top: 5), child:TEText(text: cartModel.variants[0].variantName))
+                      ) :Padding(padding: EdgeInsets.only(top: 5), child:TEText(text: cartModel.variants[0].variantName))
                 ]),
             Expanded(child: Container(),),
 

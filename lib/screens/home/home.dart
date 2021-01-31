@@ -1,16 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/homecontroller.dart';
-import 'package:takeeazy_customer/controller/optioncontroller.dart';
+import 'package:takeeazy_customer/screens/home/homecontroller.dart';
 import 'package:takeeazy_customer/main.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 import 'package:takeeazy_customer/screens/components/customsearchbar.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/components/options.dart';
-import 'package:takeeazy_customer/screens/components/servicesWidget.dart';
+import 'package:takeeazy_customer/screens/components/roundedimage.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
 
 
@@ -25,6 +23,7 @@ class _HomeState extends State<Home>{
 
   @override
   Widget build(BuildContext context) {
+    print('Home Building');
     final Size size = (TextPainter(
         text: TextSpan(text: "Hellog", style: TextStyle(fontSize: 12)),
         maxLines: 1,
@@ -85,7 +84,10 @@ class _HomeState extends State<Home>{
                   ),
                 ),
                 body:
-                uc.value
+                ChangeNotifierProvider.value(
+                  value: homeController.serviceableAreaController,
+                  builder: (_,a) =>
+                  Consumer<ValueNotifier<bool>>(builder: (_, s, c)=> s.value
                     ? ListView(
                   children: [
                     SearchBar(controller: homeController.search, focusNode: homeController.searchFocus,),
@@ -134,9 +136,8 @@ class _HomeState extends State<Home>{
                       )
                     )
                   ],
-                ): Center(
-                  child: TEText(text: "We are not serviceable in your area"),
-                )) : Scaffold(
+                ): Center(child: TEText(text: "We are not serviceable in your area"),
+                  )))) : Scaffold(
               body: Center(child: CircularProgressIndicator()),)));
   }
 

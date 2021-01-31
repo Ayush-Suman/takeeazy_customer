@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/homecontroller.dart';
-import 'package:takeeazy_customer/controller/locationcontroller.dart';
+import 'package:takeeazy_customer/screens/home/homecontroller.dart';
+import 'package:takeeazy_customer/screens/map/locationcontroller.dart';
 import 'package:takeeazy_customer/model/base/caching.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart' as NetworkCalls;
 import 'package:takeeazy_customer/model/caching/runtimecaching.dart';

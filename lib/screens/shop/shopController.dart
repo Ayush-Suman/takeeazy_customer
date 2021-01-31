@@ -1,4 +1,4 @@
-import 'package:takeeazy_customer/controller/optioncontroller.dart';
+import 'package:takeeazy_customer/screens/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/categories/categoriesModel.dart';

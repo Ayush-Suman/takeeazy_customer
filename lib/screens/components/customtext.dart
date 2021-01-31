@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/textcontroller.dart';
+import 'package:takeeazy_customer/screens/controller/textcontroller.dart';
 
 class TEText extends StatelessWidget{
   final TextController controller;

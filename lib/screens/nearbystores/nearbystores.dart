@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/nearbystorescontroller.dart';
+import 'package:takeeazy_customer/screens/nearbystores/nearbystorescontroller.dart';
 import 'package:takeeazy_customer/screens/components/customsearchbar.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';
 import 'package:takeeazy_customer/screens/nearbystores/shopCard.dart';

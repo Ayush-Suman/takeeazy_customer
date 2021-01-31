@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/ordersController.dart';
+import 'package:takeeazy_customer/screens/orders/ordersController.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/cart/cartmodel.dart';
 import 'package:takeeazy_customer/screens/components/custombutton.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/shopController.dart';
+import 'package:takeeazy_customer/screens/shop/shopController.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/containers/containersModel.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';

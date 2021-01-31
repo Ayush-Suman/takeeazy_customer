@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:takeeazy_customer/controller/itemscontroller.dart';
-import 'package:takeeazy_customer/controller/optioncontroller.dart';
+import 'package:takeeazy_customer/screens/item/itemscontroller.dart';
+import 'package:takeeazy_customer/screens/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/items/itemsModel.dart';
 import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 import 'package:takeeazy_customer/screens/components/customtext.dart';

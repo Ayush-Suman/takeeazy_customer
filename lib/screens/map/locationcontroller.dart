@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:takeeazy_customer/controller/textcontroller.dart';
+import 'package:takeeazy_customer/model/takeeazyapis/meta/metamodel.dart';
+import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
+import 'package:takeeazy_customer/screens/controller/textcontroller.dart';
 import 'package:takeeazy_customer/main.dart';
 import 'package:takeeazy_customer/model/base/exception.dart';
 import 'package:takeeazy_customer/model/base/networkcall.dart';
@@ -175,6 +177,7 @@ class LocationController{
       serviceableArea.value = true;
       print("Serviceable Area");
       storeValues();
+      HomeNavigator.currentPageIndex=0;
       NavigatorService.rootNavigator.popAndPushNamed(TERoutes.bottomnav);
       locationStatusController._newLocationStatus = LocationStatus.Fetched;
     }).catchError((e){
@@ -183,6 +186,7 @@ class LocationController{
         print("NonServiceable Area");
         serviceableArea.value= false;
         storeValues();
+        HomeNavigator.currentPageIndex=0;
         NavigatorService.rootNavigator.popAndPushNamed(TERoutes.bottomnav);
         locationStatusController._newLocationStatus = LocationStatus.Fetched;
       }

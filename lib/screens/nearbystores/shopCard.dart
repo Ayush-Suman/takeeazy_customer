@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:takeeazy_customer/model/caching/runtimecaching.dart';
 import 'package:takeeazy_customer/model/takeeazyapis/stores/storesModel.dart';
-import 'package:takeeazy_customer/screens/components/servicesWidget.dart';
+import 'package:takeeazy_customer/screens/components/roundedimage.dart';
 import 'package:takeeazy_customer/screens/values/colors.dart';
 import '../components/customtext.dart';
 
