@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:takeeazy_customer/model/caching/runtimecaching.dart';
 import 'package:takeeazy_customer/screens/home/homecontroller.dart';
 import 'package:takeeazy_customer/main.dart';
 import 'package:takeeazy_customer/model/navigator/navigatorservice.dart';
@@ -84,11 +85,7 @@ class _HomeState extends State<Home>{
                   ),
                 ),
                 body:
-                ChangeNotifierProvider.value(
-                  value: homeController.serviceableAreaController,
-                  builder: (_,a) =>
-                  Consumer<ValueNotifier<bool>>(builder: (_, s, c)=> s.value
-                    ? ListView(
+                RuntimeCaching.serviceableArea ? ListView(
                   children: [
                     SearchBar(controller: homeController.search, focusNode: homeController.searchFocus,),
                     Padding(
@@ -137,7 +134,7 @@ class _HomeState extends State<Home>{
                     )
                   ],
                 ): Center(child: TEText(text: "We are not serviceable in your area"),
-                  )))) : Scaffold(
+                  )) : Scaffold(
               body: Center(child: CircularProgressIndicator()),)));
   }
 

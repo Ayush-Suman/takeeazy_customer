@@ -17,7 +17,7 @@ class HomeController{
   final TextController city = TextController();
   final TextEditingController search = TextEditingController();
   final FocusNode searchFocus = FocusNode();
-  final ValueNotifier<bool> serviceableAreaController = ValueNotifier<bool>(false);
+  //final ValueNotifier<bool> serviceableAreaController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> updatedController = ValueNotifier<bool>(false);
   final OptionController containerListController = OptionController();
 
@@ -27,10 +27,12 @@ class HomeController{
   }
 
   void getContainers({bool forced=false}) async{
+    print(RuntimeCaching.containers.toString());
     if(!containerListController.updatedController.value || forced){
       TEResponse response = await ContainerServices.getContainers();
       try{
-        containerListController.list = await response.response;
+        List containers = await response.response;
+        containerListController.list = containers.where((element) => RuntimeCaching.containers.contains(element.id)).toList();
         containerListController.updatedController.value = true;
       }catch(e){
         if(e is SocketException){
@@ -44,7 +46,7 @@ class HomeController{
   void updateValues() async{
     HomeNavigator.currentPageIndex=1;
       city.text = RuntimeCaching.city;
-      serviceableAreaController.value = RuntimeCaching.serviceableArea;
+      //serviceableAreaController.value = RuntimeCaching.serviceableArea;
       updatedController.value = true;
   }
 

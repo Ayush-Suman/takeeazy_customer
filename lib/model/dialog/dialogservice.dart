@@ -29,6 +29,7 @@ class DialogService {
   Future closeDialog<T>(T response){
     _completer.complete(response);
     _completer = null;
+    return null;
   }
 
 }

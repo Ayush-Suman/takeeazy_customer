@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:takeeazy_customer/model/dialog/dialogservice.dart';
 import 'package:takeeazy_customer/screens/controller/optioncontroller.dart';
 import 'package:takeeazy_customer/screens/controller/textcontroller.dart';
 import 'package:takeeazy_customer/model/base/caching.dart';
@@ -10,14 +11,13 @@ import 'package:takeeazy_customer/screens/bottomnav/bottonnav.dart';
 
 class CartController {
 
-  final OptionController<CartModel> cartListController = OptionController();
+  final OptionController<CartModel> cartListController = OptionController()..list=List();
   final List<TextController> quantities = List();
   List<Map> cartData = List();
 
   final List<ValueNotifier<Variants>> valueControllers = List();
 
   void updateValues() {
-    try {
       readData('cart').then((value) {
         cartData = value.cast<Map>();
         print(value);
@@ -31,11 +31,11 @@ class CartController {
                 selectedVariant: Variants.fromJSON(e['selectedVariants'])
             )).toList();
         cartListController.updatedController.value = true;
+      }).catchError((onError){
+        print("No cart item");
+        cartListController.updatedController.value = true;
+
       });
-    } catch (e) {
-      print("No cart item");
-      cartListController.updatedController.value = true;
-    }
     cartListController.addListener(() {
       quantities.removeWhere((element) => true);
       valueControllers.removeWhere((element) => true);
@@ -73,9 +73,17 @@ class CartController {
 
   }
 
-  void orderNow() {
+  void orderNow(bool containItem) {
+    if(containItem){
     NavigatorService.cartArgument.addAll({CartNavigator.cart: cartData});
     NavigatorService.cartNavigator.pushNamed(CartNavigator.orders);
+    }else{
+      DialogService()
+          .openDialog(
+          title: "No Item in the Cart",
+          content: "Continue shopping before proceeding to order",
+          actions: [ActionHolder(title: "Continue shopping", onPressed: (){})]);
+    }
   }
 
 }

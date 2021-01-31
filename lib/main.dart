@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
       RuntimeCaching.serviceableArea = data['ser'];
       RuntimeCaching.lat = data['lat'];
       RuntimeCaching.lng = data['lng'];
+      RuntimeCaching.containers = data['containers'].cast<String>();
         TERoutes.locationController.positionController.position = Position(latitude: double.parse(data['lat']), longitude: double.parse(data['lng']));
         TERoutes.locationController.liveLocationRequired = false;
     }

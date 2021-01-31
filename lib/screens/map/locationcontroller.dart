@@ -108,6 +108,7 @@ class CustomFocusNode extends FocusNode{
 
 class LocationController{
   String currentAddress="";
+  List<String> containers =List();
   bool liveLocationRequired = true;
   final _dialogService = DialogService();
   final TextController city = TextController();
@@ -175,6 +176,7 @@ class LocationController{
     response.response.then((metaModel) {
       city.text = metaModel.city.cityName;
       serviceableArea.value = true;
+      containers = metaModel.city.containers;
       print("Serviceable Area");
       storeValues();
       HomeNavigator.currentPageIndex=0;
@@ -265,13 +267,15 @@ class LocationController{
       'ser': serviceableArea.value,
       'lat': positionController.position.latitude.toString(),
       'lng': positionController.position.longitude.toString(),
-      'addressLine': currentAddress
+      'addressLine': currentAddress,
+      'containers': containers
     };
     storeData(data, "City");
     RuntimeCaching.city = city.text;
     RuntimeCaching.serviceableArea = serviceableArea.value;
     RuntimeCaching.lat = positionController.position.latitude.toString();
     RuntimeCaching.lng = positionController.position.longitude.toString();
+    RuntimeCaching.containers = containers;
  }
 
 }
